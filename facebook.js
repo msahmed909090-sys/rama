@@ -42,16 +42,10 @@ const firebaseConfig = {
     
     // ==================== Users ====================
     
-    getUser: async function(identifier) {
+    getUser: async function(phone) {
       try {
-        let snap;
-        if (identifier && identifier.indexOf && identifier.indexOf('@') !== -1) {
-          snap = await db.collection('fb_users').where('email', '==', identifier).limit(1).get();
-        } else {
-          snap = await db.collection('fb_users').where('phone', '==', identifier).limit(1).get();
-        }
-
-        if (snap && !snap.empty) {
+        const snap = await db.collection('fb_users').where('phone', '==', phone).limit(1).get();
+        if (!snap.empty) {
           const doc = snap.docs[0];
           return { id: doc.id, ...doc.data() };
         }
@@ -62,23 +56,15 @@ const firebaseConfig = {
       }
     },
     
-    saveUser: async function(identifier, userData) {
+    saveUser: async function(phone, userData) {
       try {
-        const payload = {
+        const docRef = await db.collection('fb_users').add({
           ...userData,
+          phone: phone,
           createdAt: firebase.firestore.FieldValue.serverTimestamp(),
           updatedAt: firebase.firestore.FieldValue.serverTimestamp()
-        };
-
-        if (identifier && identifier.indexOf && identifier.indexOf('@') !== -1) {
-          payload.email = identifier;
-          if (!payload.phone) payload.phone = '';
-        } else {
-          payload.phone = identifier;
-        }
-
-        const docRef = await db.collection('fb_users').add(payload);
-        return { id: docRef.id, ...payload };
+        });
+        return { id: docRef.id, ...userData };
       } catch (error) {
         console.error('saveUser error:', error);
         throw error;
@@ -574,7 +560,7 @@ const firebaseConfig = {
           
           if (userDoc.exists) {
             const mainUserData = userDoc.data();
-            currentUserPhone = mainUserData.email || user.email || mainUserData.chatId || mainUserData.phone || `user_${user.uid.substring(0, 8)}`;
+            currentUserPhone = mainUserData.chatId || mainUserData.phone || `user_${user.uid.substring(0, 8)}`;
             
 // محاولة جلب مستخدم فيسبوك باستخدام currentUserPhone
 let fbUser = await FirebaseDB.getUser(currentUserPhone);

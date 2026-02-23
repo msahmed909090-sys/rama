@@ -31,10 +31,6 @@ const firebaseConfig = {
   let currentChat = null;
   let messagesListener = null;
   let callsListener = null;
-
-  function getUserIdentifier() {
-    return (userData && userData.chatId) ? userData.chatId : (currentUser ? currentUser.uid : null);
-  }
   
   // ============================================
   // دوال مساعدة
@@ -149,26 +145,17 @@ function formatTime(timestamp) {
             if (userDoc.exists) {
               userData = userDoc.data();
               
-  // بعد تحميل userData من Firestore
-  // إذا كان لدى المستخدم إيميل مسجل، نستخدمه كـ chatId (نلغي نظام الـ ID إذا أمكن)
-  if (userData.email && userData.chatId !== userData.email) {
-    try {
-      await db.collection('users').doc(currentUser.uid).update({ chatId: userData.email });
-      userData.chatId = userData.email;
-      console.log('تم تعيين الإيميل كـ chatId:', userData.chatId);
-    } catch (e) {
-      console.warn('تعذر تحديث chatId بالإيميل:', e);
-    }
-  } else if (!userData.chatId) {
-    // chatId غير موجود (مستخدم قديم أو خطأ) → ننشئ واحداً جديداً
-    const chatId = generateChatId();
-    await db.collection('users').doc(currentUser.uid).update({ chatId });
-    userData.chatId = chatId;
-    console.log('تم إنشاء chatId جديد للمستخدم:', chatId);
-  } else {
-    // chatId موجود بالفعل، نستخدمه كما هو
-    console.log('chatId موجود:', userData.chatId);
-  }
+// بعد تحميل userData من Firestore
+if (!userData.chatId) {
+  // chatId غير موجود (مستخدم قديم أو خطأ) → ننشئ واحداً جديداً
+  const chatId = generateChatId();
+  await db.collection('users').doc(currentUser.uid).update({ chatId });
+  userData.chatId = chatId;
+  console.log('تم إنشاء chatId جديد للمستخدم:', chatId);
+} else {
+  // chatId موجود بالفعل، نستخدمه كما هو
+  console.log('chatId موجود:', userData.chatId);
+}
               
               resolve(true);
             } else {
@@ -291,7 +278,7 @@ listenForIncomingCalls();
     try {
       // جلب المحادثات من Firestore
       const chatsSnapshot = await db.collection('chats')
-        .where('participants', 'array-contains', getUserIdentifier())
+        .where('participants', 'array-contains', currentUser.uid)
         .orderBy('lastMessageAt', 'desc')
         .limit(50)
         .get();
@@ -311,24 +298,18 @@ listenForIncomingCalls();
       
       for (const doc of chatsSnapshot.docs) {
         const chat = doc.data();
-        const otherUserId = chat.participants.find(p => p !== getUserIdentifier());
+        const otherUserId = chat.participants.find(p => p !== currentUser.uid);
         
-        // جلب بيانات المستخدم الآخر (يدعم chatId كإيميل أو UID)
-        let otherUser = {};
-        if (otherUserId && otherUserId.indexOf && otherUserId.indexOf('@') !== -1) {
-          const snap = await db.collection('users').where('chatId', '==', otherUserId).limit(1).get();
-          if (!snap.empty) otherUser = snap.docs[0].data();
-        } else {
-          const userDoc = await db.collection('users').doc(otherUserId).get();
-          if (userDoc.exists) otherUser = userDoc.data();
-        }
+        // جلب بيانات المستخدم الآخر
+        const userDoc = await db.collection('users').doc(otherUserId).get();
+        const otherUser = userDoc.exists ? userDoc.data() : {};
         
         // التحقق من الاتصال
         const isOnline = otherUser.lastOnline && 
           (Date.now() - otherUser.lastOnline.toDate() < 300000);
         
         // عدد الرسائل غير المقروءة
-        const unreadCount = chat.unreadCount && chat.unreadCount[getUserIdentifier()] || 0;
+        const unreadCount = chat.unreadCount && chat.unreadCount[currentUser.uid] || 0;
         
         chatsHtml += createChatItemHTML(doc.id, chat, otherUser, isOnline, unreadCount, otherUserId);
       }
@@ -366,7 +347,7 @@ listenForIncomingCalls();
     
     const lastMessage = chat.lastMessage || '';
     const time = formatTime(chat.lastMessageAt);
-    const isSent = chat.lastMessageSenderId === getUserIdentifier();
+    const isSent = chat.lastMessageSenderId === currentUser.uid;
     
     return `
       <div class="chat-item" data-user-id="${otherUserId}" data-user-name="${otherUser.username || 'مستخدم'}" data-user-avatar="${avatar}">
@@ -439,7 +420,7 @@ listenForIncomingCalls();
    * تحميل الرسائل
    */
   function loadMessages(otherUserId) {
-    const chatId = getChatId(getUserIdentifier(), otherUserId);
+    const chatId = getChatId(currentUser.uid, otherUserId);
     const messagesContainer = document.getElementById('chatMessages');
     
     // إلغاء الاستماع السابق
@@ -457,7 +438,7 @@ listenForIncomingCalls();
         
         snapshot.forEach(doc => {
           const msg = doc.data();
-          const isSent = msg.senderId === getUserIdentifier();
+          const isSent = msg.senderId === currentUser.uid;
           
           messagesHtml += createMessageHTML(msg, isSent);
         });
@@ -510,11 +491,11 @@ listenForIncomingCalls();
    * تحديث حالة القراءة
    */
   async function markMessagesAsRead(otherUserId) {
-    const chatId = getChatId(getUserIdentifier(), otherUserId);
+    const chatId = getChatId(currentUser.uid, otherUserId);
     
     try {
       await db.collection('chats').doc(chatId).update({
-        [`unreadCount.${getUserIdentifier()}`]: 0
+        [`unreadCount.${currentUser.uid}`]: 0
       });
     } catch (error) {
       console.error('Error marking messages as read:', error);
@@ -532,27 +513,16 @@ listenForIncomingCalls();
    * التحقق من حالة الاتصال
    */
   function checkUserOnlineStatus(userId) {
-    if (userId && userId.indexOf && userId.indexOf('@') !== -1) {
-      db.collection('users').where('chatId', '==', userId).limit(1)
-        .onSnapshot(snap => {
-          if (!snap.empty) {
-            const data = snap.docs[0].data();
-            const isOnline = data.lastOnline && (Date.now() - data.lastOnline.toDate() < 300000);
-            document.getElementById('chatUserStatus').textContent = isOnline ? 'متصل الآن' : 'غير متصل';
-          }
-        });
-    } else {
-      db.collection('users').doc(userId).onSnapshot(doc => {
-        if (doc.exists) {
-          const data = doc.data();
-          const isOnline = data.lastOnline && 
-            (Date.now() - data.lastOnline.toDate() < 300000);
-          
-          document.getElementById('chatUserStatus').textContent = 
-            isOnline ? 'متصل الآن' : 'غير متصل';
-        }
-      });
-    }
+    db.collection('users').doc(userId).onSnapshot(doc => {
+      if (doc.exists) {
+        const data = doc.data();
+        const isOnline = data.lastOnline && 
+          (Date.now() - data.lastOnline.toDate() < 300000);
+        
+        document.getElementById('chatUserStatus').textContent = 
+          isOnline ? 'متصل الآن' : 'غير متصل';
+      }
+    });
   }
   
   // ============================================
@@ -623,16 +593,16 @@ function closeChatView() {
       await db.collection('chats').doc(chatId).collection('messages').add({
         text: text,
         type: 'text',
-        senderId: getUserIdentifier(),
+        senderId: currentUser.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         read: false
       });
       
       // تحديث بيانات المحادثة
       await db.collection('chats').doc(chatId).set({
-        participants: [getUserIdentifier(), currentChat.id],
+        participants: [currentUser.uid, currentChat.id],
         lastMessage: text,
-        lastMessageSenderId: getUserIdentifier(),
+        lastMessageSenderId: currentUser.uid,
         lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
         [`unreadCount.${currentChat.id}`]: firebase.firestore.FieldValue.increment(1)
       }, { merge: true });
@@ -715,16 +685,16 @@ function initFileUploads() {
         text: type === 'image' ? '📷 صورة' : '🎬 فيديو',
         type: type,
         mediaUrl: base64,
-        senderId: getUserIdentifier(),
+        senderId: currentUser.uid,
         timestamp: firebase.firestore.FieldValue.serverTimestamp(),
         read: false
       });
       
       // تحديث بيانات المحادثة
       await db.collection('chats').doc(chatId).set({
-        participants: [getUserIdentifier(), currentChat.id],
+        participants: [currentUser.uid, currentChat.id],
         lastMessage: type === 'image' ? '📷 صورة' : '🎬 فيديو',
-        lastMessageSenderId: getUserIdentifier(),
+        lastMessageSenderId: currentUser.uid,
         lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
         [`unreadCount.${currentChat.id}`]: firebase.firestore.FieldValue.increment(1)
       }, { merge: true });
@@ -783,7 +753,7 @@ function renderMyStatus() {
         statusItem.onclick = (e) => {
             // تجاهل الضغط إذا كان على زر الحذف
             if(e.target.closest('.delete-status-btn')) return;
-          viewStatus(getUserIdentifier(), userData.username || 'أنا');
+            viewStatus(currentUser.uid, userData.username || 'أنا');
         };
         
         // حدث الحذف
