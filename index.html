@@ -1809,7 +1809,7 @@ const safeSetStyle = (id, prop, value) => {
         await db.collection('users').doc(cred.user.uid).set({
           username, email,
           photoURL: cred.user.photoURL || '',
-          chatId: newChatId, // <--- إضافة المعرف هنا
+    chatId: cred.user.uid, // استخدم UID بدل الرقم العشوائي
           level: 1, points: 0, streakDays: 0,
           totalKhatma: 0, salawatCount: 0,
           dailySalawatGoal: 100,
