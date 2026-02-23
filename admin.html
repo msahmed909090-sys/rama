@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>لوحة الإدارة</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+  <!-- شاشة التحميل -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-icon">🛡️</div>
+      <h1>لوحة الإدارة</h1>
+      <p>جاري التحقق...</p>
+      <div class="spinner"></div>
+    </div>
+  </div>
+
+  <!-- رفض الوصول -->
+  <div id="accessDenied" class="access-denied" style="display: none;">
+    <div class="denied-card">
+      <div class="denied-icon">🚫</div>
+      <h2>غير مصرح لك</h2>
+      <p>ليس لديك صلاحية للوصول لهذه الصفحة</p>
+      <a href="index.html" class="btn-back">
+        <i class="fas fa-home"></i> العودة للرئيسية
+      </a>
+    </div>
+  </div>
+
+  <!-- التطبيق الرئيسي -->
+  <div id="mainApp" style="display: none;">
+    
+    <!-- الهيدر -->
+    <header class="header">
+      <div class="header-inner">
+        <div class="header-right">
+          <button class="menu-toggle" onclick="toggleSidebar()">
+            <i class="fas fa-bars"></i>
+          </button>
+          <div class="logo">
+            <span>🛡️</span>
+            <span>لوحة الإدارة</span>
+          </div>
+        </div>
+        <div class="header-left">
+          <button class="icon-btn" onclick="window.location.href='index.html'">
+            <i class="fas fa-home"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- القائمة الجانبية -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <img id="adminAvatar" src="" alt="" class="admin-avatar">
+        <div class="admin-info">
+          <span id="adminName">المدير</span>
+          <span class="admin-role">مدير النظام</span>
+        </div>
+      </div>
+      
+      <nav class="nav-menu">
+        <a href="#" class="nav-item active" data-section="dashboard">
+          <i class="fas fa-home"></i>
+          <span>الرئيسية</span>
+        </a>
+        <a href="#" class="nav-item" data-section="users">
+          <i class="fas fa-users"></i>
+          <span>المستخدمون</span>
+          <span class="nav-badge" id="usersBadge"></span>
+        </a>
+        <a href="#" class="nav-item" data-section="questions">
+          <i class="fas fa-question-circle"></i>
+          <span>الأسئلة</span>
+          <span class="nav-badge" id="questionsBadge"></span>
+        </a>
+        <a href="#" class="nav-item" data-section="posts">
+          <i class="fas fa-newspaper"></i>
+          <span>المنشورات</span>
+        </a>
+        <a href="#" class="nav-item" data-section="support">
+          <i class="fas fa-headset"></i>
+          <span>الدعم الفني</span>
+          <span class="nav-badge" id="supportBadge"></span>
+        </a>
+        <a href="#" class="nav-item" data-section="notifications">
+          <i class="fas fa-bell"></i>
+          <span>إشعارات جماعية</span>
+        </a>
+        <a href="#" class="nav-item" data-section="logs">
+          <i class="fas fa-history"></i>
+          <span>السجلات</span>
+        </a>
+      </nav>
+      
+      <div class="sidebar-footer">
+        <button class="btn-logout" onclick="logout()">
+          <i class="fas fa-sign-out-alt"></i>
+          <span>خروج</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main">
+      
+      <!-- قسم الرئيسية -->
+      <section id="dashboardSection" class="section active">
+        <div class="section-header">
+          <h2><i class="fas fa-chart-pie"></i> نظرة عامة</h2>
+        </div>
+        
+        <div class="stats-row">
+          <div class="stat-box blue">
+            <div class="stat-icon"><i class="fas fa-users"></i></div>
+            <div class="stat-data">
+              <span class="stat-num" id="totalUsers">0</span>
+              <span class="stat-label">مستخدم</span>
+            </div>
+          </div>
+          <div class="stat-box green">
+            <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+            <div class="stat-data">
+              <span class="stat-num" id="onlineUsers">0</span>
+              <span class="stat-label">متصل الآن</span>
+            </div>
+          </div>
+          <div class="stat-box orange">
+            <div class="stat-icon"><i class="fas fa-question"></i></div>
+            <div class="stat-data">
+              <span class="stat-num" id="totalQuestions">0</span>
+              <span class="stat-label">سؤال</span>
+            </div>
+          </div>
+          <div class="stat-box purple">
+            <div class="stat-icon"><i class="fas fa-newspaper"></i></div>
+            <div class="stat-data">
+              <span class="stat-num" id="totalPosts">0</span>
+              <span class="stat-label">منشور</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="dash-card">
+            <h3><i class="fas fa-trophy"></i> أفضل 5 مستخدمين</h3>
+            <div id="topUsersList" class="top-list"></div>
+          </div>
+          
+          <div class="dash-card">
+            <h3><i class="fas fa-clock"></i> آخر النشاطات</h3>
+            <div id="recentActivity" class="activity-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- قسم المستخدمين -->
+      <section id="usersSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-users"></i> إدارة المستخدمين</h2>
+        </div>
+        
+        <div class="toolbar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="userSearch" placeholder="بحث بالاسم أو ID...">
+          </div>
+          <select id="userFilter" class="filter-select">
+            <option value="all">الكل</option>
+            <option value="admin">المشرفون</option>
+            <option value="verified">الموثقون</option>
+            <option value="banned">المحظورون</option>
+          </select>
+        </div>
+        
+        <div id="usersList" class="users-grid"></div>
+      </section>
+
+      <!-- قسم الأسئلة -->
+<!-- قسم الأسئلة - التصميم الجديد -->
+<section id="questionsSection" class="section">
+  <div class="section-header">
+    <h2><i class="fas fa-question-circle"></i> إدارة الأسئلة</h2>
+    <button class="btn-primary" onclick="openAddQuestion()">
+      <i class="fas fa-plus"></i> إضافة سؤال جديد
+    </button>
+  </div>
+
+  <!-- إحصائيات سريعة -->
+  <div class="q-stats-row">
+    <div class="q-stat-box green">
+      <i class="fas fa-check-circle"></i>
+      <div>
+        <span class="q-stat-num" id="activeQuestions">0</span>
+        <span>سؤال مفعّل</span>
+      </div>
+    </div>
+    <div class="q-stat-box orange">
+      <i class="fas fa-pause-circle"></i>
+      <div>
+        <span class="q-stat-num" id="inactiveQuestions">0</span>
+        <span>سؤال معطّل</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- فلترة -->
+  <div class="q-filters">
+    <select id="filterType" onchange="filterQuestions()">
+      <option value="all">كل الأنواع</option>
+      <option value="mcq">اختيار متعدد</option>
+      <option value="true_false">صح وخطأ</option>
+      <option value="complete_ayah">أكمل الآية</option>
+      <option value="ordering">ترتيب</option>
+    </select>
+    <select id="filterStatus" onchange="filterQuestions()">
+      <option value="all">كل الحالات</option>
+      <option value="active">مفعّل فقط</option>
+      <option value="inactive">معطّل فقط</option>
+    </select>
+  </div>
+
+  <!-- جدول الأسئلة -->
+  <div class="q-table-wrap">
+    <table class="q-table">
+      <thead>
+        <tr>
+          <th>السؤال</th>
+          <th>النوع</th>
+          <th>المستوى</th>
+          <th>الحالة</th>
+          <th>النقاط</th>
+          <th>إجراءات</th>
+        </tr>
+      </thead>
+      <tbody id="questionsTable">
+        <tr><td colspan="6" class="loading-cell"><div class="spinner"></div></td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- مودال إضافة سؤال جديد -->
+<div id="questionModal" class="modal">
+  <div class="modal-box modal-lg">
+    <div class="modal-header">
+      <h3 id="questionModalTitle">إضافة سؤال جديد</h3>
+      <button class="modal-close" onclick="closeModal('questionModal')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <!-- الخطوة 1: اختيار النوع -->
+      <div class="type-selector" id="typeSelector">
+        <div class="type-card" onclick="selectType('mcq')">
+          <i class="fas fa-list-ul"></i>
+          <h4>اختيار متعدد</h4>
+          <p>4 خيارات - إجابة واحدة</p>
+        </div>
+        <div class="type-card" onclick="selectType('true_false')">
+          <i class="fas fa-check-double"></i>
+          <h4>صح وخطأ</h4>
+          <p>إجابة نعم أو لا</p>
+        </div>
+        <div class="type-card" onclick="selectType('complete_ayah')">
+          <i class="fas fa-book-quran"></i>
+          <h4>أكمل الآية</h4>
+          <p>إكمال آية قرآنية</p>
+        </div>
+        <div class="type-card" onclick="selectType('ordering')">
+          <i class="fas fa-sort"></i>
+          <h4>ترتيب</h4>
+          <p>رتب العناصر بالترتيب</p>
+        </div>
+      </div>
+
+      <!-- الخطوة 2: نموذج السؤال -->
+      <div id="questionFormArea" style="display: none;">
+        
+        <!-- نص السؤال -->
+        <div class="q-form-section">
+          <div class="q-section-title">
+            <i class="fas fa-pen"></i> نص السؤال
+          </div>
+          <textarea id="questionText" rows="3" placeholder="اكتب السؤال هنا..." oninput="updatePreview()"></textarea>
+        </div>
+
+        <!-- الخيارات -->
+        <div class="q-form-section" id="optionsSection">
+          <div class="q-section-title">
+            <i class="fas fa-list"></i> الخيارات
+            <span id="optionsHint">اختر الإجابة الصحيحة</span>
+          </div>
+          <div class="options-builder" id="optionsBuilder"></div>
+        </div>
+
+        <!-- الصعوبة والنقاط -->
+        <div class="q-form-section">
+          <div class="q-section-title">
+            <i class="fas fa-sliders"></i> الصعوبة والنقاط
+          </div>
+          
+          <div class="q-settings-row">
+            <div class="q-setting-item">
+              <label>مستوى الصعوبة</label>
+              <div class="difficulty-wrap">
+                <input type="range" class="difficulty-slider" id="difficultySlider" min="1" max="10" value="3" oninput="updateDifficulty()">
+                <span class="difficulty-label easy" id="difficultyLabel">سهل</span>
+              </div>
+            </div>
+            <div class="q-setting-item">
+              <label>النقاط</label>
+              <input type="number" id="pointsInput" value="10" min="5" max="50">
+            </div>
+          </div>
+          
+          <label class="q-checkbox">
+            <input type="checkbox" id="activeCheckbox" checked>
+            <span>تفعيل السؤال فوراً</span>
+          </label>
+        </div>
+
+        <!-- معاينة -->
+        <div class="q-preview" id="previewSection">
+          <div class="preview-label">
+            <i class="fas fa-eye"></i> معاينة السؤال
+          </div>
+          <div class="preview-question" id="previewQuestion">نص السؤال سيظهر هنا...</div>
+          <div class="preview-options" id="previewOptions"></div>
+        </div>
+
+        <!-- أزرار الحفظ -->
+        <div class="q-actions">
+          <button class="btn-primary" onclick="saveQuestion()">
+            <i class="fas fa-save"></i> حفظ السؤال
+          </button>
+          <button class="btn-secondary" onclick="closeModal('questionModal')">إلغاء</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+      <!-- قسم المنشورات -->
+      <section id="postsSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-newspaper"></i> إدارة المنشورات</h2>
+        </div>
+        
+        <div class="toolbar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="postSearch" placeholder="بحث في المنشورات...">
+          </div>
+        </div>
+        
+        <div id="postsList" class="posts-grid"></div>
+      </section>
+
+      <!-- قسم الدعم -->
+      <section id="supportSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-headset"></i> محادثات الدعم</h2>
+          <span class="support-id">ID الدعم: <strong>4444</strong></span>
+        </div>
+        
+        <div class="support-layout">
+          <div class="chats-panel" id="chatsPanel"></div>
+          <div class="chat-panel" id="chatPanel">
+            <div class="no-chat">
+              <i class="fas fa-comments"></i>
+              <p>اختر محادثة</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- قسم الإشعارات -->
+      <section id="notificationsSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-bell"></i> إرسال إشعار جماعي</h2>
+        </div>
+        
+        <div class="form-card">
+          <div class="form-group">
+            <label>العنوان</label>
+            <input type="text" id="notifTitle" placeholder="عنوان الإشعار">
+          </div>
+          <div class="form-group">
+            <label>المحتوى</label>
+            <textarea id="notifContent" rows="4" placeholder="محتوى الإشعار..."></textarea>
+          </div>
+          <div class="form-group">
+            <label>إرسال إلى</label>
+            <select id="notifTarget">
+              <option value="all">جميع المستخدمين</option>
+              <option value="active">المتصلون الآن</option>
+            </select>
+          </div>
+          <button class="btn-primary btn-block" onclick="sendNotification()">
+            <i class="fas fa-paper-plane"></i> إرسال
+          </button>
+        </div>
+      </section>
+
+      <!-- قسم السجلات -->
+      <section id="logsSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-history"></i> سجل العمليات</h2>
+        </div>
+        
+        <div id="logsList" class="logs-list"></div>
+      </section>
+
+    </main>
+
+    <!-- الخلفية -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleSidebar()"></div>
+
+    <!-- مودال المستخدم -->
+    <div id="userModal" class="modal">
+      <div class="modal-box">
+        <div class="modal-header">
+          <h3>تفاصيل المستخدم</h3>
+          <button class="modal-close" onclick="closeModal('userModal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="user-header">
+            <img id="modalUserAvatar" src="" alt="">
+            <div class="user-meta">
+              <h3 id="modalUserName">الاسم</h3>
+              <span id="modalUserId">ID: -</span>
+            </div>
+          </div>
+          
+          <div class="user-stats-row">
+            <div class="us">
+              <span class="us-val" id="modalPoints">0</span>
+              <span class="us-lbl">نقطة</span>
+            </div>
+            <div class="us">
+              <span class="us-val" id="modalLevel">1</span>
+              <span class="us-lbl">مستوى</span>
+            </div>
+            <div class="us">
+              <span class="us-val" id="modalStreak">0</span>
+              <span class="us-lbl">يوم متتالي</span>
+            </div>
+          </div>
+          
+          <div class="edit-section">
+            <h4>تعديل النقاط</h4>
+            <div class="edit-row">
+              <input type="number" id="editPoints" placeholder="النقاط">
+              <button class="btn-sm btn-primary" onclick="updatePoints()">حفظ</button>
+              <button class="btn-sm" onclick="addPoints(100)">+100</button>
+              <button class="btn-sm" onclick="addPoints(-50)">-50</button>
+            </div>
+          </div>
+          
+          <div class="edit-section">
+            <h4>تعديل المستوى</h4>
+            <div class="edit-row">
+              <input type="number" id="editLevel" placeholder="المستوى" min="1">
+              <button class="btn-sm btn-primary" onclick="updateLevel()">حفظ</button>
+            </div>
+          </div>
+          
+          <div class="edit-section">
+            <h4>الصلاحيات</h4>
+            <div class="toggles-grid">
+              <label class="toggle-item">
+                <input type="checkbox" id="toggleAdmin">
+                <span class="toggle-box"></span>
+                <span>مشرف</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="toggleVerified">
+                <span class="toggle-box"></span>
+                <span>موثق ✓</span>
+              </label>
+              <label class="toggle-item">
+                <input type="checkbox" id="toggleBanned">
+                <span class="toggle-box"></span>
+                <span>محظور</span>
+              </label>
+            </div>
+          </div>
+          
+          <div class="edit-section">
+            <h4>إجراءات</h4>
+            <div class="actions-row">
+              <button class="btn-action warn" onclick="warnUser()">
+                <i class="fas fa-exclamation-triangle"></i> تحذير
+              </button>
+              <button class="btn-action reset" onclick="resetUser()">
+                <i class="fas fa-redo"></i> إعادة تعيين
+              </button>
+              <button class="btn-action delete" onclick="deleteUser()">
+                <i class="fas fa-trash"></i> حذف
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال السؤال -->
+    <div id="questionModal" class="modal">
+      <div class="modal-box modal-lg">
+        <div class="modal-header">
+          <h3 id="questionModalTitle">إضافة سؤال</h3>
+          <button class="modal-close" onclick="closeModal('questionModal')">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>نوع السؤال</label>
+            <select id="qType" onchange="handleQuestionType()">
+              <option value="mcq">اختيار متعدد</option>
+              <option value="true_false">صح / خطأ</option>
+              <option value="complete_ayah">أكمل الآية</option>
+              <option value="ordering">ترتيب</option>
+            </select>
+          </div>
+          
+          <div class="form-group">
+            <label>نص السؤال</label>
+            <textarea id="qText" rows="3" placeholder="اكتب السؤال..."></textarea>
+          </div>
+          
+          <div class="form-group" id="qOptionsGroup">
+            <label>الخيارات (كل خيار في سطر)</label>
+            <textarea id="qOptions" rows="4" placeholder="الخيار الأول&#10;الخيار الثاني&#10;الخيار الثالث&#10;الخيار الرابع"></textarea>
+          </div>
+          
+          <div class="form-group">
+            <label>الإجابة الصحيحة</label>
+            <input type="text" id="qAnswer" placeholder="الإجابة الصحيحة">
+          </div>
+          
+          <div class="form-row">
+            <div class="form-group">
+              <label>النقاط</label>
+              <input type="number" id="qPoints" value="10" min="1">
+            </div>
+            <div class="form-group">
+              <label>المستوى المطلوب</label>
+              <input type="number" id="qLevel" value="1" min="1">
+            </div>
+            <div class="form-group">
+              <label>الصعوبة</label>
+              <select id="qDifficulty">
+                <option value="1">سهل جداً</option>
+                <option value="2">سهل</option>
+                <option value="3">متوسط</option>
+                <option value="4">صعب</option>
+                <option value="5">صعب جداً</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="form-row">
+            <label class="check-item">
+              <input type="checkbox" id="qActive" checked>
+              <span>نشط</span>
+            </label>
+            <label class="check-item">
+              <input type="checkbox" id="qHideAfter">
+              <span>إخفاء بعد الإجابة</span>
+            </label>
+          </div>
+          
+          <button class="btn-primary btn-block" onclick="saveQuestion()">
+            <i class="fas fa-save"></i> حفظ السؤال
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>
