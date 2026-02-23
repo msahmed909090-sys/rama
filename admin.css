@@ -345,6 +345,15 @@
     gap: 12px;
   }
   
+  /* تعديل الزر في الموبايل ليأخذ عرض أقل أو سطر كامل حسب الحاجة */
+  @media (max-width: 500px) {
+    .section-header .btn-primary {
+      width: 100%;
+      justify-content: center;
+      order: -1; /* يظهر أولاً */
+    }
+  }
+  
   .section-header h2 {
     font-size: 1.25rem;
     display: flex;
@@ -1381,11 +1390,17 @@
 
 /* Stats Row */
 .q-stats-row {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 16px;
-    margin-bottom: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* عمودين في الموبايل */
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+@media (min-width: 768px) {
+  .q-stats-row {
+    grid-template-columns: repeat(4, 1fr); /* 4 أعمدة في الشاشات الكبيرة */
   }
+}
   
   .q-stat-box {
     background: var(--bg-card);
@@ -1433,37 +1448,49 @@
     min-width: 150px;
   }
   
-  /* Table */
-  .q-table-wrap {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    overflow: hidden;
+/* Table */
+.q-table-wrap {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow-x: auto; /* السماح بالتمرير الأفقي */
+  -webkit-overflow-scrolling: touch; /* لتمرير سلس على الموبايل */
+}
+
+.q-table {
+  width: 100%;
+  min-width: 600px; /* إجبار الجدول على الحد الأدنى للعرض ليظهر التمرير */
+  border-collapse: collapse;
+}
+
+.q-table th,
+.q-table td {
+  padding: 14px 12px; /* تقليل الـ padding قليلاً */
+  text-align: right;
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap; /* منع النزول لسطر جديد */
+  vertical-align: middle;
+}
+
+.q-table th {
+  background: var(--bg-input);
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.q-table tr:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* إخفاء العمود الرابع (المستوى) في الشاشات الصغيرة جداً لو أردت توفير مساحة */
+@media (max-width: 500px) {
+  .q-table th:nth-child(3),
+  .q-table td:nth-child(3) {
+    display: none;
   }
-  
-  .q-table {
-    width: 100%;
-    border-collapse: collapse;
-  }
-  
-  .q-table th,
-  .q-table td {
-    padding: 16px 20px;
-    text-align: right;
-    border-bottom: 1px solid var(--border);
-  }
-  
-  .q-table th {
-    background: var(--bg-input);
-    font-size: 0.8rem;
-    text-transform: uppercase;
-    font-weight: 700;
-    color: var(--text-muted);
-  }
-  
-  .q-table tr:hover td {
-    background: rgba(255, 255, 255, 0.02);
-  }
+}
   
   .loading-cell {
     text-align: center !important;
