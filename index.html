@@ -1803,13 +1803,13 @@ const safeSetStyle = (id, prop, value) => {
         const usersSnap = await db.collection('users').limit(2).get();
         const isFirstUser = usersSnap.empty || usersSnap.size === 0;
         
-        // === التعديل: توليد chatId فوراً عند التسجيل ===
-        const newChatId = generateChatId(); 
-        
-        await db.collection('users').doc(cred.user.uid).set({
-          username, email,
-          photoURL: cred.user.photoURL || '',
-    chatId: cred.user.uid, // استخدم UID بدل الرقم العشوائي
+          // استخدم الإيميل كـ chatId (لا نولد معرف عشوائي)
+          const emailChatId = email;
+
+          await db.collection('users').doc(cred.user.uid).set({
+            username, email,
+            photoURL: cred.user.photoURL || '',
+          chatId: emailChatId,
           level: 1, points: 0, streakDays: 0,
           totalKhatma: 0, salawatCount: 0,
           dailySalawatGoal: 100,
@@ -1830,14 +1830,14 @@ const safeSetStyle = (id, prop, value) => {
           const usersSnap = await db.collection('users').limit(1).get();
           const isFirstUser = usersSnap.empty;
           
-          // === التعديل: توليد chatId فوراً عند التسجيل بجوجل ===
-          const newChatId = generateChatId();
-          
+          // استخدم إيميل حساب جوجل كـ chatId
+          const googleChatId = user.email;
+
           await db.collection('users').doc(user.uid).set({
             username: user.displayName || 'مستخدم',
             email: user.email,
             photoURL: user.photoURL || '',
-            chatId: newChatId, // <--- إضافة المعرف هنا
+            chatId: googleChatId,
             level: 1, points: 0, streakDays: 0,
             totalKhatma: 0, salawatCount: 0,
             dailySalawatGoal: 100,
@@ -3299,10 +3299,20 @@ async function initUserChatId() {
   const userDoc = await db.collection('users').doc(currentUser.uid).get();
   const data = userDoc.data();
 
-  if (!data.chatId) {
-    const newChatId = generateChatId();
-    await db.collection('users').doc(currentUser.uid).update({ chatId: newChatId });
-    currentUserChatId = newChatId;
+  // Use user's email as chatId when available; fall back to existing chatId or UID
+  if (data.email) {
+    if (data.chatId !== data.email) {
+      try {
+        await db.collection('users').doc(currentUser.uid).update({ chatId: data.email });
+      } catch (e) {
+        console.warn('Failed to update chatId to email:', e);
+      }
+    }
+    currentUserChatId = data.email;
+  } else if (!data.chatId) {
+    // last resort: keep existing behavior but avoid generating if possible
+    currentUserChatId = currentUser.uid;
+    await db.collection('users').doc(currentUser.uid).update({ chatId: currentUserChatId });
   } else {
     currentUserChatId = data.chatId;
   }
@@ -4806,9 +4816,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // تحديث معرف المحادثة للمستخدم
   setTimeout(() => {
     if (currentUser && !userData?.chatId) {
-      const newChatId = generateChatId();
+      // Set chatId to user's email if available, otherwise use UID
+      const preferred = (currentUser && currentUser.email) ? currentUser.email : currentUser.uid;
       db.collection('users').doc(currentUser.uid).update({
-        chatId: newChatId
+        chatId: preferred
       });
     }
   }, 2000);
