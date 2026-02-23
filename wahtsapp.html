@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>واتساب الإسلامي</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <link rel="stylesheet" href="whatsapp.css">
+</head>
+<body>
+  <!-- شاشة التحقق -->
+  <div id="authCheckScreen" class="auth-check-screen">
+    <div class="auth-check-content">
+      <div class="islamic-pattern"></div>
+      <div class="auth-icon">
+        <i class="fas fa-mosque"></i>
+      </div>
+      <h2>واتساب الإسلامي</h2>
+      <p id="authStatus">جاري التحقق من الهوية...</p>
+      <div class="loader"></div>
+    </div>
+  </div>
+
+  <!-- رسالة عدم التسجيل -->
+  <div id="notRegisteredScreen" class="not-registered-screen" style="display: none;">
+    <div class="not-registered-content">
+      <div class="warning-icon">
+        <i class="fas fa-exclamation-triangle"></i>
+      </div>
+      <h2>أنت غير مسجل بالتطبيق الأساسي</h2>
+      <p>يجب عليك التسجيل في "لمة رمضان" أولاً للتمكن من استخدام واتساب الإسلامي</p>
+      <a href="index.html" class="register-btn">
+        <i class="fas fa-user-plus"></i>
+        التسجيل الآن
+      </a>
+    </div>
+  </div>
+
+  <!-- التطبيق الرئيسي -->
+  <div id="mainApp" class="main-app" style="display: none;">
+    
+    <!-- الهيدر -->
+    <header class="app-header">
+      <div class="header-content">
+        <div class="header-right">
+          <div class="app-logo">
+            <i class="fas fa-comments"></i>
+          </div>
+          <h1 class="app-title">واتساب الإسلامي</h1>
+        </div>
+        <div class="header-left">
+          <button class="header-btn" id="searchBtn" title="البحث">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="header-btn" id="settingsBtn" title="الإعدادات">
+            <i class="fas fa-cog"></i>
+          </button>
+          <div class="user-profile" id="userProfileBtn">
+            <img id="headerUserAvatar" src="" alt="الصورة الشخصية">
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- المحتوى الرئيسي -->
+    <main class="main-content">
+      
+      <!-- قسم المحادثات -->
+      <section id="chatsSection" class="section active">
+        <div class="section-content">
+          <!-- شريط البحث -->
+          <div class="search-bar">
+            <div class="search-wrapper">
+              <i class="fas fa-search"></i>
+              <input type="text" id="chatSearchInput" placeholder="ابحث عن محادثة...">
+            </div>
+          </div>
+          
+          <!-- قائمة المحادثات -->
+          <div class="chats-lis
+          t" id="chatsList">
+            <!-- ستضاف المحادثات هنا -->
+          </div>
+        </div>
+      </section>
+
+      <!-- قسم التحديثات -->
+<!-- قسم التحديثات -->
+<section id="statusSection" class="section">
+  <div class="section-content">
+    
+    <!-- زر إضافة حالة جديد (منفصل) -->
+    <div class="add-status-card" id="addStatusCardBtn">
+      <div class="add-status-icon">
+        <i class="fas fa-plus"></i>
+      </div>
+      <div class="status-info">
+        <h4>إضافة حالة جديدة</h4>
+        <p>شارك لحظاتك مع الآخرين</p>
+      </div>
+    </div>
+
+    <!-- حالتي (تظهر هنا إذا كان لديك حالة) -->
+    <div id="myStatusWrapper" style="display: none;">
+      <div class="section-divider">
+        <span>حالتي</span>
+      </div>
+      <div class="status-item my-status-view" id="myStatusViewItem">
+        <div class="status-avatar-ring">
+          <img id="myStatusViewAvatar" src="" alt="">
+        </div>
+        <div class="status-info">
+          <h4>حالتي</h4>
+          <p id="myStatusViewTime">اضغط للعرض</p>
+        </div>
+        <!-- زر حذف الحالة -->
+        <button class="delete-status-btn" id="deleteMyStatusBtn" title="حذف الحالة">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+
+    <div class="section-divider">
+      <span>التحديثات الأخيرة</span>
+    </div>
+    
+    <!-- قائمة الحالات (للأصدقاء) -->
+    <div class="status-list" id="statusList">
+      <!-- ستضاف الحالات هنا -->
+    </div>
+  </div>
+</section>
+
+      <!-- قسم المجتمعات -->
+      <section id="communitiesSection" class="section">
+        <div class="section-content">
+          <div class="create-community-card" id="createCommunityBtn">
+            <div class="create-icon">
+              <i class="fas fa-users"></i>
+            </div>
+            <div class="create-info">
+              <h4>إنشاء مجتمع جديد</h4>
+              <p>اجمع أصدقاءك في مجتمع واحد</p>
+            </div>
+            <i class="fas fa-chevron-left"></i>
+          </div>
+          
+          <!-- قائمة المجتمعات -->
+          <div class="communities-list" id="communitiesList">
+            <!-- ستضاف المجتمعات هنا -->
+          </div>
+        </div>
+      </section>
+
+      <!-- قسم المكالمات -->
+      <section id="callsSection" class="section">
+        <div class="section-content">
+          <div class="calls-header">
+            <h3>سجل المكالمات</h3>
+            <button class="clear-calls-btn" id="clearCallsBtn">
+              <i class="fas fa-trash"></i>
+              مسح السجل
+            </button>
+          </div>
+          
+          <!-- قائمة المكالمات -->
+          <div class="calls-list" id="callsList">
+            <!-- ستضاف المكالمات هنا -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </main>
+
+  <!-- زر الرجوع للصفحة الرئيسية (عائم أسفل اليسار) -->
+  <a href="index.html" class="floating-back-btn" title="العودة للرئيسية">
+    <i class="fas fa-arrow-right"></i>
+  </a>
+
+  <!-- شريط التنقل السفلي -->
+  <nav class="bottom-nav">
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+      <div class="nav-item active" data-section="chats">
+        <i class="fas fa-comment-dots"></i>
+        <span>المحادثات</span>
+        <div class="nav-badge" id="chatsBadge" style="display: none;">0</div>
+      </div>
+      <div class="nav-item" data-section="status">
+        <i class="fas fa-circle-notch"></i>
+        <span>التحديثات</span>
+      </div>
+      <div class="nav-item" data-section="communities">
+        <i class="fas fa-users"></i>
+        <span>المجتمعات</span>
+      </div>
+      <div class="nav-item" data-section="calls">
+        <i class="fas fa-phone-alt"></i>
+        <span>المكالمات</span>
+      </div>
+    </nav>
+
+    <!-- واجهة المحادثة -->
+    <div class="chat-view" id="chatView">
+      <div class="chat-header">
+        <button class="back-btn" id="backFromChat">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <div class="chat-user-info">
+          <img id="chatUserAvatar" src="" alt="">
+          <div class="chat-user-details">
+            <h4 id="chatUserName">اسم المستخدم</h4>
+            <span id="chatUserStatus">متصل الآن</span>
+          </div>
+        </div>
+        <div class="chat-actions">
+          <button class="action-btn" id="videoCallBtn" title="مكالمة فيديو">
+            <i class="fas fa-video"></i>
+          </button>
+          <button class="action-btn" id="voiceCallBtn" title="مكالمة صوتية">
+            <i class="fas fa-phone"></i>
+          </button>
+          <button class="action-btn" id="chatMenuBtn" title="القائمة">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div>
+      </div>
+      
+      <div class="chat-messages" id="chatMessages">
+        <!-- الرسائل ستضاف هنا -->
+      </div>
+      
+      <div class="chat-input-area">
+        <button class="attach-btn" id="attachBtn">
+          <i class="fas fa-paperclip"></i>
+        </button>
+        <div class="input-wrapper">
+          <input type="text" id="messageInput" placeholder="اكتب رسالة...">
+          <button class="emoji-btn" id="emojiBtn">
+            <i class="far fa-smile"></i>
+          </button>
+        </div>
+        <button class="send-btn" id="sendBtn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+        <button class="mic-btn" id="micBtn">
+          <i class="fas fa-microphone"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- مودال إضافة حالة -->
+    <div class="modal" id="addStatusModal">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>إضافة حالة جديدة</h3>
+          <button class="close-modal-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="status-type-tabs">
+            <button class="type-tab active" data-type="text">
+              <i class="fas fa-font"></i>
+              نص
+            </button>
+            <button class="type-tab" data-type="image">
+              <i class="fas fa-image"></i>
+              صورة
+            </button>
+            <button class="type-tab" data-type="video">
+              <i class="fas fa-video"></i>
+              فيديو
+            </button>
+          </div>
+          
+          <div class="status-input-area">
+            <textarea id="statusTextInput" placeholder="اكتب حالتك..."></textarea>
+            <input type="file" id="statusImageInput" accept="image/*" style="display: none;">
+            <input type="file" id="statusVideoInput" accept="video/*" style="display: none;">
+            <div id="statusMediaPreview" class="media-preview" style="display: none;"></div>
+          </div>
+          
+          <div class="bg-colors">
+            <span>لون الخلفية:</span>
+            <div class="color-options">
+              <div class="color-option active" style="background: #075e54;" data-color="#075e54"></div>
+              <div class="color-option" style="background: #128c7e;" data-color="#128c7e"></div>
+              <div class="color-option" style="background: #25d366;" data-color="#25d366"></div>
+              <div class="color-option" style="background: #dcf8c6;" data-color="#dcf8c6"></div>
+              <div class="color-option" style="background: #ece5dd;" data-color="#ece5dd"></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="cancelStatusBtn">إلغاء</button>
+          <button class="submit-btn" id="submitStatusBtn">نشر الحالة</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال إنشاء مجتمع -->
+    <div class="modal" id="createCommunityModal">
+      <div class="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>إنشاء مجتمع جديد</h3>
+          <button class="close-modal-btn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label>اسم المجتمع</label>
+            <input type="text" id="communityNameInput" placeholder="أدخل اسم المجتمع">
+          </div>
+          <div class="form-group">
+            <label>وصف المجتمع</label>
+            <textarea id="communityDescInput" placeholder="أدخل وصف المجتمع"></textarea>
+          </div>
+          <div class="form-group">
+            <label>أضف أعضاء (أرقام الهواتف)</label>
+            <div class="members-input-area">
+              <input type="text" id="memberPhoneInput" placeholder="رقم الهاتف">
+              <button class="add-member-btn" id="addMemberBtn">
+                <i class="fas fa-plus"></i>
+              </button>
+            </div>
+            <div class="added-members" id="addedMembersList"></div>
+          </div>
+          <div class="form-group">
+            <label>صورة المجتمع</label>
+            <div class="community-avatar-upload" id="communityAvatarUpload">
+              <i class="fas fa-camera"></i>
+              <span>اختر صورة</span>
+              <input type="file" id="communityAvatarInput" accept="image/*" style="display: none;">
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="cancel-btn" id="cancelCommunityBtn">إلغاء</button>
+          <button class="submit-btn" id="createCommunitySubmitBtn">إنشاء المجتمع</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال المكالمة -->
+<!-- استبدل مودال المكالمة القديم بهذا -->
+
+<!-- مودال المكالمة -->
+<div class="call-modal" id="callModal">
+  <div class="call-modal-content">
+    <div class="call-header">
+      <div class="call-type-icon" id="callTypeIcon">
+        <i class="fas fa-phone"></i>
+      </div>
+      <span class="call-type-text" id="callTypeText">مكالمة صوتية</span>
+    </div>
+    
+    <div class="call-user">
+      <img id="callUserAvatar" src="" alt="">
+      <h3 id="callUserName">اسم المستخدم</h3>
+      <span id="callStatus">جاري الاتصال...</span>
+    </div>
+    
+    <!-- عنصر الفيديو للمكالمات -->
+    <video id="remoteVideo" autoplay playsinline style="display: none;"></video>
+    
+    <div class="call-timer" id="callTimer" style="display: none;">
+      <span id="callDuration">00:00</span>
+    </div>
+    
+    <div class="call-actions">
+      <button class="call-action-btn speaker" id="speakerBtn" title="مكبر الصوت">
+        <i class="fas fa-volume-up"></i>
+      </button>
+      <button class="call-action-btn earpiece" id="earpieceBtn" title="سماعة الأذن">
+        <i class="fas fa-headphones"></i>
+      </button>
+      <button class="call-action-btn video" id="toggleVideoBtn" style="display: none;">
+        <i class="fas fa-video"></i>
+      </button>
+      <button class="call-action-btn mute" id="muteBtn" title="كتم المايك">
+        <i class="fas fa-microphone"></i>
+      </button>
+      <button class="call-action-btn end" id="endCallBtn" title="إنهاء المكالمة">
+        <i class="fas fa-phone-slash"></i>
+      </button>
+    </div>
+    
+    <!-- مؤشر جودة الاتصال -->
+    <div class="call-quality-indicator" id="callQualityIndicator">
+      <i class="fas fa-signal"></i>
+      <span id="callQualityText">جودة الاتصال: ممتازة</span>
+    </div>
+  </div>
+</div>
+
+<!-- مودال مكالمة واردة -->
+<div class="incoming-call-modal" id="incomingCallModal" style="display: none;">
+  <div class="incoming-call-content">
+    <div class="incoming-call-header">
+      <div class="incoming-call-icon">
+        <i class="fas fa-phone-alt"></i>
+      </div>
+      <span id="incomingCallType">مكالمة صوتية</span>
+    </div>
+    
+    <div class="incoming-call-user">
+      <img id="incomingCallerAvatar" src="" alt="">
+      <h3 id="incomingCallerName">اسم المتصل</h3>
+      <p>يتصل بك...</p>
+    </div>
+    
+    <div class="incoming-call-actions">
+      <button class="reject-call-btn" id="rejectCallBtn">
+        <i class="fas fa-phone-slash"></i>
+        رفض
+      </button>
+      <button class="accept-call-btn" id="acceptCallBtn">
+        <i class="fas fa-phone-alt"></i>
+        قبول
+      </button>
+    </div>
+  </div>
+</div>
+
+    <!-- مودال عرض الحالة -->
+    <div class="status-view-modal" id="statusViewModal">
+      <div class="status-view-content">
+        <div class="status-header">
+          <div class="status-progress">
+            <div class="progress-bar" id="statusProgressBar"></div>
+          </div>
+          <div class="status-user-info">
+            <img id="statusViewAvatar" src="" alt="">
+            <div>
+              <h4 id="statusViewUserName">اسم المستخدم</h4>
+              <span id="statusViewTime">منذ 5 دقائق</span>
+            </div>
+          </div>
+          <button class="close-status-btn" id="closeStatusBtn">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="status-body" id="statusViewBody">
+          <!-- محتوى الحالة -->
+        </div>
+      </div>
+    </div>
+
+    <!-- مودال إرفاق ملف -->
+    <div class="attach-menu" id="attachMenu">
+      <div class="attach-item" id="attachImage">
+        <div class="attach-icon" style="background: #e07c52;">
+          <i class="fas fa-image"></i>
+        </div>
+        <span>صورة</span>
+      </div>
+      <div class="attach-item" id="attachVideo">
+        <div class="attach-icon" style="background: #7c3aed;">
+          <i class="fas fa-video"></i>
+        </div>
+        <span>فيديو</span>
+      </div>
+      <div class="attach-item" id="attachDocument">
+        <div class="attach-icon" style="background: #3b82f6;">
+          <i class="fas fa-file-alt"></i>
+        </div>
+        <span>مستند</span>
+      </div>
+      <div class="attach-item" id="attachLocation">
+        <div class="attach-icon" style="background: #10b981;">
+          <i class="fas fa-map-marker-alt"></i>
+        </div>
+        <span>موقع</span>
+      </div>
+    </div>
+
+    <!-- ملفات مخفية للرفع -->
+    <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
+    <input type="file" id="videoUploadInput" accept="video/*" style="display: none;">
+    <input type="file" id="documentUploadInput" style="display: none;">
+    
+    <!-- Toast -->
+    <div class="toast-container" id="toastContainer"></div>
+
+  </div>
+
+  <!-- Firebase -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+  
+  <script src="whatsapp.js"></script>
+</body>
+</html>

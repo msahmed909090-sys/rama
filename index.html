@@ -1,0 +1,5507 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لمة رمضان</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <link rel="stylesheet" href="style.css">
+
+  <!-- <style>
+    :root {
+      --bg-deep: #050a15;
+      --bg-primary: #0c1425;
+      --bg-secondary: #111d35;
+      --bg-card: #162035;
+      --bg-elevated: #1a2845;
+      --gold: #e8b931;
+      --gold-light: #f5d976;
+      --gold-dark: #c9a020;
+      --gold-glow: rgba(232, 185, 49, 0.4);
+      --emerald: #10b981;
+      --emerald-light: #34d399;
+      --emerald-dark: #059669;
+      --text-primary: #f0e6d3;
+      --text-secondary: #9ca3af;
+      --text-muted: #6b7280;
+      --border-subtle: rgba(232, 185, 49, 0.1);
+      --border-active: rgba(232, 185, 49, 0.3);
+      --success: #22c55e;
+      --danger: #ef4444;
+      --info: #3b82f6;
+    }
+
+    .light-mode {
+      --bg-deep: #faf7f0;
+      --bg-primary: #f5f0e1;
+      --bg-secondary: #ebe5d3;
+      --bg-card: #ffffff;
+      --bg-elevated: #ffffff;
+      --text-primary: #1a1a2e;
+      --text-secondary: #4a4a5a;
+      --text-muted: #7a7a8a;
+      --border-subtle: rgba(201, 160, 32, 0.15);
+      --border-active: rgba(201, 160, 32, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg-deep);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      line-height: 1.6;
+    }
+
+    .font-amiri { font-family: 'Amiri', serif; }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { 
+      background: linear-gradient(180deg, var(--gold), var(--gold-dark));
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: var(--gold-light); }
+
+    /* Background Canvas */
+    #bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Ambient Glow Effects */
+    .ambient-glow {
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(100px);
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.3;
+    }
+
+    .glow-1 {
+      width: 400px;
+      height: 400px;
+      background: var(--gold);
+      top: -100px;
+      right: -100px;
+      animation: floatGlow 20s ease-in-out infinite;
+    }
+
+    .glow-2 {
+      width: 300px;
+      height: 300px;
+      background: var(--emerald);
+      bottom: 10%;
+      left: -50px;
+      animation: floatGlow 25s ease-in-out infinite reverse;
+    }
+
+    @keyframes floatGlow {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.1); }
+      66% { transform: translate(-20px, 20px) scale(0.9); }
+    }
+
+    .light-mode .ambient-glow { opacity: 0.15; }
+
+    /* Page System */
+    .page {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      position: relative;
+      z-index: 1;
+    }
+
+    .page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Glass Card */
+    .glass-card {
+      background: linear-gradient(
+        135deg,
+        rgba(22, 32, 53, 0.9) 0%,
+        rgba(26, 40, 69, 0.7) 100%
+      );
+      backdrop-filter: blur(20px);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--gold), transparent);
+      opacity: 0.5;
+    }
+
+    .glass-card:hover {
+      border-color: var(--border-active);
+      transform: translateY(-4px);
+      box-shadow: 
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 0 60px var(--gold-glow);
+    }
+
+    .light-mode .glass-card {
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.95) 0%,
+        rgba(250, 247, 240, 0.9) 100%
+      );
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 14px 28px;
+      border-radius: 16px;
+      border: none;
+      font-family: 'Cairo', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+      transition: left 0.5s;
+    }
+
+    .btn:hover::before { left: 100%; }
+
+    .btn-gold {
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      color: var(--bg-deep);
+      box-shadow: 0 8px 24px var(--gold-glow);
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 32px var(--gold-glow);
+    }
+
+    .btn-gold:active { transform: translateY(0) scale(0.98); }
+
+    .btn-emerald {
+      background: linear-gradient(135deg, var(--emerald-light) 0%, var(--emerald-dark) 100%);
+      color: white;
+      box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+    }
+
+    .btn-emerald:hover {
+      transform: translateY(-3px) scale(1.02);
+      box-shadow: 0 12px 32px rgba(16, 185, 129, 0.4);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      border: 2px solid var(--border-active);
+      color: var(--gold);
+    }
+
+    .btn-ghost:hover {
+      background: var(--gold);
+      color: var(--bg-deep);
+      transform: translateY(-2px);
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 0.875rem;
+      border-radius: 12px;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, var(--danger), #dc2626);
+      color: white;
+    }
+
+    /* Input Fields */
+    .input-field {
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 16px;
+      border: 2px solid var(--border-subtle);
+      background: var(--bg-secondary);
+      color: var(--text-primary);
+      font-family: 'Cairo', sans-serif;
+      font-size: 1rem;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .input-field:focus {
+      border-color: var(--gold);
+      background: var(--bg-elevated);
+      box-shadow: 0 0 0 4px var(--gold-glow);
+    }
+
+    .input-field::placeholder { color: var(--text-muted); }
+
+    /* Bottom Navigation */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(180deg, transparent 0%, var(--bg-primary) 30%);
+      padding: 8px 16px 20px;
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 24px;
+      display: flex;
+      justify-content: space-around;
+      padding: 8px;
+      backdrop-filter: blur(20px);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+      cursor: pointer;
+      padding: 10px 16px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+      color: var(--text-muted);
+      font-size: 0.7rem;
+      font-weight: 600;
+      position: relative;
+    }
+
+    .nav-item i {
+      font-size: 1.3rem;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-item.active {
+      color: var(--gold);
+      background: rgba(232, 185, 49, 0.1);
+    }
+
+    .nav-item.active i { transform: scale(1.15); }
+
+    .nav-item::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%) scaleX(0);
+      width: 30px;
+      height: 3px;
+      background: var(--gold);
+      border-radius: 0 0 3px 3px;
+      transition: transform 0.3s ease;
+    }
+
+    .nav-item.active::before { transform: translateX(-50%) scaleX(1); }
+
+    /* Progress System */
+    .progress-track {
+      width: 100%;
+      height: 10px;
+      background: var(--bg-secondary);
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      border-radius: 10px;
+      background: linear-gradient(90deg, var(--gold), var(--emerald-light));
+      transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .progress-fill::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      animation: shimmer 2s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    /* Badge System */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .badge-gold {
+      background: linear-gradient(135deg, rgba(232, 185, 49, 0.15), rgba(201, 160, 32, 0.1));
+      color: var(--gold);
+      border: 1px solid rgba(232, 185, 49, 0.3);
+    }
+
+    .badge-emerald {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(5, 150, 105, 0.1));
+      color: var(--emerald-light);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 10, 21, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 200;
+      padding: 20px;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .modal-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 28px;
+      padding: 32px;
+      max-width: 480px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(40px) scale(0.95); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* Toast */
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 300;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      padding: 14px 24px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      animation: toastPop 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+      pointer-events: auto;
+      text-align: center;
+      min-width: 280px;
+      backdrop-filter: blur(10px);
+    }
+
+    .toast-success {
+      background: linear-gradient(135deg, var(--success), #16a34a);
+      color: white;
+      box-shadow: 0 8px 24px rgba(34, 197, 94, 0.3);
+    }
+
+    .toast-error {
+      background: linear-gradient(135deg, var(--danger), #dc2626);
+      color: white;
+      box-shadow: 0 8px 24px rgba(239, 68, 68, 0.3);
+    }
+
+    .toast-info {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg-deep);
+      box-shadow: 0 8px 24px var(--gold-glow);
+    }
+
+    @keyframes toastPop {
+      0% { transform: translateY(-20px) scale(0.9); opacity: 0; }
+      50% { transform: translateY(5px) scale(1.02); }
+      100% { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-deep);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      transition: opacity 0.6s ease;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loader {
+      width: 60px;
+      height: 60px;
+      border: 4px solid var(--border-subtle);
+      border-top-color: var(--gold);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .loader-pulse {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: var(--gold);
+      animation: pulse-loader 1.5s ease-in-out infinite;
+    }
+
+    @keyframes pulse-loader {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.3); opacity: 0.5; }
+    }
+
+    /* Countdown */
+    .countdown-item {
+      text-align: center;
+      min-width: 80px;
+    }
+
+    .countdown-number {
+      font-size: 2.5rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      line-height: 1.2;
+      text-shadow: 0 0 30px var(--gold-glow);
+    }
+
+    /* Salawat Counter */
+    .salawat-btn {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+      border: 4px solid var(--gold-light);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      color: var(--bg-deep);
+      font-size: 1.2rem;
+      font-weight: 700;
+      box-shadow: 
+        0 0 60px var(--gold-glow),
+        inset 0 -4px 20px rgba(0,0,0,0.2);
+      user-select: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .salawat-btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+      animation: rotateGlow 3s linear infinite;
+    }
+
+    @keyframes rotateGlow {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .salawat-btn:active {
+      transform: scale(0.92);
+      box-shadow: 0 0 40px var(--gold-glow);
+    }
+
+    .salawat-btn .counter {
+      font-size: 3rem;
+      line-height: 1;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Quiz Options */
+    .quiz-option {
+      padding: 18px;
+      border: 2px solid var(--border-subtle);
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+      background: var(--bg-secondary);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quiz-option:hover {
+      border-color: var(--gold);
+      background: rgba(232, 185, 49, 0.05);
+      transform: translateX(-4px);
+    }
+
+    .quiz-option.correct {
+      border-color: var(--success);
+      background: rgba(34, 197, 94, 0.15);
+      animation: correctPulse 0.5s ease;
+    }
+
+    .quiz-option.wrong {
+      border-color: var(--danger);
+      background: rgba(239, 68, 68, 0.15);
+      animation: shake 0.5s ease;
+    }
+
+    @keyframes correctPulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+    }
+
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      75% { transform: translateX(8px); }
+    }
+
+    /* Leaderboard */
+    .leader-item {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 16px;
+      transition: all 0.3s ease;
+    }
+
+    .leader-item:hover {
+      background: rgba(232, 185, 49, 0.05);
+      transform: translateX(-4px);
+    }
+
+    .leader-rank {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .rank-1 {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      color: var(--bg-deep);
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.4);
+    }
+
+    .rank-2 {
+      background: linear-gradient(135deg, #E8E8E8, #B8B8B8);
+      color: var(--bg-deep);
+    }
+
+    .rank-3 {
+      background: linear-gradient(135deg, #CD7F32, #B87333);
+      color: white;
+    }
+
+    /* Tab System */
+    .tab-btn {
+      padding: 10px 20px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: none;
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'Cairo';
+      font-weight: 700;
+    }
+
+    .tab-btn.active {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      color: var(--bg-deep);
+      box-shadow: 0 4px 16px var(--gold-glow);
+    }
+
+    .tab-btn:hover:not(.active) {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    /* Header */
+    .app-header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: linear-gradient(180deg, var(--bg-primary) 0%, transparent 100%);
+      padding: 16px;
+      backdrop-filter: blur(10px);
+    }
+
+    /* Stat Card */
+    .stat-card {
+      text-align: center;
+      padding: 24px 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--bg-secondary), var(--bg-card));
+      border: 1px solid var(--border-subtle);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+      border-color: var(--border-active);
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 900;
+      background: linear-gradient(135deg, var(--gold), var(--gold-light));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* Action Card */
+    .action-card {
+      text-align: center;
+      padding: 28px 16px;
+      border-radius: 20px;
+      background: linear-gradient(135deg, var(--bg-card), var(--bg-elevated));
+      border: 1px solid var(--border-subtle);
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .action-card:hover {
+      transform: translateY(-8px) scale(1.02);
+      border-color: var(--border-active);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), 0 0 60px var(--gold-glow);
+    }
+
+    .action-card .icon {
+      font-size: 3rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    /* Main Content */
+    .main-content {
+      padding-bottom: 100px;
+    }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .glass-card { border-radius: 20px; padding: 20px; }
+      .countdown-number { font-size: 1.8rem; }
+      .countdown-item { min-width: 60px; }
+      .salawat-btn { width: 150px; height: 150px; }
+      .salawat-btn .counter { font-size: 2.5rem; }
+      .btn { padding: 12px 20px; font-size: 0.9rem; }
+      .stat-value { font-size: 1.5rem; }
+    }
+
+    /* Room Status */
+    .room-status {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 10px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .status-waiting {
+      background: rgba(245, 158, 11, 0.15);
+      color: #fbbf24;
+    }
+
+    .status-started {
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--success);
+    }
+
+    .status-finished {
+      background: rgba(107, 114, 128, 0.15);
+      color: var(--text-muted);
+    }
+
+    /* Streak Animation */
+    .streak-flame {
+      animation: flicker 0.6s ease-in-out infinite alternate;
+      filter: drop-shadow(0 0 8px rgba(255, 150, 50, 0.6));
+    }
+
+    @keyframes flicker {
+      from { transform: scale(1) rotate(-3deg); }
+      to { transform: scale(1.1) rotate(3deg); }
+    }
+
+    /* Focus visible for accessibility */
+    :focus-visible {
+      outline: 2px solid var(--gold);
+      outline-offset: 2px;
+    }
+
+    /* Reduce motion */
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style> -->
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div style="text-align: center;">
+      <div style="font-size: 5rem; margin-bottom: 1rem; animation: float 3s ease-in-out infinite;">
+        <span style="display: inline-block; animation: crescentSpin 4s ease-in-out infinite;">🌙</span>
+      </div>
+      <h1 class="font-amiri" style="font-size: 3rem; color: var(--gold); margin-bottom: 0.5rem;">لمة رمضان</h1>
+      <p style="color: var(--text-secondary); margin-bottom: 2rem;">جاري التحميل...</p>
+      <div class="loader-pulse" style="margin: 0 auto;"></div>
+    </div>
+  </div>
+
+  <style>
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+    @keyframes crescentSpin {
+      0%, 100% { transform: rotate(-10deg); }
+      50% { transform: rotate(10deg); }
+    }
+  </style>
+
+  <!-- Background Canvas -->
+  <canvas id="bgCanvas"></canvas>
+
+  <!-- Ambient Glow Effects -->
+  <div class="ambient-glow glow-1"></div>
+  <div class="ambient-glow glow-2"></div>
+
+  <!-- Toast Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- ============ AUTH PAGE ============ -->
+  <div id="authPage" class="page">
+    <div class="min-h-screen flex items-center justify-center p-4">
+      <div class="glass-card max-w-md w-full p-8 text-center">
+        <div style="font-size: 5rem; margin-bottom: 0.5rem; animation: float 3s ease-in-out infinite;">
+          🌙
+        </div>
+        <h1 class="font-amiri text-4xl mb-2" style="color: var(--gold);">لمة رمضان</h1>
+        <p class="text-sm mb-8" style="color: var(--text-secondary);">اجتمع مع أحبابك في شهر الخير</p>
+
+        <div id="authTabs" class="flex gap-2 justify-center mb-6">
+          <button class="tab-btn active" onclick="switchAuthTab('login')">تسجيل الدخول</button>
+          <button class="tab-btn" onclick="switchAuthTab('register')">حساب جديد</button>
+        </div>
+
+        <!-- Login Form -->
+        <form id="loginForm" class="space-y-4" onsubmit="handleLogin(event)">
+          <input type="email" class="input-field" placeholder="البريد الإلكتروني" id="loginEmail" required>
+          <input type="password" class="input-field" placeholder="كلمة المرور" id="loginPassword" required>
+          <button type="submit" class="btn btn-gold w-full">
+            <i class="fas fa-sign-in-alt"></i> دخول
+          </button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="registerForm" class="space-y-4" style="display: none;" onsubmit="handleRegister(event)">
+          <input type="text" class="input-field" placeholder="اسم المستخدم" id="regUsername" required>
+          <input type="email" class="input-field" placeholder="البريد الإلكتروني" id="regEmail" required>
+          <input type="password" class="input-field" placeholder="كلمة المرور (6 أحرف على الأقل)" id="regPassword" required minlength="6">
+          <button type="submit" class="btn btn-gold w-full">
+            <i class="fas fa-user-plus"></i> إنشاء حساب
+          </button>
+        </form>
+
+        <div class="my-6 flex items-center gap-3">
+          <hr style="flex: 1; border-color: var(--border-subtle);">
+          <span style="color: var(--text-secondary); font-size: 0.85rem;">أو</span>
+          <hr style="flex: 1; border-color: var(--border-subtle);">
+        </div>
+
+        <button class="btn btn-ghost w-full" onclick="handleGoogleLogin()">
+          <i class="fab fa-google"></i> الدخول بحساب جوجل
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ MAIN APP ============ -->
+  <div id="appContainer" style="display: none;">
+    <!-- Top Header -->
+    <header class="app-header">
+      <div class="max-w-4xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <span style="font-size: 1.8rem;">🌙</span>
+          <h1 class="font-amiri text-xl" style="color: var(--gold);">لمة رمضان</h1>
+        </div>
+        <div class="flex items-center gap-4">
+          <button onclick="toggleTheme()" class="btn btn-sm btn-ghost" style="padding: 10px 12px; border-radius: 12px;" aria-label="تبديل السمة">
+            <i class="fas fa-moon" id="themeIcon"></i>
+          </button>
+          <div class="flex items-center gap-3 cursor-pointer" onclick="showPage('profile')">
+            <img id="headerAvatar" src="" alt="الصورة الشخصية" style="width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--gold); object-fit: cover;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a2845%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2265%22 text-anchor=%22middle%22 fill=%22%23e8b931%22 font-size=%2240%22>👤</text></svg>'">
+            <span id="headerName" class="text-sm font-bold hidden sm:inline"></span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="main-content max-w-4xl mx-auto p-4">
+      <!-- ===== HOME PAGE ===== -->
+      <div id="homePage" class="page active">
+        <!-- Welcome Card -->
+        <div class="glass-card mb-6 p-6">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="text-2xl font-bold mb-1">السلام عليكم</h2>
+              <p class="text-sm" style="color: var(--text-secondary);" id="homeGreeting">أهلاً بك في لمة رمضان</p>
+            </div>
+            <div class="text-center">
+              <div class="streak-flame" style="font-size: 2rem;">🔥</div>
+              <span class="text-lg font-bold" id="homeStreak">0</span>
+              <span class="text-xs block" style="color: var(--text-secondary);">يوم</span>
+            </div>
+          </div>
+          <!-- Level Progress -->
+          <div class="flex items-center gap-4">
+            <span class="badge badge-gold">
+              <i class="fas fa-star"></i> مستوى <span id="homeLevel">1</span>
+            </span>
+            <div class="flex-1">
+              <div class="progress-track">
+                <div class="progress-fill" id="homeLevelProgress" style="width: 0%"></div>
+              </div>
+            </div>
+            <span class="text-sm font-bold" style="color: var(--text-secondary);">
+              <span id="homePoints">0</span> نقطة
+            </span>
+          </div>
+        </div>
+
+        <!-- Ramadan Countdown -->
+        <div class="glass-card mb-6 p-6" id="none">
+          <h3 class="font-bold text-lg mb-4 flex items-center gap-3">
+            <i class="fas fa-clock" style="color: var(--gold);"></i> العد التنازلي لرمضان
+          </h3>
+          <div id="countdownContainer" class="flex justify-center gap-6 flex-wrap">
+            <div class="countdown-item">
+              <div class="countdown-number" id="cdDays">00</div>
+              <div class="text-sm" style="color: var(--text-secondary);">يوم</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-number" id="cdHours">00</div>
+              <div class="text-sm" style="color: var(--text-secondary);">ساعة</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-number" id="cdMinutes">00</div>
+              <div class="text-sm" style="color: var(--text-secondary);">دقيقة</div>
+            </div>
+            <div class="countdown-item">
+              <div class="countdown-number" id="cdSeconds">00</div>
+              <div class="text-sm" style="color: var(--text-secondary);">ثانية</div>
+            </div>
+          </div>
+          <p id="countdownLabel" class="text-center text-sm mt-4" style="color: var(--text-secondary);"></p>
+        </div>
+
+        <!-- Daily Dua -->
+        <div class="glass-card mb-6 p-6 text-center">
+          <h3 class="font-bold text-lg mb-3 flex items-center justify-center gap-3">
+            <i class="fas fa-hands-praying" style="color: var(--emerald-light);"></i> دعاء اليوم
+          </h3>
+          <p class="font-amiri text-xl leading-relaxed" id="dailyDua" style="color: var(--gold-light);">
+            اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي
+          </p>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <div class="action-card" onclick="showPage('quran')">
+            <span class="icon">📖</span>
+            <div class="font-bold">ختمة القرآن</div>
+          </div>
+          <div class="action-card" onclick="showPage('salawat')">
+            <span class="icon">🤲</span>
+            <div class="font-bold">الصلاة على النبي</div>
+          </div>
+          <div class="action-card" onclick="showPage('quiz')">
+            <span class="icon">🧠</span>
+            <div class="font-bold">مسابقات</div>
+          </div>
+          <div class="action-card" onclick="showPage('rooms')">
+            <span class="icon">🏆</span>
+            <div class="font-bold">غرف التحدي</div>
+          </div>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="grid grid-cols-3 gap-4">
+          <div class="stat-card">
+            <div class="stat-value" id="homeTotalKhatma">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">ختمات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="homeSalawat">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">صلوات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="homeQuizzes">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">مسابقات</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== QURAN PLANNER PAGE ===== -->
+      <div id="quranPage" class="page">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-book-quran" style="color: var(--gold);"></i> خطة ختم القرآن
+        </h2>
+
+        <!-- Setup Plan -->
+        <div id="quranSetup" class="glass-card mb-6 p-6">
+          <h3 class="font-bold text-lg mb-4">إعداد خطة الختمة</h3>
+          <div class="space-y-4">
+            <div>
+              <label class="text-sm mb-2 block" style="color: var(--text-secondary);">عدد الختمات المطلوبة</label>
+              <input type="number" class="input-field" id="targetKhatma" value="1" min="1" max="10">
+            </div>
+            <div class="flex items-center justify-between text-sm" style="color: var(--text-secondary);">
+              <span>إجمالي الصفحات:</span>
+              <span id="totalPagesDisplay" class="font-bold">604</span>
+            </div>
+            <div class="flex items-center justify-between text-sm" style="color: var(--text-secondary);">
+              <span>صفحات يومياً (30 يوم):</span>
+              <span id="pagesPerDayDisplay" class="font-bold">~20</span>
+            </div>
+            <button class="btn btn-gold w-full" onclick="startQuranPlan()">
+              <i class="fas fa-play"></i> ابدأ الخطة
+            </button>
+          </div>
+        </div>
+
+        <!-- Active Plan -->
+        <div id="quranActive" class="glass-card mb-6 p-6" style="display: none;">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="font-bold text-lg">تقدم الختمة</h3>
+            <span class="badge badge-emerald" id="quranDayBadge">اليوم 1</span>
+          </div>
+          <div class="mb-4">
+            <div class="flex justify-between text-sm mb-2">
+              <span>التقدم</span>
+              <span id="quranProgressText" class="font-bold">0/604 صفحة</span>
+            </div>
+            <div class="progress-track" style="height: 14px;">
+              <div class="progress-fill" id="quranProgressBar" style="width: 0%"></div>
+            </div>
+          </div>
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="stat-card">
+              <div class="stat-value" id="quranPagesPerDay">20</div>
+              <div class="text-sm" style="color: var(--text-secondary);">صفحة/يوم</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" style="background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="quranCompleted">0</div>
+              <div class="text-sm" style="color: var(--text-secondary);">صفحة مكتملة</div>
+            </div>
+          </div>
+          <div class="flex gap-3">
+            <button class="btn btn-emerald flex-1" onclick="addQuranPages()">
+              <i class="fas fa-plus"></i> أضف صفحات اليوم
+            </button>
+            <button class="btn btn-ghost btn-sm" onclick="resetQuranPlan()">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SALAWAT PAGE ===== -->
+      <div id="salawatPage" class="page">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-heart" style="color: var(--gold);"></i> الصلاة على النبي ﷺ
+        </h2>
+
+        <div class="glass-card mb-6 p-6 text-center">
+          <p class="font-amiri text-xl mb-6" style="color: var(--gold-light);">
+            اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَى نَبِيِّنَا مُحَمَّدٍ ﷺ
+          </p>
+
+          <div class="flex justify-center mb-8">
+            <div class="salawat-btn" onclick="addSalawat()">
+              <div class="counter" id="salawatCount">0</div>
+              <div style="font-size: 0.9rem; position: relative; z-index: 1;">صلاة</div>
+            </div>
+          </div>
+
+          <div class="mb-6">
+            <div class="flex justify-between text-sm mb-2">
+              <span>هدف اليوم</span>
+              <span class="font-bold"><span id="salawatToday">0</span> / <span id="salawatGoal">100</span></span>
+            </div>
+            <div class="progress-track" style="height: 12px;">
+              <div class="progress-fill" id="salawatProgress" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4">
+            <div class="stat-card">
+              <div class="stat-value" id="salawatTotal">0</div>
+              <div class="text-sm" style="color: var(--text-secondary);">إجمالي الصلوات</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" style="background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="salawatPoints">0</div>
+              <div class="text-sm" style="color: var(--text-secondary);">النقاط المكتسبة</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass-card p-6">
+          <h3 class="font-bold mb-4">تعديل الهدف اليومي</h3>
+          <div class="flex gap-3">
+            <input type="number" class="input-field" id="newSalawatGoal" value="100" min="10" max="10000">
+            <button class="btn btn-gold" onclick="updateSalawatGoal()">حفظ</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== QUIZ PAGE ===== -->
+      <div id="quizPage" class="page">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-brain" style="color: var(--gold);"></i> المسابقات اليومية
+        </h2>
+
+        <!-- Quiz Menu -->
+        <div id="quizMenu">
+          <div class="grid grid-cols-2 gap-4">
+            <div class="action-card" onclick="startQuiz('mcq')">
+              <span class="icon">❓</span>
+              <div class="font-bold mb-1">اختيار متعدد</div>
+              <div class="text-xs" style="color: var(--text-secondary);">اختر الإجابة الصحيحة</div>
+            </div>
+            <div class="action-card" onclick="startQuiz('complete_ayah')">
+              <span class="icon">📜</span>
+              <div class="font-bold mb-1">أكمل الآية</div>
+              <div class="text-xs" style="color: var(--text-secondary);">أكمل الآية القرآنية</div>
+            </div>
+            <div class="action-card" onclick="startQuiz('true_false')">
+              <span class="icon">✅</span>
+              <div class="font-bold mb-1">صح أم خطأ</div>
+              <div class="text-xs" style="color: var(--text-secondary);">حدد صحة المعلومة</div>
+            </div>
+            <div class="action-card" onclick="startQuiz('ordering')">
+              <span class="icon">🔢</span>
+              <div class="font-bold mb-1">ترتيب</div>
+              <div class="text-xs" style="color: var(--text-secondary);">رتب العناصر بالترتيب الصحيح</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Active -->
+        <div id="quizActive" style="display: none;">
+          <div class="glass-card mb-6 p-6">
+            <div class="flex items-center justify-between mb-4">
+              <span class="badge badge-gold" id="quizTypeLabel">اختيار متعدد</span>
+              <span class="text-sm font-bold" style="color: var(--text-secondary);">
+                سؤال <span id="quizCurrent">1</span>/<span id="quizTotal">5</span>
+              </span>
+            </div>
+            <div class="progress-track mb-6">
+              <div class="progress-fill" id="quizProgressBar" style="width: 20%"></div>
+            </div>
+
+            <h3 class="text-xl font-bold mb-6 font-amiri text-center" id="quizQuestion">نص السؤال</h3>
+
+            <div id="quizOptions" class="space-y-4"></div>
+
+            <div id="quizFeedback" class="mt-6 text-center" style="display: none;">
+              <p id="quizFeedbackText" class="font-bold text-xl mb-4"></p>
+              <button class="btn btn-gold" onclick="nextQuestion()">
+                <i class="fas fa-arrow-left"></i> التالي
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quiz Result -->
+        <div id="quizResult" style="display: none;">
+          <div class="glass-card text-center p-8">
+            <div style="font-size: 5rem; margin-bottom: 1rem;" id="quizResultEmoji">🎉</div>
+            <h3 class="text-2xl font-bold mb-2" id="quizResultTitle">أحسنت!</h3>
+            <p class="mb-6 text-lg" style="color: var(--text-secondary);" id="quizResultText">أجبت على 4 من 5 أسئلة بشكل صحيح</p>
+            <div class="grid grid-cols-2 gap-4 mb-6">
+              <div class="stat-card">
+                <div class="stat-value" id="quizResultPoints">+40</div>
+                <div class="text-sm" style="color: var(--text-secondary);">نقاط</div>
+              </div>
+              <div class="stat-card">
+                <div class="stat-value" style="background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="quizResultCorrect">4/5</div>
+                <div class="text-sm" style="color: var(--text-secondary);">إجابات صحيحة</div>
+              </div>
+            </div>
+            <button class="btn btn-gold w-full" onclick="backToQuizMenu()">
+              <i class="fas fa-redo"></i> العودة للمسابقات
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== LEADERBOARD PAGE ===== -->
+      <div id="leaderboardPage" class="page">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-trophy" style="color: var(--gold);"></i> لوحة المتصدرين
+        </h2>
+
+        <div class="flex gap-2 mb-6 overflow-x-auto" style="padding-bottom: 8px;">
+          <button class="tab-btn active" onclick="switchLeaderboard('points', this)">النقاط</button>
+          <button class="tab-btn" onclick="switchLeaderboard('totalKhatma', this)">الختمات</button>
+          <button class="tab-btn" onclick="switchLeaderboard('salawatCount', this)">الصلوات</button>
+        </div>
+
+        <div class="glass-card p-4">
+          <div id="leaderboardList" class="space-y-2">
+            <div class="text-center p-4" style="color: var(--text-secondary);">جاري التحميل...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== ROOMS PAGE ===== -->
+      <div id="roomsPage" class="page">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-users" style="color: var(--gold);"></i> غرف التحدي
+        </h2>
+
+        <div class="flex gap-3 mb-6">
+          <button class="btn btn-gold" onclick="createRoom()">
+            <i class="fas fa-plus"></i> إنشاء غرفة
+          </button>
+          <button class="btn btn-ghost" onclick="loadRooms()">
+            <i class="fas fa-sync"></i> تحديث
+          </button>
+        </div>
+
+        <div id="roomsList" class="space-y-4">
+          <div class="glass-card p-6 text-center" style="color: var(--text-secondary);">لا توجد غرف حالياً</div>
+        </div>
+      </div>
+
+      <!-- ===== PROFILE PAGE ===== -->
+      <div id="profilePage" class="page">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-user" style="color: var(--gold);"></i> الملف الشخصي
+        </h2>
+
+        <div class="glass-card mb-6 p-8 text-center">
+          <img id="profileAvatar" src="" alt="الصورة الشخصية" style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--gold); margin: 0 auto 1rem; object-fit: cover;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a2845%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2265%22 text-anchor=%22middle%22 fill=%22%23e8b931%22 font-size=%2240%22>👤</text></svg>'">
+          <h3 class="text-2xl font-bold mb-1" id="profileName">المستخدم</h3>
+          <p class="text-sm mb-4" style="color: var(--text-secondary);" id="profileEmail">email@example.com</p>
+          <div class="flex justify-center gap-2">
+            <span class="badge badge-gold">
+              <i class="fas fa-star"></i> مستوى <span id="profileLevel">1</span>
+            </span>
+            <span class="badge badge-emerald" id="profileRoleBadge">مستخدم</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4 mb-6">
+          <div class="stat-card">
+            <div class="stat-value" id="profilePoints">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">النقاط</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="profileStreak">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">أيام متتالية</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="profileKhatma">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">ختمات</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="profileSalawat">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">صلوات</div>
+          </div>
+        </div>
+
+        <!-- Badges & Rewards -->
+        <div class="glass-card mb-6 p-6">
+          <h3 class="font-bold text-lg mb-4 flex items-center gap-3">
+            <i class="fas fa-medal" style="color: var(--gold);"></i> الأوسمة والإنجازات
+          </h3>
+          <div id="badgesGrid" class="grid grid-cols-4 gap-3 text-center"></div>
+        </div>
+
+        <!-- Admin Panel Link -->
+        <div id="adminLink" style="display: none;" class="mb-6">
+          <button class="btn btn-gold w-full" onclick="showPage('admin')">
+            <i class="fas fa-shield-halved"></i> لوحة الإدارة
+          </button>
+        </div>
+      <br><br><br>
+
+        <button class="btn btn-danger w-full" onclick="handleLogout()">
+          <i class="fas fa-sign-out-alt"></i> تسجيل الخروج
+        </button>
+      </div>
+
+      <!-- ===== ADMIN PAGE ===== -->
+      <div id="adminPage" class="page">
+        <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+          <i class="fas fa-shield-halved" style="color: var(--gold);"></i> لوحة الإدارة
+        </h2>
+
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+          <div class="stat-card">
+            <div class="stat-value" id="adminUsersCount">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">مستخدمين</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="adminQuestionsCount">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">أسئلة</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" id="adminRoomsCount">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">غرف</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-value" style="background: linear-gradient(135deg, var(--emerald-light), var(--emerald)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;" id="adminLogsCount">0</div>
+            <div class="text-sm" style="color: var(--text-secondary);">سجلات</div>
+          </div>
+        </div>
+
+        <!-- Users Management -->
+        <div class="glass-card mb-6 p-6">
+          <h3 class="font-bold text-lg mb-4">إدارة المستخدمين</h3>
+          <div id="adminUsersList" class="space-y-3 max-h-72 overflow-y-auto">
+            <div class="text-center p-4" style="color: var(--text-secondary);">جاري التحميل...</div>
+          </div>
+        </div>
+
+        <!-- Add Question -->
+        <div class="glass-card mb-6 p-6">
+          <h3 class="font-bold text-lg mb-4">إضافة سؤال جديد</h3>
+          <div class="space-y-4">
+            <select class="input-field" id="adminQType">
+              <option value="mcq">اختيار متعدد</option>
+              <option value="true_false">صح أم خطأ</option>
+              <option value="complete_ayah">أكمل الآية</option>
+              <option value="ordering">ترتيب</option>
+            </select>
+            <input type="text" class="input-field" id="adminQText" placeholder="نص السؤال">
+            <input type="text" class="input-field" id="adminQOptions" placeholder="الخيارات (مفصولة بفاصلة)">
+            <input type="text" class="input-field" id="adminQAnswer" placeholder="الإجابة الصحيحة">
+            <div class="grid grid-cols-2 gap-4">
+              <input type="number" class="input-field" id="adminQDifficulty" placeholder="الصعوبة (1-10)" min="1" max="10" value="5">
+              <input type="number" class="input-field" id="adminQPoints" placeholder="النقاط" value="10">
+            </div>
+            <button class="btn btn-gold w-full" onclick="adminAddQuestion()">
+              <i class="fas fa-plus"></i> إضافة السؤال
+            </button>
+          </div>
+        </div>
+
+        <!-- Admin Logs -->
+        <div class="glass-card p-6">
+          <h3 class="font-bold text-lg mb-4">سجل العمليات</h3>
+          <div id="adminLogsList" class="space-y-3 max-h-60 overflow-y-auto">
+            <div class="text-center p-4" style="color: var(--text-secondary);">لا توجد سجلات</div>
+          </div>
+        </div>
+      </div>
+      <!-- ===== SOCIAL PAGE ===== -->
+<!-- ===== SOCIAL PAGE ===== -->
+<div id="socialPage" class="page">
+  <h2 class="text-2xl font-bold mb-6 flex items-center gap-3">
+    <i class="fas fa-users" style="color: var(--gold);"></i> السوشيال الإسلامي
+  </h2>
+
+  <!-- Social Apps Grid -->
+  <div class="grid grid-cols-2 gap-4 mb-6">
+    <div class="action-card" onclick="openWhatsApp()">
+      <span class="icon" style="color: #25D366;">💬</span>
+      <div class="font-bold">واتساب الإسلامي</div>
+      <div class="text-xs" style="color: var(--text-secondary);">محادثات خاصة</div>
+    </div>
+    <div class="action-card" onclick="openFacebook()">
+      <span class="icon" style="color: #1877F2;">📘</span>
+      <div class="font-bold">فيسبوك الإسلامي</div>
+      <div class="text-xs" style="color: var(--text-secondary);">منشورات وجروبات</div>
+    </div>
+  </div>
+
+  <!-- معلومات الـ ID -->
+  <div class="glass-card p-6 text-center">
+    <h3 class="font-bold mb-3">معرفك الشخصي</h3>
+    <div class="id-badge mb-4" id="myChatIdDisplay">-</div>
+    <p class="text-sm" style="color: var(--text-muted);">
+      شارك هذا المعرف مع أصدقائك للتواصل
+    </p>
+    <button class="btn btn-gold mt-4" onclick="copyMyChatId()">
+      <i class="fas fa-copy"></i> نسخ المعرف
+    </button>
+  </div>
+</div>
+
+<!-- Chat Modal -->
+<div class="modal-overlay" id="chatModal">
+  <div class="modal-content" style="max-width: 500px; height: 80vh; display: flex; flex-direction: column;">
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-3">
+        <div style="width: 40px; height: 40px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center;">👤</div>
+        <div>
+          <div class="font-bold" id="chatPartnerName">-</div>
+          <div class="text-xs" style="color: var(--text-secondary);">ID: <span id="chatPartnerId">-</span></div>
+        </div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="closeModal('chatModal')">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <!-- Messages -->
+    <div id="chatMessages" style="flex: 1; overflow-y: auto; padding: 16px; background: var(--bg-secondary); border-radius: 16px; margin-bottom: 16px;"></div>
+    
+    <!-- Input -->
+    <div class="flex gap-2">
+      <input type="text" class="input-field" id="chatInput" placeholder="اكتب رسالتك..." onkeypress="if(event.key==='Enter')sendMessage()">
+      <button class="btn btn-gold" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Create Group Modal -->
+<div class="modal-overlay" id="groupModal">
+  <div class="modal-content">
+    <h3 class="text-xl font-bold mb-4">إنشاء جروب جديد</h3>
+    <div class="space-y-4">
+      <input type="text" class="input-field" id="groupName" placeholder="اسم الجروب">
+      <textarea class="input-field" id="groupDesc" rows="2" placeholder="وصف الجروب"></textarea>
+      <select class="input-field" id="groupCategory">
+        <option value="quran">قرآن وتجويد</option>
+        <option value="hadith">حديث وسنة</option>
+        <option value="fikih">فقه وعلوم</option>
+        <option value="general">عام</option>
+      </select>
+      <button class="btn btn-gold w-full" onclick="createGroup()">إنشاء الجروب</button>
+    </div>
+    <button class="btn btn-ghost w-full mt-4" onclick="closeModal('groupModal')">إلغاء</button>
+  </div>
+</div>
+    </main>
+
+    <nav class="bottom-nav">
+      <div class="nav-container">
+        <div class="nav-item active" onclick="showPage('home')" data-page="home">
+          <i class="fas fa-home"></i>
+          <span>الرئيسية</span>
+        </div>
+        <div class="nav-item" onclick="showPage('quran')" data-page="quran">
+          <i class="fas fa-book-quran"></i>
+          <span>القرآن</span>
+        </div>
+        <div class="nav-item" onclick="showPage('social')" data-page="social">
+          <i class="fas fa-comments"></i>
+          <span>سوشيال</span>
+        </div>
+        <div class="nav-item" onclick="showPage('quiz')" data-page="quiz">
+          <i class="fas fa-brain"></i>
+          <span>مسابقات</span>
+        </div>
+        <div class="nav-item" onclick="showPage('leaderboard')" data-page="leaderboard">
+          <i class="fas fa-trophy"></i>
+          <span>المتصدرين</span>
+        </div>
+      </div>
+    </nav>
+
+  <!-- Modals -->
+  <div class="modal-overlay" id="quranPagesModal">
+    <div class="modal-content text-center">
+      <h3 class="text-xl font-bold mb-6">كم صفحة قرأت اليوم؟</h3>
+      <input type="number" class="input-field mb-6" id="quranPagesInput" value="20" min="1" max="604">
+      <div class="flex gap-3 justify-center">
+        <button class="btn btn-gold" onclick="confirmQuranPages()">تأكيد</button>
+        <button class="btn btn-ghost" onclick="closeModal('quranPagesModal')">إلغاء</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="roomModal">
+    <div class="modal-content">
+      <h3 class="text-xl font-bold mb-6" id="roomModalTitle">غرفة التحدي</h3>
+      <div id="roomModalContent"></div>
+      <button class="btn btn-ghost w-full mt-6" onclick="closeModal('roomModal')">إغلاق</button>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+
+  <script>
+    // دوال مساعدة آمنة للتحديث
+const safeSetText = (id, value) => {
+  const el = document.getElementById(id);
+  if (el) el.textContent = value;
+};
+
+const safeSetSrc = (id, value) => {
+  const el = document.getElementById(id);
+  if (el) el.src = value;
+};
+
+const safeSetValue = (id, value) => {
+  const el = document.getElementById(id);
+  if (el) el.value = value;
+};
+
+const safeSetStyle = (id, prop, value) => {
+  const el = document.getElementById(id);
+  if (el) el.style[prop] = value;
+};
+    // =============================================
+    // BACKGROUND CANVAS ANIMATION
+    // =============================================
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animationFrameId = null;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    function createParticles() {
+      particles = [];
+      const count = Math.min(60, Math.floor(window.innerWidth / 25));
+      for (let i = 0; i < count; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          size: Math.random() * 2 + 0.5,
+          speedX: (Math.random() - 0.5) * 0.3,
+          speedY: Math.random() * 0.5 + 0.1,
+          opacity: Math.random() * 0.5 + 0.2,
+          hue: Math.random() > 0.7 ? 45 : 150 // Gold or emerald
+        });
+      }
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      const isLight = document.body.classList.contains('light-mode');
+      
+      particles.forEach(p => {
+        const saturation = isLight ? '40%' : '70%';
+        const lightness = isLight ? '40%' : '55%';
+        
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.1, p.size), 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, ${saturation}, ${lightness}, ${p.opacity})`;
+        ctx.fill();
+        
+        // Add glow effect
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, Math.max(0.1, p.size * 3), 0, Math.PI * 2);
+        ctx.fillStyle = `hsla(${p.hue}, ${saturation}, ${lightness}, ${p.opacity * 0.1})`;
+        ctx.fill();
+        
+        // Update position
+        p.x += p.speedX;
+        p.y -= p.speedY;
+        
+        // Wrap around
+        if (p.y < -10) {
+          p.y = canvas.height + 10;
+          p.x = Math.random() * canvas.width;
+        }
+        if (p.x < -10) p.x = canvas.width + 10;
+        if (p.x > canvas.width + 10) p.x = -10;
+      });
+      
+      // Draw connecting lines
+      particles.forEach((p1, i) => {
+        particles.slice(i + 1).forEach(p2 => {
+          const dx = p1.x - p2.x;
+          const dy = p1.y - p2.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          
+          if (dist < 120) {
+            ctx.beginPath();
+            ctx.moveTo(p1.x, p1.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(232, 185, 49, ${0.1 * (1 - dist / 120)})`;
+            ctx.lineWidth = 0.5;
+            ctx.stroke();
+          }
+        });
+      });
+      
+      animationFrameId = requestAnimationFrame(drawParticles);
+    }
+
+    // Check for reduced motion preference
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    
+    function initCanvas() {
+      resizeCanvas();
+      createParticles();
+      if (!prefersReducedMotion.matches) {
+        drawParticles();
+      }
+    }
+
+    window.addEventListener('resize', () => {
+      resizeCanvas();
+      createParticles();
+    });
+
+    initCanvas();
+
+    // =============================================
+    // FIREBASE CONFIGURATION
+    // =============================================
+    const firebaseConfig = {
+      apiKey: "AIzaSyCuZZqke1vA0db_CpVzb12epJaOEzJGZ9E",
+      authDomain: "lamet-ramadan-c1740.firebaseapp.com",
+      projectId: "lamet-ramadan-c1740",
+      storageBucket: "lamet-ramadan-c1740.firebasestorage.app",
+      messagingSenderId: "179701807452",
+      appId: "1:179701807452:web:d662c22e8d6ae9960da999",
+      measurementId: "G-9PCZHJW886"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+
+    // =============================================
+    // STATE MANAGEMENT
+    // =============================================
+    let currentUser = null;
+    let userData = null;
+    let currentQuiz = { questions: [], currentIndex: 0, score: 0, type: '' };
+    let unsubscribers = [];
+
+    // =============================================
+    // SAMPLE QUESTIONS
+    // =============================================
+    const sampleQuestions = [
+      { type: "mcq", questionText: "ما هي أطول سورة في القرآن الكريم؟", options: ["سورة البقرة", "سورة آل عمران", "سورة النساء", "سورة المائدة"], correctAnswer: "سورة البقرة", difficulty: 3, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "mcq", questionText: "كم عدد أجزاء القرآن الكريم؟", options: ["20 جزء", "25 جزء", "30 جزء", "40 جزء"], correctAnswer: "30 جزء", difficulty: 1, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "mcq", questionText: "في أي غزوة نزلت سورة الأنفال؟", options: ["غزوة أحد", "غزوة بدر", "غزوة الخندق", "غزوة حنين"], correctAnswer: "غزوة بدر", difficulty: 5, levelRequired: 2, points: 15, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "mcq", questionText: "ما هي السورة التي تسمى بعروس القرآن؟", options: ["سورة يس", "سورة الرحمن", "سورة الملك", "سورة الكهف"], correctAnswer: "سورة الرحمن", difficulty: 4, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "mcq", questionText: "كم عدد السور المكية في القرآن الكريم؟", options: ["86 سورة", "28 سورة", "70 سورة", "114 سورة"], correctAnswer: "86 سورة", difficulty: 6, levelRequired: 3, points: 20, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "complete_ayah", questionText: "أكمل الآية: بسم الله الرحمن ...", options: ["الكريم", "الرحيم", "العظيم", "الحكيم"], correctAnswer: "الرحيم", difficulty: 1, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "complete_ayah", questionText: "أكمل الآية: إنا أعطيناك ...", options: ["الجنة", "الكوثر", "الحكمة", "النصر"], correctAnswer: "الكوثر", difficulty: 2, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "complete_ayah", questionText: "أكمل الآية: قل هو الله ...", options: ["الواحد", "أحد", "الصمد", "العظيم"], correctAnswer: "أحد", difficulty: 1, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "true_false", questionText: "سورة الفاتحة تسمى أم الكتاب", options: ["صح", "خطأ"], correctAnswer: "صح", difficulty: 1, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "true_false", questionText: "عدد آيات سورة البقرة 286 آية", options: ["صح", "خطأ"], correctAnswer: "صح", difficulty: 3, levelRequired: 1, points: 10, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "true_false", questionText: "أول سورة نزلت كاملة هي سورة البقرة", options: ["صح", "خطأ"], correctAnswer: "خطأ", difficulty: 4, levelRequired: 2, points: 15, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "ordering", questionText: "رتب السور التالية حسب ترتيبها في المصحف:", options: ["الفاتحة", "البقرة", "آل عمران", "النساء"], correctAnswer: "الفاتحة,البقرة,آل عمران,النساء", difficulty: 2, levelRequired: 1, points: 15, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() },
+      { type: "ordering", questionText: "رتب أركان الإسلام:", options: ["الشهادتان", "الصلاة", "الزكاة", "الصيام"], correctAnswer: "الشهادتان,الصلاة,الزكاة,الصيام", difficulty: 3, levelRequired: 1, points: 15, isActive: true, createdAt: firebase.firestore.FieldValue.serverTimestamp() }
+    ];
+
+    async function initializeDatabase() {
+  // تم تعطيلها لأن الأدمن يدير الأسئلة
+  return;
+}
+    // =============================================
+    // THEME TOGGLE
+    // =============================================
+    let darkMode = localStorage.getItem('darkMode') !== 'false';
+
+    function applyTheme() {
+      document.body.classList.toggle('light-mode', !darkMode);
+      const icon = document.getElementById('themeIcon');
+      if (icon) icon.className = darkMode ? 'fas fa-sun' : 'fas fa-moon';
+    }
+
+    function toggleTheme() {
+      darkMode = !darkMode;
+      localStorage.setItem('darkMode', darkMode);
+      applyTheme();
+    }
+
+    applyTheme();
+
+    // =============================================
+    // TOAST NOTIFICATIONS
+    // =============================================
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // =============================================
+    // MODAL
+    // =============================================
+    function openModal(id) {
+      document.getElementById(id).classList.add('active');
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove('active');
+    }
+
+    // =============================================
+    // PAGE NAVIGATION
+    // =============================================
+    function showPage(page) {
+      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+      const el = document.getElementById(page + 'Page');
+      if (el) el.classList.add('active');
+      
+      document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+      const navItem = document.querySelector(`.nav-item[data-page="${page}"]`);
+      if (navItem) navItem.classList.add('active');
+
+      if (page === 'leaderboard') loadLeaderboard('points');
+      if (page === 'rooms') loadRooms();
+      if (page === 'profile') updateProfilePage();
+      if (page === 'admin') loadAdminData();
+      if (page === 'quran') loadQuranPlan();
+    }
+
+    // =============================================
+    // AUTH TAB
+    // =============================================
+    function switchAuthTab(tab) {
+      document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+      document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+      document.querySelectorAll('#authTabs .tab-btn').forEach((b, i) => {
+        b.classList.toggle('active', (tab === 'login' && i === 0) || (tab === 'register' && i === 1));
+      });
+    }
+
+    // =============================================
+    // AUTHENTICATION
+    // =============================================
+    async function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      try {
+        await auth.signInWithEmailAndPassword(email, password);
+        showToast('تم تسجيل الدخول بنجاح', 'success');
+      } catch (error) {
+        showToast(getFirebaseError(error), 'error');
+      }
+    }
+
+    async function handleRegister(e) {
+      e.preventDefault();
+      const username = document.getElementById('regUsername').value;
+      const email = document.getElementById('regEmail').value;
+      const password = document.getElementById('regPassword').value;
+      try {
+        const cred = await auth.createUserWithEmailAndPassword(email, password);
+        await cred.user.updateProfile({ displayName: username });
+        const usersSnap = await db.collection('users').limit(2).get();
+        const isFirstUser = usersSnap.empty || usersSnap.size === 0;
+        
+        // === التعديل: توليد chatId فوراً عند التسجيل ===
+        const newChatId = generateChatId(); 
+        
+        await db.collection('users').doc(cred.user.uid).set({
+          username, email,
+          photoURL: cred.user.photoURL || '',
+          chatId: newChatId, // <--- إضافة المعرف هنا
+          level: 1, points: 0, streakDays: 0,
+          totalKhatma: 0, salawatCount: 0,
+          dailySalawatGoal: 100,
+          role: isFirstUser ? 'admin' : 'user',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showToast('تم إنشاء الحساب بنجاح! 🎉', 'success');
+      } catch (error) {
+        showToast(getFirebaseError(error), 'error');
+      }
+    }
+    async function handleGoogleLogin() {
+      try {
+        const result = await auth.signInWithPopup(googleProvider);
+        const user = result.user;
+        const userDoc = await db.collection('users').doc(user.uid).get();
+        if (!userDoc.exists) {
+          const usersSnap = await db.collection('users').limit(1).get();
+          const isFirstUser = usersSnap.empty;
+          
+          // === التعديل: توليد chatId فوراً عند التسجيل بجوجل ===
+          const newChatId = generateChatId();
+          
+          await db.collection('users').doc(user.uid).set({
+            username: user.displayName || 'مستخدم',
+            email: user.email,
+            photoURL: user.photoURL || '',
+            chatId: newChatId, // <--- إضافة المعرف هنا
+            level: 1, points: 0, streakDays: 0,
+            totalKhatma: 0, salawatCount: 0,
+            dailySalawatGoal: 100,
+            role: isFirstUser ? 'admin' : 'user',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+        showToast('أهلاً بك! 🌙', 'success');
+      } catch (error) {
+        showToast(getFirebaseError(error), 'error');
+      }
+    }
+    function handleLogout() {
+      unsubscribers.forEach(unsub => unsub());
+      unsubscribers = [];
+      auth.signOut();
+      showToast('تم تسجيل الخروج', 'info');
+    }
+
+    function getFirebaseError(error) {
+      const errors = {
+        'auth/email-already-in-use': 'البريد الإلكتروني مستخدم بالفعل',
+        'auth/invalid-email': 'بريد إلكتروني غير صالح',
+        'auth/weak-password': 'كلمة المرور ضعيفة',
+        'auth/user-not-found': 'لم يتم العثور على المستخدم',
+        'auth/wrong-password': 'كلمة المرور غير صحيحة',
+        'auth/invalid-credential': 'بيانات الدخول غير صحيحة',
+        'auth/popup-closed-by-user': 'تم إغلاق نافذة تسجيل الدخول'
+      };
+      return errors[error.code] || error.message;
+    }
+
+    // =============================================
+    // AUTH STATE OBSERVER
+    // =============================================
+    auth.onAuthStateChanged(async (user) => {
+      const loading = document.getElementById('loadingScreen');
+      if (user) {
+        currentUser = user;
+        await initializeDatabase();
+        let userDoc = await db.collection('users').doc(user.uid).get();
+        if (!userDoc.exists) {
+          const usersSnap = await db.collection('users').limit(1).get();
+          const isFirst = usersSnap.empty;
+          const newUser = {
+            username: user.displayName || 'مستخدم',
+            email: user.email,
+            photoURL: user.photoURL || '',
+            level: 1, points: 0, streakDays: 0,
+            totalKhatma: 0, salawatCount: 0,
+            dailySalawatGoal: 100,
+            role: isFirst ? 'admin' : 'user',
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          };
+          await db.collection('users').doc(user.uid).set(newUser);
+          userData = newUser;
+        } else {
+          userData = userDoc.data();
+        }
+        const unsub = db.collection('users').doc(user.uid).onSnapshot((doc) => {
+          if (doc.exists) {
+            userData = doc.data();
+            updateUI();
+          }
+        });
+        unsubscribers.push(unsub);
+        document.getElementById('authPage').classList.remove('active');
+        document.getElementById('appContainer').style.display = 'block';
+        showPage('home');
+        updateUI();
+        startCountdown();
+      } else {
+        currentUser = null;
+        userData = null;
+        document.getElementById('appContainer').style.display = 'none';
+        document.getElementById('authPage').classList.add('active');
+      }
+      setTimeout(() => loading.classList.add('hidden'), 600);
+    });
+
+    // =============================================
+    // UI UPDATE
+    // =============================================
+// =============================================
+// UI UPDATE - مصحح
+// =============================================
+function updateUI() {
+  if (!userData) return;
+  
+  const name = userData.username || currentUser?.displayName || 'مستخدم';
+  const photo = userData.photoURL || currentUser?.photoURL || '';
+  const level = userData.level || 1;
+  const points = userData.points || 0;
+  const streak = userData.streakDays || 0;
+  const khatma = userData.totalKhatma || 0;
+  const salawat = userData.salawatCount || 0;
+
+  // تحديث العناصر مع التحقق من وجودها
+  const safeSetText = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.textContent = value;
+  };
+  
+  const safeSetSrc = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.src = value;
+  };
+  
+  const safeSetValue = (id, value) => {
+    const el = document.getElementById(id);
+    if (el) el.value = value;
+  };
+
+  safeSetText('headerName', name);
+  safeSetSrc('headerAvatar', photo || 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231a2845" width="100" height="100"/><text x="50" y="65" text-anchor="middle" fill="%23e8b931" font-size="40">👤</text></svg>');
+
+  safeSetText('homeGreeting', `أهلاً ${name}، رمضان كريم 🌙`);
+  safeSetText('homeStreak', streak);
+  safeSetText('homeLevel', level);
+  safeSetText('homePoints', points);
+  safeSetText('homeTotalKhatma', khatma);
+  safeSetText('homeSalawat', salawat);
+
+  const pointsForLevel = level * 100;
+  const progressPct = Math.min(100, (points % pointsForLevel) / pointsForLevel * 100);
+  
+  const progressEl = document.getElementById('homeLevelProgress');
+  if (progressEl) progressEl.style.width = progressPct + '%';
+
+  safeSetText('salawatCount', salawat);
+  safeSetText('salawatTotal', salawat);
+  safeSetText('salawatGoal', userData.dailySalawatGoal || 100);
+  safeSetText('salawatPoints', Math.floor(salawat / 10));
+  safeSetValue('newSalawatGoal', userData.dailySalawatGoal || 100);
+
+  if (userData.role === 'admin') {
+    const adminLink = document.getElementById('adminLink');
+    if (adminLink) adminLink.style.display = 'block';
+    
+  }
+  
+  updateBadges();
+  
+  // تحديث الـ ID - استخدام العنصر الصحيح
+  safeSetText('myChatIdDisplay', userData?.chatId || 'جاري التحميل...');
+  safeSetText('myChatId', userData?.chatId || '-');
+  
+}
+    // =============================================
+    // RAMADAN COUNTDOWN
+    // =============================================
+    function startCountdown() {
+  // رمضان 2026: 19 فبراير 2026
+  const ramadanStart = new Date('2026-02-19T00:00:00');
+  const ramadanEnd = new Date('2026-03-20T23:59:59');
+
+  function update() {
+    const now = new Date();
+    let target, label;
+
+    if (now < ramadanStart) {
+      target = ramadanStart;
+      label = 'باقي على رمضان ٢٠٢٦';
+    } else if (now < ramadanEnd) {
+      target = ramadanEnd;
+      const dayOfRamadan = Math.ceil((now - ramadanStart) / (1000 * 60 * 60 * 24));
+      label = `رمضان مبارك! 🌙 اليوم ${DateTimeSystem.arabicNumber(dayOfRamadan)} من رمضان`;
+    } else {
+      target = new Date('2027-02-08T00:00:00'); // رمضان 2027 تقريباً
+      label = 'باقي على رمضان القادم';
+    }
+
+    const diff = target - now;
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    document.getElementById('cdDays').textContent = String(days).padStart(2, '0');
+    document.getElementById('cdHours').textContent = String(hours).padStart(2, '0');
+    document.getElementById('cdMinutes').textContent = String(minutes).padStart(2, '0');
+    document.getElementById('cdSeconds').textContent = String(seconds).padStart(2, '0');
+    document.getElementById('countdownLabel').textContent = label;
+  }
+
+  update();
+  setInterval(update, 1000);
+}
+    // =============================================
+    // DAILY DUA
+    // =============================================
+    const duas = [
+      "اللَّهُمَّ إِنَّكَ عَفُوٌّ تُحِبُّ الْعَفْوَ فَاعْفُ عَنِّي",
+      "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ",
+      "اللَّهُمَّ إِنِّي أَسْأَلُكَ الْجَنَّةَ وَأَعُوذُ بِكَ مِنَ النَّارِ",
+      "رَبِّ اشْرَحْ لِي صَدْرِي وَيَسِّرْ لِي أَمْرِي",
+      "اللَّهُمَّ أَعِنِّي عَلَى ذِكْرِكَ وَشُكْرِكَ وَحُسْنِ عِبَادَتِكَ",
+      "رَبَّنَا لَا تُزِغْ قُلُوبَنَا بَعْدَ إِذْ هَدَيْتَنَا وَهَبْ لَنَا مِن لَّدُنكَ رَحْمَةً",
+      "اللَّهُمَّ بَلِّغْنَا رَمَضَانَ وَأَعِنَّا عَلَى صِيَامِهِ وَقِيَامِهِ",
+      "اللَّهُمَّ اجْعَلْنَا مِنْ عُتَقَائِكَ مِنَ النَّارِ فِي هَذَا الشَّهْرِ الْمُبَارَكِ"
+    ];
+
+    function setDailyDua() {
+      const dayOfYear = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+      document.getElementById('dailyDua').textContent = duas[dayOfYear % duas.length];
+    }
+
+    setDailyDua();
+
+    // =============================================
+    // QURAN PLANNER
+    // =============================================
+    document.getElementById('targetKhatma').addEventListener('input', function () {
+      const target = parseInt(this.value) || 1;
+      const total = target * 604;
+      document.getElementById('totalPagesDisplay').textContent = total;
+      document.getElementById('pagesPerDayDisplay').textContent = '~' + Math.ceil(total / 30);
+    });
+
+    async function loadQuranPlan() {
+      if (!currentUser) return;
+      try {
+        const doc = await db.collection('quranPlans').doc(currentUser.uid).get();
+        if (doc.exists) {
+          const plan = doc.data();
+          document.getElementById('quranSetup').style.display = 'none';
+          document.getElementById('quranActive').style.display = 'block';
+          const completed = plan.completedPages || 0;
+          const total = plan.totalPages || 604;
+          const pct = Math.min(100, (completed / total) * 100);
+          document.getElementById('quranDayBadge').textContent = `اليوم ${plan.currentDay || 1}`;
+          document.getElementById('quranProgressText').textContent = `${completed}/${total} صفحة`;
+          document.getElementById('quranProgressBar').style.width = pct + '%';
+          document.getElementById('quranPagesPerDay').textContent = plan.pagesPerDay || 20;
+          document.getElementById('quranCompleted').textContent = completed;
+        } else {
+          document.getElementById('quranSetup').style.display = 'block';
+          document.getElementById('quranActive').style.display = 'none';
+        }
+      } catch (error) {
+        console.error('Load Quran Plan:', error);
+      }
+    }
+
+    async function startQuranPlan() {
+      if (!currentUser) return;
+      const target = parseInt(document.getElementById('targetKhatma').value) || 1;
+      const totalPages = target * 604;
+      const pagesPerDay = Math.ceil(totalPages / 30);
+      const now = new Date();
+      const end = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000);
+      try {
+        await db.collection('quranPlans').doc(currentUser.uid).set({
+          targetKhatma: target, totalPages, pagesPerDay,
+          completedPages: 0, currentDay: 1,
+          startDate: firebase.firestore.FieldValue.serverTimestamp(),
+          endDate: firebase.firestore.Timestamp.fromDate(end)
+        });
+        showToast('تم بدء خطة الختمة! 📖', 'success');
+        loadQuranPlan();
+      } catch (error) {
+        showToast('حدث خطأ', 'error');
+      }
+    }
+
+    function addQuranPages() {
+      openModal('quranPagesModal');
+    }
+
+    async function confirmQuranPages() {
+      const pages = parseInt(document.getElementById('quranPagesInput').value) || 0;
+      if (pages <= 0) return;
+      try {
+        const docRef = db.collection('quranPlans').doc(currentUser.uid);
+        const doc = await docRef.get();
+        if (!doc.exists) return;
+        const plan = doc.data();
+        let newCompleted = (plan.completedPages || 0) + pages;
+        const totalPages = plan.totalPages || 604;
+        let newKhatma = 0;
+        if (newCompleted >= totalPages) {
+          newKhatma = Math.floor(newCompleted / totalPages);
+          newCompleted = newCompleted % totalPages;
+        }
+        await docRef.update({
+          completedPages: newCompleted,
+          currentDay: firebase.firestore.FieldValue.increment(1)
+        });
+        const pointsEarned = pages * 2;
+        const updates = {
+          points: firebase.firestore.FieldValue.increment(pointsEarned),
+          streakDays: firebase.firestore.FieldValue.increment(1)
+        };
+        if (newKhatma > 0) {
+          updates.totalKhatma = firebase.firestore.FieldValue.increment(newKhatma);
+        }
+        await db.collection('users').doc(currentUser.uid).update(updates);
+        await checkLevelUp();
+        closeModal('quranPagesModal');
+        showToast(`+${pointsEarned} نقطة! ${newKhatma > 0 ? '🎉 ختمة مباركة!' : '📖'}`, 'success');
+        loadQuranPlan();
+      } catch (error) {
+        showToast('حدث خطأ', 'error');
+      }
+    }
+
+    async function resetQuranPlan() {
+      if (!confirm('هل تريد إعادة تعيين الخطة؟')) return;
+      try {
+        await db.collection('quranPlans').doc(currentUser.uid).delete();
+        showToast('تم إعادة تعيين الخطة', 'info');
+        loadQuranPlan();
+      } catch (error) {
+        showToast('حدث خطأ', 'error');
+      }
+    }
+
+    // =============================================
+    // SALAWAT COUNTER
+    // =============================================
+    let salawatDebounce = null;
+    let pendingSalawat = 0;
+
+    async function addSalawat() {
+      pendingSalawat++;
+      const countEl = document.getElementById('salawatCount');
+      const current = parseInt(countEl.textContent) || 0;
+      countEl.textContent = current + 1;
+
+      const todayEl = document.getElementById('salawatToday');
+      const todayCount = parseInt(todayEl.textContent) || 0;
+      todayEl.textContent = todayCount + 1;
+      const goal = parseInt(document.getElementById('salawatGoal').textContent) || 100;
+      document.getElementById('salawatProgress').style.width = Math.min(100, ((todayCount + 1) / goal) * 100) + '%';
+
+      clearTimeout(salawatDebounce);
+      salawatDebounce = setTimeout(async () => {
+        const toAdd = pendingSalawat;
+        pendingSalawat = 0;
+        try {
+          await db.collection('users').doc(currentUser.uid).update({
+            salawatCount: firebase.firestore.FieldValue.increment(toAdd),
+            points: firebase.firestore.FieldValue.increment(Math.floor(toAdd / 10))
+          });
+          await checkLevelUp();
+        } catch (error) {
+          console.error('Salawat error:', error);
+        }
+      }, 1000);
+    }
+
+    async function updateSalawatGoal() {
+      const goal = parseInt(document.getElementById('newSalawatGoal').value) || 100;
+      try {
+        await db.collection('users').doc(currentUser.uid).update({ dailySalawatGoal: goal });
+        showToast('تم تحديث الهدف', 'success');
+      } catch (error) {
+        showToast('حدث خطأ', 'error');
+      }
+    }
+
+    // =============================================
+    // LEVEL SYSTEM
+    // =============================================
+    async function checkLevelUp() {
+      if (!currentUser || !userData) return;
+      const doc = await db.collection('users').doc(currentUser.uid).get();
+      const data = doc.data();
+      const currentLevel = data.level || 1;
+      const points = data.points || 0;
+      const newLevel = Math.floor(points / 100) + 1;
+      if (newLevel > currentLevel) {
+        await db.collection('users').doc(currentUser.uid).update({ level: newLevel });
+        showToast(`🎉 مبروك! وصلت للمستوى ${newLevel}`, 'success');
+      }
+    }
+
+    // =============================================
+    // QUIZ SYSTEM
+    // =============================================
+    async function startQuiz(type) {
+      try {
+        const userLevel = userData?.level || 1;
+        let query = db.collection('questions')
+          .where('type', '==', type)
+          .where('isActive', '==', true)
+          .where('levelRequired', '<=', userLevel);
+        const snap = await query.get();
+        if (snap.empty) {
+          showToast('لا توجد أسئلة متاحة حالياً', 'info');
+          return;
+        }
+        let questions = [];
+        snap.forEach(doc => questions.push({ id: doc.id, ...doc.data() }));
+        questions = questions.sort(() => Math.random() - 0.5).slice(0, 5);
+        currentQuiz = { questions, currentIndex: 0, score: 0, type, totalCorrect: 0 };
+        document.getElementById('quizMenu').style.display = 'none';
+        document.getElementById('quizActive').style.display = 'block';
+        document.getElementById('quizResult').style.display = 'none';
+        const typeLabels = {
+          mcq: 'اختيار متعدد',
+          complete_ayah: 'أكمل الآية',
+          true_false: 'صح أم خطأ',
+          ordering: 'ترتيب'
+        };
+        document.getElementById('quizTypeLabel').textContent = typeLabels[type] || type;
+        document.getElementById('quizTotal').textContent = questions.length;
+        displayQuestion();
+      } catch (error) {
+        console.error('Quiz error:', error);
+        showToast('حدث خطأ في تحميل الأسئلة', 'error');
+      }
+      // قبل التعديل:
+
+// بعد التعديل:
+// أولاً اجلب IDs الأسئلة اللي المستخدم جاوب عليها
+const answeredSnap = await db.collection('users').doc(currentUser.uid)
+  .collection('answeredQuestions').get();
+
+const answeredIds = answeredSnap.docs.map(doc => doc.id);
+
+// ثم فلترة الأسئلة
+let query = db.collection('questions')
+  .where('type', '==', type)
+  .where('isActive', '==', true)
+  .where('levelRequired', '<=', userLevel);
+
+// وبعد جلب الأسئلة:
+let questions = [];
+snap.forEach(doc => {
+  if (!answeredIds.includes(doc.id)) {
+    questions.push({ id: doc.id, ...doc.data() });
+  }
+});
+    }
+
+    function displayQuestion() {
+      const q = currentQuiz.questions[currentQuiz.currentIndex];
+      if (!q) return;
+      document.getElementById('quizCurrent').textContent = currentQuiz.currentIndex + 1;
+      document.getElementById('quizProgressBar').style.width = ((currentQuiz.currentIndex + 1) / currentQuiz.questions.length * 100) + '%';
+      document.getElementById('quizQuestion').textContent = q.questionText;
+      document.getElementById('quizFeedback').style.display = 'none';
+      const optionsDiv = document.getElementById('quizOptions');
+      optionsDiv.innerHTML = '';
+
+      if (q.type === 'ordering') {
+        const shuffled = [...q.options].sort(() => Math.random() - 0.5);
+        let selectedOrder = [];
+        shuffled.forEach(opt => {
+          const div = document.createElement('div');
+          div.className = 'quiz-option';
+          div.textContent = opt;
+          div.onclick = () => {
+            if (div.classList.contains('selected')) {
+              div.classList.remove('selected');
+              div.style.opacity = '1';
+              selectedOrder = selectedOrder.filter(s => s !== opt);
+              updateOrderDisplay();
+            } else {
+              div.classList.add('selected');
+              div.style.opacity = '0.6';
+              selectedOrder.push(opt);
+              updateOrderDisplay();
+              if (selectedOrder.length === shuffled.length) {
+                checkOrderAnswer(selectedOrder, q);
+              }
+            }
+          };
+          optionsDiv.appendChild(div);
+        });
+        const orderDisplay = document.createElement('div');
+        orderDisplay.id = 'orderDisplay';
+        orderDisplay.className = 'mt-4 text-sm text-center';
+        orderDisplay.style.color = 'var(--text-secondary)';
+        orderDisplay.textContent = 'اضغط على العناصر بالترتيب الصحيح';
+        optionsDiv.appendChild(orderDisplay);
+
+        function updateOrderDisplay() {
+          document.getElementById('orderDisplay').textContent = selectedOrder.length > 0
+            ? `الترتيب: ${selectedOrder.join(' → ')}`
+            : 'اضغط على العناصر بالترتيب الصحيح';
+        }
+      } else {
+        const options = q.options || [];
+        options.forEach(opt => {
+          const div = document.createElement('div');
+          div.className = 'quiz-option';
+          div.textContent = opt;
+          div.onclick = () => checkAnswer(opt, q, div);
+          optionsDiv.appendChild(div);
+        });
+      }
+    }
+
+    function checkAnswer(selected, question, element) {
+      const options = document.querySelectorAll('.quiz-option');
+      options.forEach(o => o.style.pointerEvents = 'none');
+      const isCorrect = selected === question.correctAnswer;
+      if (isCorrect) {
+        element.classList.add('correct');
+        currentQuiz.score += (question.points || 10);
+        currentQuiz.totalCorrect++;
+      } else {
+        element.classList.add('wrong');
+        options.forEach(o => {
+          if (o.textContent === question.correctAnswer) o.classList.add('correct');
+        });
+      }
+      showQuizFeedback(isCorrect);
+      // في نهاية دالة checkAnswer:
+saveAnsweredQuestion(question.id);
+    }
+
+    function checkOrderAnswer(selectedOrder, question) {
+      const correctOrder = question.correctAnswer.split(',');
+      const isCorrect = selectedOrder.join(',') === correctOrder.join(',');
+      if (isCorrect) {
+        currentQuiz.score += (question.points || 15);
+        currentQuiz.totalCorrect++;
+      }
+      showQuizFeedback(isCorrect);
+      saveAnsweredQuestion(question.id);
+    }
+
+    function showQuizFeedback(isCorrect) {
+      const feedback = document.getElementById('quizFeedback');
+      const feedbackText = document.getElementById('quizFeedbackText');
+      feedback.style.display = 'block';
+      if (isCorrect) {
+        feedbackText.textContent = '✅ إجابة صحيحة! أحسنت!';
+        feedbackText.style.color = 'var(--success)';
+      } else {
+        feedbackText.textContent = '❌ إجابة خاطئة!';
+        feedbackText.style.color = 'var(--danger)';
+      }
+      // أضف هذا السطر بعد الإجابة على السؤال:
+async function saveAnsweredQuestion(questionId) {
+  await db.collection('users').doc(currentUser.uid)
+    .collection('answeredQuestions')
+    .doc(questionId)
+    .set({
+      answeredAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+}
+    }
+
+    function nextQuestion() {
+      currentQuiz.currentIndex++;
+      if (currentQuiz.currentIndex >= currentQuiz.questions.length) {
+        showQuizResult();
+      } else {
+        displayQuestion();
+      }
+    }
+
+    async function showQuizResult() {
+      document.getElementById('quizActive').style.display = 'none';
+      document.getElementById('quizResult').style.display = 'block';
+      const total = currentQuiz.questions.length;
+      const correct = currentQuiz.totalCorrect;
+      const points = currentQuiz.score;
+      const emoji = correct === total ? '🏆' : correct >= total / 2 ? '🎉' : '💪';
+      const title = correct === total ? 'ممتاز! إجابات كاملة!' : correct >= total / 2 ? 'أحسنت!' : 'حاول مرة أخرى!';
+      document.getElementById('quizResultEmoji').textContent = emoji;
+      document.getElementById('quizResultTitle').textContent = title;
+      document.getElementById('quizResultText').textContent = `أجبت على ${correct} من ${total} أسئلة بشكل صحيح`;
+      document.getElementById('quizResultPoints').textContent = `+${points}`;
+      document.getElementById('quizResultCorrect').textContent = `${correct}/${total}`;
+      try {
+        await db.collection('users').doc(currentUser.uid).update({
+          points: firebase.firestore.FieldValue.increment(points)
+        });
+        await checkLevelUp();
+      } catch (error) {
+        console.error('Save quiz result:', error);
+      }
+      document.getElementById('homeQuizzes').textContent = (parseInt(document.getElementById('homeQuizzes').textContent) || 0) + 1;
+    }
+
+    function backToQuizMenu() {
+      document.getElementById('quizMenu').style.display = 'block';
+      document.getElementById('quizActive').style.display = 'none';
+      document.getElementById('quizResult').style.display = 'none';
+    }
+
+    // =============================================
+    // LEADERBOARD
+    // =============================================
+    async function loadLeaderboard(field = 'points') {
+      const list = document.getElementById('leaderboardList');
+      list.innerHTML = '<div class="text-center p-4"><div class="loader" style="margin:0 auto;width:30px;height:30px;border-width:3px;"></div></div>';
+      try {
+        const snap = await db.collection('users').orderBy(field, 'desc').limit(20).get();
+        let html = '';
+        let rank = 0;
+        snap.forEach(doc => {
+          rank++;
+          const data = doc.data();
+          const rankClass = rank <= 3 ? `rank-${rank}` : '';
+          const value = data[field] || 0;
+          const fieldLabels = { points: 'نقطة', totalKhatma: 'ختمة', salawatCount: 'صلاة' };
+          const isCurrentUser = doc.id === currentUser?.uid;
+          html += `
+            <div class="leader-item" style="${isCurrentUser ? 'background: rgba(232, 185, 49, 0.1); border-radius: 16px;' : ''}">
+              <div class="leader-rank ${rankClass}" style="${rank > 3 ? 'background: var(--bg-secondary); color: var(--text-secondary);' : ''}">
+                ${rank <= 3 ? ['🥇', '🥈', '🥉'][rank - 1] : rank}
+              </div>
+              <img src="${data.photoURL || ''}" alt="" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover;" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect fill=%22%231a2845%22 width=%22100%22 height=%22100%22/><text x=%2250%22 y=%2265%22 text-anchor=%22middle%22 fill=%22%23e8b931%22 font-size=%2240%22>👤</text></svg>'">
+              <div class="flex-1">
+                <div class="font-bold text-sm">${data.username || 'مستخدم'} ${isCurrentUser ? '(أنت)' : ''}</div>
+                <div class="text-xs" style="color: var(--text-secondary);">مستوى ${data.level || 1}</div>
+              </div>
+              <div class="text-left">
+                <span class="font-bold" style="color: var(--gold);">${value.toLocaleString()}</span>
+                <span class="text-xs" style="color: var(--text-secondary);"> ${fieldLabels[field]}</span>
+              </div>
+            </div>
+          `;
+        });
+        list.innerHTML = html || '<div class="text-center p-4" style="color: var(--text-secondary);">لا يوجد بيانات بعد</div>';
+      } catch (error) {
+        list.innerHTML = '<div class="text-center p-4" style="color: var(--danger);">حدث خطأ في تحميل البيانات</div>';
+        console.error('Leaderboard error:', error);
+      }
+    }
+
+    function switchLeaderboard(field, btn) {
+      document.querySelectorAll('#leaderboardPage .tab-btn').forEach(b => b.classList.remove('active'));
+      if (btn) btn.classList.add('active');
+      loadLeaderboard(field);
+    }
+
+    // =============================================
+    // ROOMS
+    // =============================================
+    async function loadRooms() {
+      const list = document.getElementById('roomsList');
+      list.innerHTML = '<div class="text-center p-4"><div class="loader" style="margin:0 auto;width:30px;height:30px;border-width:3px;"></div></div>';
+      try {
+        const snap = await db.collection('rooms').orderBy('createdAt', 'desc').limit(20).get();
+        let html = '';
+        snap.forEach(doc => {
+          const room = doc.data();
+          const statusClass = `status-${room.status}`;
+          const statusLabels = { waiting: 'في الانتظار', started: 'جارية', finished: 'منتهية' };
+          html += `
+            <div class="glass-card p-5">
+              <div class="flex items-center justify-between mb-3">
+                <h4 class="font-bold">غرفة #${doc.id.slice(-6)}</h4>
+                <span class="room-status ${statusClass}">${statusLabels[room.status] || room.status}</span>
+              </div>
+              <div class="flex items-center justify-between">
+                <span class="text-sm" style="color: var(--text-secondary);">
+                  <i class="fas fa-users"></i> ${(room.players || []).length} لاعبين
+                </span>
+                ${room.status === 'waiting' ? `<button class="btn btn-sm btn-gold" onclick="joinRoom('${doc.id}')">انضمام</button>` : ''}
+              </div>
+            </div>
+          `;
+        });
+        list.innerHTML = html || '<div class="glass-card p-6 text-center" style="color: var(--text-secondary);">لا توجد غرف حالياً. أنشئ غرفة جديدة!</div>';
+      } catch (error) {
+        list.innerHTML = '<div class="glass-card p-6 text-center" style="color: var(--danger);">حدث خطأ</div>';
+        console.error('Rooms error:', error);
+      }
+    }
+
+    async function createRoom() {
+      try {
+        const roomRef = await db.collection('rooms').add({
+          hostId: currentUser.uid,
+          players: [currentUser.uid],
+          status: 'waiting',
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showToast('تم إنشاء الغرفة! 🎮', 'success');
+        loadRooms();
+        openRoomModal(roomRef.id);
+      } catch (error) {
+        showToast('حدث خطأ في إنشاء الغرفة', 'error');
+      }
+    }
+
+    async function joinRoom(roomId) {
+      try {
+        await db.collection('rooms').doc(roomId).update({
+          players: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+        });
+        showToast('تم الانضمام للغرفة! 🎮', 'success');
+        loadRooms();
+        openRoomModal(roomId);
+      } catch (error) {
+        showToast('حدث خطأ في الانضمام', 'error');
+      }
+    }
+
+    async function openRoomModal(roomId) {
+      document.getElementById('roomModalTitle').textContent = `غرفة #${roomId.slice(-6)}`;
+      const content = document.getElementById('roomModalContent');
+      try {
+        const doc = await db.collection('rooms').doc(roomId).get();
+        const room = doc.data();
+        const isHost = room.hostId === currentUser.uid;
+        let playersHtml = '';
+        for (const playerId of (room.players || [])) {
+          const playerDoc = await db.collection('users').doc(playerId).get();
+          const playerData = playerDoc.exists ? playerDoc.data() : { username: 'مستخدم' };
+          playersHtml += `
+            <div class="flex items-center gap-3 p-3 rounded-xl" style="background: var(--bg-secondary);">
+              <span>${playerId === room.hostId ? '👑' : '👤'}</span>
+              <span class="font-bold">${playerData.username}</span>
+              ${playerId === currentUser.uid ? '<span class="badge badge-gold text-xs">أنت</span>' : ''}
+            </div>
+          `;
+        }
+        content.innerHTML = `
+          <div class="space-y-4">
+            <div class="text-sm font-bold" style="color: var(--text-secondary);">اللاعبون:</div>
+            <div class="space-y-2">${playersHtml}</div>
+            ${isHost && room.status === 'waiting' ? `
+              <button class="btn btn-emerald w-full" onclick="startRoomMatch('${roomId}')">
+                <i class="fas fa-play"></i> بدء التحدي
+              </button>
+            ` : ''}
+          </div>
+        `;
+      } catch (error) {
+        content.innerHTML = '<p style="color: var(--danger);">حدث خطأ في تحميل بيانات الغرفة</p>';
+      }
+      openModal('roomModal');
+    }
+
+    async function startRoomMatch(roomId) {
+      try {
+        await db.collection('rooms').doc(roomId).update({ status: 'started' });
+        showToast('تم بدء التحدي! 🏆', 'success');
+        closeModal('roomModal');
+        startQuiz('mcq');
+      } catch (error) {
+        showToast('حدث خطأ', 'error');
+      }
+    }
+
+    // =============================================
+    // BADGES & REWARDS
+    // =============================================
+    const allBadges = [
+      { id: 'first_login', icon: '🌟', name: 'أول خطوة', desc: 'سجلت في التطبيق', check: () => true },
+      { id: 'streak_3', icon: '🔥', name: '3 أيام', desc: '3 أيام متتالية', check: (d) => (d.streakDays || 0) >= 3 },
+      { id: 'streak_7', icon: '💎', name: 'أسبوع', desc: '7 أيام متتالية', check: (d) => (d.streakDays || 0) >= 7 },
+      { id: 'streak_30', icon: '👑', name: 'شهر', desc: '30 يوم متتالي', check: (d) => (d.streakDays || 0) >= 30 },
+      { id: 'points_100', icon: '⭐', name: 'نجم', desc: '100 نقطة', check: (d) => (d.points || 0) >= 100 },
+      { id: 'points_500', icon: '🌙', name: 'هلال', desc: '500 نقطة', check: (d) => (d.points || 0) >= 500 },
+      { id: 'points_1000', icon: '🏆', name: 'بطل', desc: '1000 نقطة', check: (d) => (d.points || 0) >= 1000 },
+      { id: 'khatma_1', icon: '📖', name: 'ختمة', desc: 'ختمة كاملة', check: (d) => (d.totalKhatma || 0) >= 1 },
+      { id: 'salawat_100', icon: '🤲', name: 'مُصلّي', desc: '100 صلاة', check: (d) => (d.salawatCount || 0) >= 100 },
+      { id: 'salawat_1000', icon: '💚', name: 'محب', desc: '1000 صلاة', check: (d) => (d.salawatCount || 0) >= 1000 },
+      { id: 'level_5', icon: '🎯', name: 'مستوى 5', desc: 'وصلت للمستوى 5', check: (d) => (d.level || 1) >= 5 },
+      { id: 'level_10', icon: '🏅', name: 'مستوى 10', desc: 'وصلت للمستوى 10', check: (d) => (d.level || 1) >= 10 }
+    ];
+
+    function updateBadges() {
+      if (!userData) return;
+      const grid = document.getElementById('badgesGrid');
+      let html = '';
+      allBadges.forEach(badge => {
+        const earned = badge.check(userData);
+        html += `
+          <div class="p-3 rounded-xl cursor-pointer transition-all" title="${badge.desc}" 
+               style="opacity: ${earned ? '1' : '0.3'}; ${earned ? 'background: rgba(232, 185, 49, 0.1);' : ''}">
+            <div style="font-size: 2rem;">${badge.icon}</div>
+            <div class="text-xs mt-1 font-bold">${badge.name}</div>
+          </div>
+        `;
+      });
+      grid.innerHTML = html;
+    }
+
+    // =============================================
+    // PROFILE PAGE
+    // =============================================
+    function updateProfilePage() {
+      if (!userData || !currentUser) return;
+      document.getElementById('profileName').textContent = userData.username || currentUser.displayName || 'مستخدم';
+      document.getElementById('profileEmail').textContent = userData.email || currentUser.email;
+      document.getElementById('profileAvatar').src = userData.photoURL || currentUser.photoURL || '';
+      document.getElementById('profileLevel').textContent = userData.level || 1;
+      document.getElementById('profilePoints').textContent = userData.points || 0;
+      document.getElementById('profileStreak').textContent = userData.streakDays || 0;
+      document.getElementById('profileKhatma').textContent = userData.totalKhatma || 0;
+      document.getElementById('profileSalawat').textContent = userData.salawatCount || 0;
+      document.getElementById('profileRoleBadge').textContent = userData.role === 'admin' ? 'مدير' : 'مستخدم';
+      document.getElementById('profileRoleBadge').className = `badge ${userData.role === 'admin' ? 'badge-gold' : 'badge-emerald'}`;
+    }
+
+    // =============================================
+    // ADMIN PANEL
+    // =============================================
+    async function loadAdminData() {
+      if (!userData || userData.role !== 'admin') {
+        showToast('غير مصرح لك بالوصول', 'error');
+        showPage('home');
+        return;
+      }
+      try {
+        const [usersSnap, questionsSnap, roomsSnap, logsSnap] = await Promise.all([
+          db.collection('users').get(),
+          db.collection('questions').get(),
+          db.collection('rooms').get(),
+          db.collection('adminLogs').orderBy('timestamp', 'desc').limit(20).get()
+        ]);
+        document.getElementById('adminUsersCount').textContent = usersSnap.size;
+        document.getElementById('adminQuestionsCount').textContent = questionsSnap.size;
+        document.getElementById('adminRoomsCount').textContent = roomsSnap.size;
+        document.getElementById('adminLogsCount').textContent = logsSnap.size;
+
+        let usersHtml = '';
+        usersSnap.forEach(doc => {
+          const u = doc.data();
+          usersHtml += `
+            <div class="flex items-center justify-between p-3 rounded-xl" style="background: var(--bg-secondary);">
+              <div class="flex items-center gap-3">
+                <span>${u.role === 'admin' ? '👑' : '👤'}</span>
+                <div>
+                  <div class="font-bold text-sm">${u.username || 'مستخدم'}</div>
+                  <div class="text-xs" style="color: var(--text-secondary);">${u.email}</div>
+                </div>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="badge badge-gold text-xs">${u.points || 0} نقطة</span>
+                ${u.role !== 'admin' ? `
+                  <button class="btn btn-sm btn-ghost" onclick="toggleAdminRole('${doc.id}', '${u.role}')">
+                    ${u.role === 'admin' ? 'إزالة' : 'ترقية'}
+                  </button>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+        document.getElementById('adminUsersList').innerHTML = usersHtml;
+
+        let logsHtml = '';
+        logsSnap.forEach(doc => {
+          const l = doc.data();
+          const time = l.timestamp ? new Date(l.timestamp.seconds * 1000).toLocaleString('ar') : '';
+          logsHtml += `
+            <div class="p-3 rounded-xl text-sm" style="background: var(--bg-secondary);">
+              <div class="font-bold">${l.action}</div>
+              <div class="text-xs" style="color: var(--text-secondary);">${time}</div>
+            </div>
+          `;
+        });
+        document.getElementById('adminLogsList').innerHTML = logsHtml || '<div class="text-center p-4" style="color: var(--text-secondary);">لا توجد سجلات</div>';
+      } catch (error) {
+        console.error('Admin load error:', error);
+      }
+    }
+
+    async function toggleAdminRole(userId, currentRole) {
+      const newRole = currentRole === 'admin' ? 'user' : 'admin';
+      try {
+        await db.collection('users').doc(userId).update({ role: newRole });
+        await db.collection('adminLogs').add({
+          adminId: currentUser.uid,
+          action: `تم ${newRole === 'admin' ? 'ترقية' : 'تخفيض'} المستخدم`,
+          targetUserId: userId,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        showToast('تم التحديث', 'success');
+        loadAdminData();
+      } catch (error) {
+        showToast('حدث خطأ', 'error');
+      }
+    }
+
+    async function adminAddQuestion() {
+      const type = document.getElementById('adminQType').value;
+      const questionText = document.getElementById('adminQText').value.trim();
+      const optionsStr = document.getElementById('adminQOptions').value.trim();
+      const correctAnswer = document.getElementById('adminQAnswer').value.trim();
+      const difficulty = parseInt(document.getElementById('adminQDifficulty').value) || 5;
+      const points = parseInt(document.getElementById('adminQPoints').value) || 10;
+
+      if (!questionText || !correctAnswer) {
+        showToast('يرجى ملء جميع الحقول المطلوبة', 'error');
+        return;
+      }
+
+      const options = optionsStr ? optionsStr.split(',').map(o => o.trim()) : [];
+
+      try {
+        await db.collection('questions').add({
+          type, questionText, options, correctAnswer, difficulty,
+          levelRequired: Math.ceil(difficulty / 2),
+          points, isActive: true,
+          createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        await db.collection('adminLogs').add({
+          adminId: currentUser.uid,
+          action: `تم إضافة سؤال جديد: ${questionText.slice(0, 50)}`,
+          targetUserId: '',
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        document.getElementById('adminQText').value = '';
+        document.getElementById('adminQOptions').value = '';
+        document.getElementById('adminQAnswer').value = '';
+        showToast('تم إضافة السؤال بنجاح! ✅', 'success');
+        loadAdminData();
+      } catch (error) {
+        showToast('حدث خطأ في إضافة السؤال', 'error');
+      }
+    }
+// =============================================
+// DATE & TIME SYSTEM - نظام التاريخ والوقت
+// =============================================
+
+const DateTimeSystem = {
+  // تاريخ بداية رمضان 2026
+  ramadanStart: new Date('2026-02-19T00:00:00'),
+  // تاريخ نهاية رمضان 2026 (30 يوم)
+  ramadanEnd: new Date('2026-03-20T23:59:59'),
+  
+  // الحصول على التاريخ الحالي من جهاز المستخدم
+  getCurrentDate: function() {
+    return new Date();
+  },
+  
+  // تنسيق التاريخ بالعربية
+  formatDateArabic: function(date) {
+    const options = { 
+      weekday: 'long', 
+      year: 'numeric', 
+      month: 'long', 
+      day: 'numeric' 
+    };
+    return date.toLocaleDateString('ar-EG', options);
+  },
+  
+  // حساب الفرق بالأيام بين تاريخين
+  getDaysDiff: function(date1, date2) {
+    const d1 = new Date(date1);
+    const d2 = new Date(date2);
+    d1.setHours(0, 0, 0, 0);
+    d2.setHours(0, 0, 0, 0);
+    const diffTime = Math.abs(d2 - d1);
+    return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+  },
+  
+  // الحصول على يوم رمضان الحالي
+  getRamadanDay: function() {
+    const now = this.getCurrentDate();
+    
+    if (now < this.ramadanStart) {
+      const daysLeft = this.getDaysDiff(now, this.ramadanStart);
+      return { 
+        status: 'before', 
+        day: 0, 
+        daysRemaining: daysLeft,
+        message: `باقي ${this.arabicNumber(daysLeft)} يوم على رمضان` 
+      };
+    }
+    
+    if (now > this.ramadanEnd) {
+      return { status: 'after', day: 30, daysRemaining: 0, message: 'انتهى رمضان المبارك' };
+    }
+    
+    // حساب اليوم الصحيح في رمضان
+    let ramadanDay = this.getDaysDiff(this.ramadanStart, now) + 1;
+    ramadanDay = Math.min(30, Math.max(1, ramadanDay));
+    
+    return { 
+      status: 'during', 
+      day: ramadanDay, 
+      daysRemaining: 0,
+      message: `اليوم ${this.arabicNumber(ramadanDay)} من رمضان` 
+    };
+  },
+  
+  // تحويل الأرقام إلى عربية
+  arabicNumber: function(num) {
+    const arabicNums = ['٠', '١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'];
+    return String(num).replace(/[0-9]/g, d => arabicNums[d]);
+  },
+  
+  // الحصول على معلومات التاريخ الكاملة
+  getDateInfo: function(userRegistrationDate) {
+    const now = this.getCurrentDate();
+    const ramadanInfo = this.getRamadanDay();
+    
+    // حساب الأيام منذ التسجيل
+    let daysSinceRegistration = 0;
+    if (userRegistrationDate) {
+      const regDate = userRegistrationDate.toDate ? userRegistrationDate.toDate() : new Date(userRegistrationDate);
+      daysSinceRegistration = this.getDaysDiff(regDate, now);
+    }
+    
+    // تحديد الفترة الزمنية
+    const hour = now.getHours();
+    let timeOfDay = 'صباح الخير';
+    let timeIcon = '🌅';
+    
+    if (hour >= 5 && hour < 12) {
+      timeOfDay = 'صباح الخير';
+      timeIcon = '🌅';
+    } else if (hour >= 12 && hour < 17) {
+      timeOfDay = 'مساء الخير';
+      timeIcon = '☀️';
+    } else if (hour >= 17 && hour < 20) {
+      timeOfDay = 'مساء الخير';
+      timeIcon = '🌆';
+    } else {
+      timeOfDay = 'مساء النور';
+      timeIcon = '🌙';
+    }
+    
+    // اسم اليوم بالعربية
+    const dayNames = ['الأحد', 'الإثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+    const dayName = dayNames[now.getDay()];
+    
+    // اسم الشهر بالعربية
+    const monthNames = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 
+                        'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+    const monthName = monthNames[now.getMonth()];
+    
+    return {
+      // التاريخ الكامل
+      fullDate: this.formatDateArabic(now),
+      dayName: dayName,
+      dayNumber: now.getDate(),
+      monthName: monthName,
+      year: now.getFullYear(),
+      
+      // الوقت
+      hour: now.getHours(),
+      minute: now.getMinutes(),
+      timeOfDay: timeOfDay,
+      timeIcon: timeIcon,
+      
+      // رمضان
+      ramadanStatus: ramadanInfo.status,
+      ramadanDay: ramadanInfo.day,
+      ramadanMessage: ramadanInfo.message,
+      daysRemaining: ramadanInfo.daysRemaining,
+      isRamadan: ramadanInfo.status === 'during',
+      
+      // التسجيل
+      daysSinceRegistration: daysSinceRegistration,
+      
+      // رسالة مخصصة
+      greeting: this.getGreeting(ramadanInfo, daysSinceRegistration, timeOfDay)
+    };
+  },
+  
+  // إنشاء رسالة ترحيب مخصصة
+  getGreeting: function(ramadanInfo, daysSinceReg, timeOfDay) {
+    let greeting = `${timeOfDay}! `;
+    
+    if (ramadanInfo.status === 'during') {
+      greeting += `أنت في اليوم ${this.arabicNumber(ramadanInfo.day)} من رمضان 🌙`;
+    } else if (ramadanInfo.status === 'before') {
+      greeting += `باقي ${this.arabicNumber(ramadanInfo.daysRemaining)} يوم على رمضان`;
+    } else {
+      greeting += `رمضان مبارك عليك!`;
+    }
+    
+    if (daysSinceReg > 0) {
+      greeting += ` • معنا منذ ${this.arabicNumber(daysSinceReg)} يوم`;
+    }
+    
+    return greeting;
+  },
+  
+  // التحقق من يوم جديد
+  checkNewDay: function(lastActiveDate) {
+    if (!lastActiveDate) return true;
+    
+    const lastDate = lastActiveDate.toDate ? lastActiveDate.toDate() : new Date(lastActiveDate);
+    const now = this.getCurrentDate();
+    
+    lastDate.setHours(0, 0, 0, 0);
+    const today = new Date(now);
+    today.setHours(0, 0, 0, 0);
+    
+    return lastDate < today;
+  },
+  
+  // الحصول على وقت الصلاة التقريبي
+  getPrayerTimes: function() {
+    // أوقات تقريبية (يمكن ربطها بـ API لاحقاً)
+    return {
+      fajr: { name: 'الفجر', time: '05:00', icon: '🌅' },
+      dhuhr: { name: 'الظهر', time: '12:15', icon: '☀️' },
+      asr: { name: 'العصر', time: '15:45', icon: '🌤️' },
+      maghrib: { name: 'المغرب', time: '18:00', icon: '🌆' },
+      isha: { name: 'العشاء', time: '19:30', icon: '🌙' }
+    };
+  },
+  
+  // الحصول على الصلاة القادمة
+  getNextPrayer: function() {
+    const now = this.getCurrentDate();
+    const currentMinutes = now.getHours() * 60 + now.getMinutes();
+    const prayers = this.getPrayerTimes();
+    
+    for (const [key, prayer] of Object.entries(prayers)) {
+      const [hours, minutes] = prayer.time.split(':').map(Number);
+      const prayerMinutes = hours * 60 + minutes;
+      
+      if (prayerMinutes > currentMinutes) {
+        const remaining = prayerMinutes - currentMinutes;
+        const remainingHours = Math.floor(remaining / 60);
+        const remainingMins = remaining % 60;
+        
+        return {
+          name: prayer.name,
+          time: prayer.time,
+          icon: prayer.icon,
+          remaining: remainingMins,
+          remainingText: remainingHours > 0 
+            ? `باقي ${remainingHours} ساعة و ${remainingMins} دقيقة`
+            : `باقي ${remainingMins} دقيقة`
+        };
+      }
+    }
+    
+    // إذا مرت كل الصلوات، نرجع صلاة الفجر لليوم التالي
+    return {
+      name: 'الفجر',
+      time: prayers.fajr.time,
+      icon: prayers.fajr.icon,
+      remaining: 0,
+      remainingText: 'غداً إن شاء الله'
+    };
+  }
+};
+
+// =============================================
+// تحديث واجهة المستخدم بالتاريخ
+// =============================================
+
+function updateDateDisplay() {
+  if (!userData) return;
+  
+  const dateInfo = DateTimeSystem.getDateInfo(userData.createdAt);
+  
+  // تحديث الترحيب في الصفحة الرئيسية
+  const homeGreeting = document.getElementById('homeGreeting');
+  if (homeGreeting) {
+    homeGreeting.innerHTML = `
+      <span style="font-size: 1.3rem;">${dateInfo.timeIcon}</span>
+      ${dateInfo.greeting}
+    `;
+  }
+  
+  // تحديث بطاقة التاريخ
+  updateDateCard(dateInfo);
+  
+  // تحديث عداد رمضان
+  updateRamadanCounter(dateInfo);
+  
+  // تحديث الصلاة القادمة
+  updateNextPrayer();
+}
+
+function updateDateCard(dateInfo) {
+  // إنشاء أو تحديث بطاقة التاريخ
+  let dateCard = document.getElementById('dateInfoCard');
+  
+  if (!dateCard) {
+    // إضافة البطاقة بعد بطاقة العد التنازلي
+    const countdownContainer = document.getElementById('countdownContainer');
+    if (countdownContainer && countdownContainer.parentElement) {
+      const cardHTML = `
+        <div class="glass-card mb-6 p-6" id="dateInfoCard">
+          <div class="date-card-content">
+            <!-- التاريخ -->
+            <div class="date-main-info">
+              <span class="date-label">التاريخ</span>
+              <span class="date-value">${dateInfo.dayName}، ${dateInfo.dayNumber} ${dateInfo.monthName} ${dateInfo.year}</span>
+            </div>
+            
+            <!-- يوم رمضان -->
+            <div class="ramadan-day-display">
+              ${dateInfo.isRamadan ? `
+                <div class="ramadan-day-badge">
+                  <span class="ramadan-day-number">${DateTimeSystem.arabicNumber(dateInfo.ramadanDay)}</span>
+                  <span class="ramadan-day-label">يوم من رمضان ٢٠٢٦</span>
+                </div>
+              ` : `
+                <div class="ramadan-status">
+                  <span class="status-icon">${dateInfo.ramadanStatus === 'before' ? '🌙' : '🎉'}</span>
+                  <span class="status-text">${dateInfo.ramadanMessage}</span>
+                </div>
+              `}
+            </div>
+            
+            <!-- أيام العضوية -->
+            ${dateInfo.daysSinceRegistration > 0 ? `
+              <div class="membership-info">
+                <i class="fas fa-calendar-check"></i>
+                <span>معنا منذ ${DateTimeSystem.arabicNumber(dateInfo.daysSinceRegistration)} يوم</span>
+              </div>
+            ` : ''}
+          </div>
+        </div>
+      `;
+      countdownContainer.parentElement.insertAdjacentHTML('afterend', cardHTML);
+    }
+  } else {
+    // تحديث المحتوى الموجود
+    const dateValue = dateCard.querySelector('.date-value');
+    if (dateValue) {
+      dateValue.textContent = `${dateInfo.dayName}، ${dateInfo.dayNumber} ${dateInfo.monthName} ${dateInfo.year}`;
+    }
+    
+    const ramadanDisplay = dateCard.querySelector('.ramadan-day-display');
+    if (ramadanDisplay) {
+      if (dateInfo.isRamadan) {
+        ramadanDisplay.innerHTML = `
+          <div class="ramadan-day-badge">
+            <span class="ramadan-day-number">${DateTimeSystem.arabicNumber(dateInfo.ramadanDay)}</span>
+            <span class="ramadan-day-label">يوم من رمضان ٢٠٢٦</span>
+          </div>
+        `;
+      } else {
+        ramadanDisplay.innerHTML = `
+          <div class="ramadan-status">
+            <span class="status-icon">${dateInfo.ramadanStatus === 'before' ? '🌙' : '🎉'}</span>
+            <span class="status-text">${dateInfo.ramadanMessage}</span>
+          </div>
+        `;
+      }
+    }
+    
+    const membershipInfo = dateCard.querySelector('.membership-info span');
+    if (membershipInfo) {
+      membershipInfo.textContent = `معنا منذ ${DateTimeSystem.arabicNumber(dateInfo.daysSinceRegistration)} يوم`;
+    }
+  }
+}
+
+function updateRamadanCounter(dateInfo) {
+  const countdownLabel = document.getElementById('countdownLabel');
+  if (countdownLabel) {
+    if (dateInfo.isRamadan) {
+      countdownLabel.innerHTML = `
+        <span style="color: var(--gold);">🌙 ${dateInfo.ramadanMessage}</span>
+      `;
+    } else if (dateInfo.ramadanStatus === 'before') {
+      countdownLabel.innerHTML = `
+        <span style="color: var(--text-secondary);">${dateInfo.ramadanMessage}</span>
+      `;
+    }
+  }
+}
+
+function updateNextPrayer() {
+  const nextPrayer = DateTimeSystem.getNextPrayer();
+  
+  // إنشاء أو تحديث عنصر الصلاة القادمة
+  let prayerElement = document.getElementById('nextPrayerCard');
+  
+  if (!prayerElement) {
+    const dateCard = document.getElementById('dateInfoCard');
+    if (dateCard) {
+      const prayerHTML = `
+        <div class="glass-card mb-6 p-4" id="nextPrayerCard">
+          <div class="prayer-card-content">
+            <div class="prayer-icon">${nextPrayer.icon}</div>
+            <div class="prayer-info">
+              <span class="prayer-name">صلاة ${nextPrayer.name}</span>
+              <span class="prayer-time">${nextPrayer.time}</span>
+              <span class="prayer-remaining">${nextPrayer.remainingText}</span>
+            </div>
+          </div>
+        </div>
+      `;
+      dateCard.insertAdjacentHTML('afterend', prayerHTML);
+    }
+  } else {
+    const prayerIcon = prayerElement.querySelector('.prayer-icon');
+    const prayerName = prayerElement.querySelector('.prayer-name');
+    const prayerTime = prayerElement.querySelector('.prayer-time');
+    const prayerRemaining = prayerElement.querySelector('.prayer-remaining');
+    
+    if (prayerIcon) prayerIcon.textContent = nextPrayer.icon;
+    if (prayerName) prayerName.textContent = `صلاة ${nextPrayer.name}`;
+    if (prayerTime) prayerTime.textContent = nextPrayer.time;
+    if (prayerRemaining) prayerRemaining.textContent = nextPrayer.remainingText;
+  }
+}
+
+// =============================================
+// تتبع النشاط اليومي
+// =============================================
+
+async function trackDailyActivity() {
+  if (!currentUser || !userData) return;
+  
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  
+  const lastActive = userData.lastActiveDate;
+  const isNewDay = DateTimeSystem.checkNewDay(lastActive);
+  
+  if (isNewDay) {
+    // تحديث تاريخ آخر نشاط
+    await db.collection('users').doc(currentUser.uid).update({
+      lastActiveDate: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    // التحقق من Streak
+    if (lastActive) {
+      const lastDate = lastActive.toDate ? lastActive.toDate() : new Date(lastActive);
+      lastDate.setHours(0, 0, 0, 0);
+      
+      const diffDays = DateTimeSystem.getDaysDiff(lastDate, today);
+      
+      if (diffDays === 1) {
+        // يوم متتالي - زيادة الـ Streak
+        await db.collection('users').doc(currentUser.uid).update({
+          streakDays: firebase.firestore.FieldValue.increment(1)
+        });
+        showToast(`🔥 يوم متتالي رقم ${userData.streakDays + 1}!`, 'success');
+      } else if (diffDays > 1) {
+        // انقطع الـ Streak
+        await db.collection('users').doc(currentUser.uid).update({
+          streakDays: 1
+        });
+      }
+    } else {
+      // أول يوم
+      await db.collection('users').doc(currentUser.uid).update({
+        streakDays: 1
+      });
+    }
+  }
+}
+
+// تحديث كل دقيقة
+setInterval(() => {
+  updateNextPrayer();
+}, 60000);
+
+console.log('🌙 لمة رمضان 2026 - جاري التحميل...');
+    // =============================================
+// ANTI-CHEAT SYSTEM - نظام منع الغش
+// =============================================
+const AntiCheat = {
+  // توليد بصمة فريدة للجهاز
+  getDeviceFingerprint: function() {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    ctx.textBaseline = "top";
+    ctx.font = "14px 'Arial'";
+    ctx.fillText("fingerprint", 2, 2);
+    
+    const fingerprint = [
+      navigator.userAgent,
+      navigator.language,
+      screen.width + 'x' + screen.height,
+      new Date().getTimezoneOffset(),
+      canvas.toDataURL()
+    ].join('|');
+    
+    return btoa(fingerprint).slice(0, 32);
+  },
+
+  // فحص النشاط المشبوه
+  checkSuspicious: function(userId, action) {    const key = `activity_${userId}`;
+    const now = Date.now();
+    let activities = JSON.parse(localStorage.getItem(key) || '[]');
+    
+    // إزالة الأنشطة القديمة (أكثر من ساعة)
+    activities = activities.filter(t => now - t < 3600000);
+    activities.push(now);
+    
+    localStorage.setItem(key, JSON.stringify(activities));
+    
+    // إذا كان هناك أكثر من 100 نشاط في الساعة = مشبوه
+    if (activities.length > 100) {
+      this.reportSuspicious(userId, 'نشاط مفرط');
+      return true;
+    }
+    
+    return false;
+  },
+
+  // الإبلاغ عن نشاط مشبوه
+  reportSuspicious: async function(userId, reason) {
+    await db.collection('suspiciousActivities').add({
+      userId,
+      reason,
+      fingerprint: this.getDeviceFingerprint(),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+  },
+
+  // تسجيل بصمة الجهاز للمستخدم
+  registerDevice: async function(userId) {
+    const fingerprint = this.getDeviceFingerprint();
+    const doc = await db.collection('userDevices').doc(userId).get();
+    
+    if (!doc.exists) {
+      await db.collection('userDevices').doc(userId).set({
+        fingerprints: [fingerprint],
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    } else {
+      const data = doc.data();
+      if (!data.fingerprints.includes(fingerprint)) {
+        // جهاز جديد!
+        if (data.fingerprints.length >= 3) {
+          // أكثر من 3 أجهزة = مشبوه
+          this.reportSuspicious(userId, 'أجهزة متعددة');
+        }
+        await db.collection('userDevices').doc(userId).update({
+          fingerprints: firebase.firestore.FieldValue.arrayUnion(fingerprint)
+        });
+      }
+    }
+  }
+};
+
+// =============================================
+// SOCIAL SYSTEM - النظام الاجتماعي
+// =============================================
+let currentChatId = null;
+let currentGroupId = null;
+
+// توليد ID فريد للمستخدم
+function generateChatId() {
+  const chars = '0123456789';
+  let id = '';
+  for (let i = 0; i < 10; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
+
+// تهيئة ID للمستخدم
+async function initUserChatId() {
+  if (!currentUser) return;
+  
+  const userDoc = await db.collection('users').doc(currentUser.uid).get();
+  const data = userDoc.data();
+  
+  if (!data.chatId) {
+    const newChatId = generateChatId();
+    await db.collection('users').doc(currentUser.uid).update({
+      chatId: newChatId
+    });
+    document.getElementById('myChatId').textContent = newChatId;
+  } else {
+    document.getElementById('myChatId').textContent = data.chatId;
+  }
+  
+  // تسجيل بصمة الجهاز
+  AntiCheat.registerDevice(currentUser.uid);
+}
+
+// فتح تطبيق سوشيال
+function openSocialApp(app) {
+  document.getElementById('whatsappSection').style.display = app === 'whatsapp' ? 'block' : 'none';
+  document.getElementById('facebookSection').style.display = app === 'facebook' ? 'block' : 'none';
+  
+  if (app === 'whatsapp') {
+    loadChatList();
+  } else {
+    loadPosts();
+    loadGroups();
+  }
+}
+
+// =============================================
+// WHATSAPP ISLAMIC - واتساب الإسلامي
+// =============================================
+
+// بدء محادثة
+async function startChat() {
+  const friendId = document.getElementById('friendChatId').value.trim();
+  if (!friendId) {
+    showToast('أدخل ID صديقك', 'error');
+    return;
+  }
+  
+  // البحث عن المستخدم
+  const usersSnap = await db.collection('users').where('chatId', '==', friendId).limit(1).get();
+  
+  if (usersSnap.empty) {
+    showToast('لم يتم العثور على هذا المستخدم', 'error');
+    return;
+  }
+  
+  const friendDoc = usersSnap.docs[0];
+  const friendData = friendDoc.data();
+  
+  currentChatId = friendDoc.id;
+  document.getElementById('chatPartnerName').textContent = friendData.username || 'مستخدم';
+  document.getElementById('chatPartnerId').textContent = friendId;
+  
+  openModal('chatModal');
+  loadMessages(friendDoc.id);
+}
+
+// تحميل قائمة المحادثات
+async function loadChatList() {
+  const list = document.getElementById('chatList');
+  
+  // جلب المحادثات الأخيرة
+  const chatsSnap = await db.collection('chats')
+    .where('participants', 'array-contains', currentUser.uid)
+    .orderBy('lastMessageAt', 'desc')
+    .limit(20)
+    .get();
+  
+  if (chatsSnap.empty) {
+    list.innerHTML = '<div class="text-center p-4" style="color: var(--text-muted);">لا توجد محادثات بعد</div>';
+    return;
+  }
+  
+  let html = '';
+  for (const doc of chatsSnap.docs) {
+    const chat = doc.data();
+    const otherUserId = chat.participants.find(p => p !== currentUser.uid);
+    
+    const userDoc = await db.collection('users').doc(otherUserId).get();
+    const userData = userDoc.exists ? userDoc.data() : {};
+    
+    html += `
+      <div class="chat-list-item" onclick="openChatWith('${otherUserId}', '${userData.username || 'مستخدم'}', '${userData.chatId || ''}')">
+        <div class="chat-avatar">👤</div>
+        <div class="flex-1">
+          <div class="font-bold">${userData.username || 'مستخدم'}</div>
+          <div class="text-sm" style="color: var(--text-muted);">${chat.lastMessage || ''}</div>
+        </div>
+        <div class="text-xs" style="color: var(--text-muted);">${formatTime(chat.lastMessageAt)}</div>
+      </div>
+    `;
+  }
+  
+  list.innerHTML = html;
+}
+
+// فتح محادثة
+async function openChatWith(userId, username, chatId) {
+  currentChatId = userId;
+  document.getElementById('chatPartnerName').textContent = username;
+  document.getElementById('chatPartnerId').textContent = chatId;
+  
+  openModal('chatModal');
+  loadMessages(userId);
+}
+
+// تحميل الرسائل
+function loadMessages(friendId) {
+  const chatId = getChatId(currentUser.uid, friendId);
+  
+  db.collection('chats').doc(chatId).collection('messages')
+    .orderBy('timestamp', 'asc')
+    .limitToLast(100)
+    .onSnapshot(snapshot => {
+      const messagesDiv = document.getElementById('chatMessages');
+      let html = '';
+      
+      snapshot.forEach(doc => {
+        const msg = doc.data();
+        const isSent = msg.senderId === currentUser.uid;
+        const time = formatTime(msg.timestamp);
+        
+        html += `
+          <div class="chat-bubble ${isSent ? 'sent' : 'received'}">
+            ${escapeHtml(msg.text)}
+            <span class="time">${time}</span>
+          </div>
+        `;
+      });
+      
+      messagesDiv.innerHTML = html;
+      messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    });
+}
+
+// إرسال رسالة
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  
+  if (!text || !currentChatId) return;
+  
+  // فحص النشاط المشبوه
+  if (AntiCheat.checkSuspicious(currentUser.uid, 'message')) {
+    showToast('تم اكتشاف نشاط مشبوه!', 'error');
+    return;
+  }
+  
+  // فلترة الكلمات غير اللائقة
+  const filteredText = filterInappropriateContent(text);
+  
+  const chatId = getChatId(currentUser.uid, currentChatId);
+  
+  try {
+    // إضافة الرسالة
+    await db.collection('chats').doc(chatId).collection('messages').add({
+      text: filteredText,
+      senderId: currentUser.uid,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    // تحديث بيانات المحادثة
+    await db.collection('chats').doc(chatId).set({
+      participants: [currentUser.uid, currentChatId],
+      lastMessage: filteredText.slice(0, 50),
+      lastMessageAt: firebase.firestore.FieldValue.serverTimestamp()
+    }, { merge: true });
+    
+    input.value = '';
+  } catch (error) {
+    showToast('حدث خطأ في الإرسال', 'error');
+  }
+}
+
+// توليد معرف المحادثة
+function getChatId(id1, id2) {
+  return [id1, id2].sort().join('_');
+}
+
+// =============================================
+// FACEBOOK ISLAMIC - فيسبوك الإسلامي
+// =============================================
+
+// إنشاء منشور
+async function createPost() {
+  const text = document.getElementById('newPostText').value.trim();
+  const type = document.getElementById('postType').value;
+  
+  if (!text) {
+    showToast('اكتب شيئاً أولاً', 'error');
+    return;
+  }
+  
+  // فحص النشاط المشبوه
+  if (AntiCheat.checkSuspicious(currentUser.uid, 'post')) {
+    showToast('تم اكتشاف نشاط مشبوه!', 'error');
+    return;
+  }
+  
+  const filteredText = filterInappropriateContent(text);
+  
+  try {
+    await db.collection('posts').add({
+      text: filteredText,
+      authorId: currentUser.uid,
+      authorName: userData.username,
+      type: type,
+      groupId: currentGroupId || null,
+      likes: 0,
+      comments: 0,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    document.getElementById('newPostText').value = '';
+    showToast('تم نشر المنشور بنجاح', 'success');
+    loadPosts();
+  } catch (error) {
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// تحميل المنشورات
+async function loadPosts() {
+  const feed = document.getElementById('postsFeed');
+  feed.innerHTML = '<div class="text-center p-4"><div class="loader" style="margin:0 auto;"></div></div>';
+  
+  let query = db.collection('posts').orderBy('createdAt', 'desc').limit(20);
+  
+  if (currentGroupId) {
+    query = query.where('groupId', '==', currentGroupId);
+  }
+  
+  const snap = await query.get();
+  
+  if (snap.empty) {
+    feed.innerHTML = '<div class="text-center p-4" style="color: var(--text-muted);">لا توجد منشورات</div>';
+    return;
+  }
+  
+  let html = '';
+  for (const doc of snap.docs) {
+    const post = doc.data();
+    const time = formatTime(post.createdAt);
+    
+    // تحقق من الإعجاب
+    const likeDoc = await db.collection('posts').doc(doc.id).collection('likes').doc(currentUser.uid).get();
+    const isLiked = likeDoc.exists;
+    
+    html += `
+      <div class="post-card">
+        <div class="post-header">
+          <div style="width: 40px; height: 40px; background: var(--gold); border-radius: 50%; display: flex; align-items: center; justify-content: center;">👤</div>
+          <div>
+            <div class="font-bold">${post.authorName || 'مستخدم'}</div>
+            <div class="text-xs" style="color: var(--text-muted);">${time}</div>
+          </div>
+        </div>
+        <div class="post-content">${escapeHtml(post.text)}</div>
+        <div class="post-actions">
+          <div class="post-action-btn ${isLiked ? 'liked' : ''}" onclick="toggleLike('${doc.id}')">
+            <i class="fas fa-heart"></i> ${post.likes || 0}
+          </div>
+          <div class="post-action-btn" onclick="showComments('${doc.id}')">
+            <i class="fas fa-comment"></i> ${post.comments || 0}
+          </div>
+          <div class="post-action-btn" onclick="sharePost('${doc.id}')">
+            <i class="fas fa-share"></i> مشاركة
+          </div>
+        </div>
+        <div id="comments-${doc.id}" style="display: none;"></div>
+      </div>
+    `;
+  }
+  
+  feed.innerHTML = html;
+}
+
+// الإعجاب بمنشور
+async function toggleLike(postId) {
+  const likeRef = db.collection('posts').doc(postId).collection('likes').doc(currentUser.uid);
+  const likeDoc = await likeRef.get();
+  
+  if (likeDoc.exists) {
+    await likeRef.delete();
+    await db.collection('posts').doc(postId).update({
+      likes: firebase.firestore.FieldValue.increment(-1)
+    });
+  } else {
+    await likeRef.set({
+      timestamp: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    await db.collection('posts').doc(postId).update({
+      likes: firebase.firestore.FieldValue.increment(1)
+    });
+  }
+  
+  loadPosts();
+}
+
+// عرض التعليقات
+async function showComments(postId) {
+  const container = document.getElementById(`comments-${postId}`);
+  
+  if (container.style.display === 'block') {
+    container.style.display = 'none';
+    return;
+  }
+  
+  container.style.display = 'block';
+  
+  const commentsSnap = await db.collection('posts').doc(postId).collection('comments')
+    .orderBy('timestamp', 'desc').limit(10).get();
+  
+  let html = '<div class="comments-section">';
+  
+  commentsSnap.forEach(doc => {
+    const c = doc.data();
+    html += `
+      <div class="comment">
+        <div class="comment-avatar">👤</div>
+        <div>
+          <span class="font-bold text-sm">${c.authorName || 'مستخدم'}</span>
+          <p class="text-sm">${escapeHtml(c.text)}</p>
+        </div>
+      </div>
+    `;
+  });
+  
+  html += `
+    <div class="flex gap-2 mt-3">
+      <input type="text" class="input-field" id="comment-${postId}" placeholder="أضف تعليقاً...">
+      <button class="btn btn-sm btn-gold" onclick="addComment('${postId}')">إرسال</button>
+    </div>
+  </div>`;
+  
+  container.innerHTML = html;
+}
+
+// إضافة تعليق
+async function addComment(postId) {
+  const input = document.getElementById(`comment-${postId}`);
+  const text = input.value.trim();
+  
+  if (!text) return;
+  
+  const filteredText = filterInappropriateContent(text);
+  
+  await db.collection('posts').doc(postId).collection('comments').add({
+    text: filteredText,
+    authorId: currentUser.uid,
+    authorName: userData.username,
+    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  
+  await db.collection('posts').doc(postId).update({
+    comments: firebase.firestore.FieldValue.increment(1)
+  });
+  
+  showComments(postId);
+}
+
+// =============================================
+// GROUPS - الجروبات
+// =============================================
+
+// تحميل الجروبات
+async function loadGroups() {
+  const list = document.getElementById('groupsList');
+  
+  const snap = await db.collection('groups').orderBy('membersCount', 'desc').limit(10).get();
+  
+  if (snap.empty) {
+    list.innerHTML = '<div class="text-sm" style="color: var(--text-muted);">لا توجد جروبات</div>';
+    return;
+  }
+  
+  const icons = { quran: '📖', hadith: '📜', fikih: '⚖️', general: '💬' };
+  
+  let html = '';
+  snap.forEach(doc => {
+    const g = doc.data();
+    html += `
+      <div class="group-card" onclick="selectGroup('${doc.id}', '${g.name}')">
+        <div class="icon">${icons[g.category] || '💬'}</div>
+        <div class="name">${g.name}</div>
+        <div class="members">${g.membersCount || 0} عضو</div>
+      </div>
+    `;
+  });
+  
+  list.innerHTML = html;
+}
+
+// اختيار جروب
+async function selectGroup(groupId, groupName) {
+  currentGroupId = groupId;
+  
+  // الانضمام للجروب
+  await db.collection('groups').doc(groupId).update({
+    members: firebase.firestore.FieldValue.arrayUnion(currentUser.uid),
+    membersCount: firebase.firestore.FieldValue.increment(1)
+  });
+  
+  showToast(`انضممت لجروب ${groupName}`, 'success');
+  loadPosts();
+}
+
+// فتح نافذة إنشاء جروب
+function openCreateGroupModal() {
+  openModal('groupModal');
+}
+
+// إنشاء جروب
+async function createGroup() {
+  const name = document.getElementById('groupName').value.trim();
+  const desc = document.getElementById('groupDesc').value.trim();
+  const category = document.getElementById('groupCategory').value;
+  
+  if (!name) {
+    showToast('أدخل اسم الجروب', 'error');
+    return;
+  }
+  
+  try {
+    await db.collection('groups').add({
+      name,
+      description: desc,
+      category,
+      createdBy: currentUser.uid,
+      members: [currentUser.uid],
+      membersCount: 1,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    closeModal('groupModal');
+    showToast('تم إنشاء الجروب بنجاح', 'success');
+    loadGroups();
+    
+    document.getElementById('groupName').value = '';
+    document.getElementById('groupDesc').value = '';
+  } catch (error) {
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// =============================================
+// HELPER FUNCTIONS - دوال مساعدة
+// =============================================
+
+// تنسيق الوقت
+function formatTime(timestamp) {
+  if (!timestamp) return '';
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  const now = new Date();
+  const diff = (now - date) / 1000;
+  
+  if (diff < 60) return 'الآن';
+  if (diff < 3600) return `منذ ${Math.floor(diff / 60)} د`;
+  if (diff < 86400) return `منذ ${Math.floor(diff / 3600)} س`;
+  return date.toLocaleDateString('ar-EG');
+}
+
+// فلترة المحتوى غير اللائق
+function filterInappropriateContent(text) {
+  const inappropriateWords = ['كلمة1', 'كلمة2', 'كلمة3']; // أضف الكلمات المطلوب حظرها
+  
+  let filtered = text;
+  inappropriateWords.forEach(word => {
+    const regex = new RegExp(word, 'gi');
+    filtered = filtered.replace(regex, '***');
+  });
+  
+  return filtered;
+}
+
+// تهريب HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// تهيئة السوشيال عند تحميل الصفحة
+document.addEventListener('DOMContentLoaded', () => {
+  setTimeout(() => {
+    if (currentUser) {
+      initUserChatId();
+    }
+  }, 2000);
+});
+// =============================================
+// SOCIAL SYSTEM - النظام الاجتماعي الكامل
+// =============================================
+
+// المتغيرات العامة
+let socialCurrentView = null;
+let socialCurrentChat = null;
+let socialMessagesListener = null;
+let socialPostsListener = null;
+
+// معرف الأدمن الثابت
+const ADMIN_ID = '7395046638';
+
+// =============================================
+// 1. فتح واتساب الإسلامي
+// =============================================
+// فتح واتساب الإسلامي (صفحة خارجية)
+function openWhatsApp() {
+  // التحويل إلى صفحة whatsapp.html
+  window.location.href = 'wahtsapp.html';
+}
+// إنشاء حاوية واتساب
+function createWhatsAppContainer() {
+  const container = document.createElement('div');
+  container.id = 'whatsappFullContainer';
+  container.className = 'social-container';
+  container.innerHTML = `
+    <!-- الهيدر -->
+    <div class="social-header" style="background: var(--whatsapp-header);">
+      <button class="social-back-btn" onclick="closeWhatsApp()" style="background: rgba(255,255,255,0.2);">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <h1 class="social-header-title" style="color: white;">واتساب الإسلامي</h1>
+      <div class="social-header-actions">
+        <button class="social-header-btn" onclick="openSearchUsers()" style="background: rgba(255,255,255,0.1); color: white;">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="social-header-btn" onclick="showMyChatId()" style="background: rgba(255,255,255,0.1); color: white;">
+          <i class="fas fa-qrcode"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- التبويبات -->
+    <div class="whatsapp-tabs">
+      <div class="whatsapp-tab active">المحادثات</div>
+      <div class="whatsapp-tab">الحالات</div>
+      <div class="whatsapp-tab">المكالمات</div>
+    </div>
+    
+    <!-- البحث -->
+    <div class="whatsapp-search">
+      <div class="whatsapp-search-wrapper">
+        <input type="text" class="whatsapp-search-input" placeholder="ابحث عن محادثة..." id="whatsappSearchInput">
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
+    
+    <!-- قائمة المحادثات -->
+    <div class="whatsapp-chats-list" id="whatsappChatsList">
+      <!-- المحادثات ستضاف هنا -->
+    </div>
+    
+    <!-- نافذة المحادثة -->
+    <div class="chat-view" id="chatView">
+      <!-- ستملأ عند فتح محادثة -->
+    </div>
+  `;
+  
+  return container;
+}
+
+// إغلاق واتساب
+function closeWhatsApp() {
+  const container = document.getElementById('whatsappFullContainer');
+  if (container) {
+    container.classList.remove('active');
+    setTimeout(() => {
+      // لا نحذف الحاوية للحفاظ على المحادثات
+    }, 300);
+  }
+  
+  // إيقاف الاستماع للرسائل
+  if (socialMessagesListener) {
+    socialMessagesListener();
+    socialMessagesListener = null;
+  }
+  
+  socialCurrentView = null;
+  socialCurrentChat = null;
+}
+
+// تحميل محادثات واتساب
+async function loadWhatsAppChats() {
+  const list = document.getElementById('whatsappChatsList');
+  if (!list) return;
+  
+  list.innerHTML = `
+    <div class="text-center p-4">
+      <div class="loader" style="margin: 0 auto;"></div>
+    </div>
+  `;
+  
+  try {
+    // جلب المحادثات من Firebase
+    const chatsSnap = await db.collection('chats')
+      .where('participants', 'array-contains', currentUser.uid)
+      .orderBy('lastMessageAt', 'desc')
+      .limit(50)
+      .get();
+    
+    if (chatsSnap.empty) {
+      list.innerHTML = `
+        <div class="text-center p-8" style="color: rgba(255,255,255,0.6);">
+          <i class="fas fa-comments" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
+          <p>لا توجد محادثات بعد</p>
+          <p style="font-size: 0.85rem; margin-top: 8px;">ابحث عن مستخدمين للبدء</p>
+        </div>
+      `;
+      return;
+    }
+    
+    let html = '';
+    for (const doc of chatsSnap.docs) {
+      const chat = doc.data();
+      const otherUserId = chat.participants.find(p => p !== currentUser.uid);
+      
+      // جلب بيانات المستخدم الآخر
+      const userDoc = await db.collection('users').doc(otherUserId).get();
+      const userData = userDoc.exists ? userDoc.data() : {};
+      
+      const isAdmin = userData.chatId === ADMIN_ID;
+      const isOnline = userData.lastOnline && (Date.now() - userData.lastOnline.toDate() < 300000);
+      
+      html += createChatItemHTML(doc.id, chat, userData, isAdmin, isOnline);
+    }
+    
+    list.innerHTML = html;
+    
+  } catch (error) {
+    console.error('Error loading chats:', error);
+    list.innerHTML = `
+      <div class="text-center p-4" style="color: #ef4444;">
+        حدث خطأ في تحميل المحادثات
+      </div>
+    `;
+  }
+}
+
+// إنشاء HTML لعنصر محادثة
+function createChatItemHTML(chatId, chat, userData, isAdmin, isOnline) {
+  const time = chat.lastMessageAt ? formatChatTime(chat.lastMessageAt) : '';
+  const preview = chat.lastMessage || 'ابدأ المحادثة...';
+  const unread = chat.unreadCount && chat.unreadCount[currentUser.uid] || 0;
+  
+  return `
+    <div class="whatsapp-chat-item ${isAdmin ? 'whatsapp-admin-chat' : ''}" 
+         onclick="openChat('${chat.participants.find(p => p !== currentUser.uid)}', '${userData.chatId || ''}')">
+      <div class="whatsapp-chat-avatar ${isOnline ? 'online' : ''}">
+        ${isAdmin ? '👑' : '👤'}
+      </div>
+      <div class="whatsapp-chat-info">
+        <div class="whatsapp-chat-name">
+          ${userData.username || 'مستخدم'}
+          ${isAdmin ? '<span class="whatsapp-admin-badge">أدمن</span>' : ''}
+          ${userData.verified ? '<i class="fas fa-check-circle verified"></i>' : ''}
+        </div>
+        <div class="whatsapp-chat-preview ${unread > 0 ? 'unread' : ''}">
+          ${chat.lastMessageSenderId === currentUser.uid ? '<i class="fas fa-check-double" style="color: #53bdeb;"></i>' : ''}
+          ${preview.length > 30 ? preview.substring(0, 30) + '...' : preview}
+        </div>
+      </div>
+      <div class="whatsapp-chat-time">
+        <span>${time}</span>
+        ${unread > 0 ? `<span class="whatsapp-unread-badge">${unread}</span>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// إضافة محادثة الأدمن
+function addAdminChat() {
+  const list = document.getElementById('whatsappChatsList');
+  if (!list) return;
+  
+  // التحقق من وجود محادثة الأدمن
+  const adminChatHTML = `
+    <div class="whatsapp-chat-item whatsapp-admin-chat" onclick="startAdminChat()">
+      <div class="whatsapp-chat-avatar online">👑</div>
+      <div class="whatsapp-chat-info">
+        <div class="whatsapp-chat-name">
+          الأدمن الرئيسي
+          <span class="whatsapp-admin-badge">دعم</span>
+          <i class="fas fa-check-circle verified"></i>
+        </div>
+        <div class="whatsapp-chat-preview">
+          <i class="fas fa-shield-alt" style="color: var(--whatsapp-green);"></i>
+          تواصل مع الإدارة للمساعدة
+        </div>
+      </div>
+      <div class="whatsapp-chat-time">
+        <span style="color: var(--whatsapp-green);">متصل الآن</span>
+      </div>
+    </div>
+  `;
+  
+  // إضافة في بداية القائمة
+  list.insertAdjacentHTML('afterbegin', adminChatHTML);
+}
+
+// فتح محادثة
+async function openChat(otherUserId, otherUserChatId) {
+  socialCurrentChat = otherUserId;
+  
+  // جلب بيانات المستخدم
+  const userDoc = await db.collection('users').doc(otherUserId).get();
+  const userData = userDoc.exists ? userDoc.data() : {};
+  
+  const chatId = getChatDocumentId(currentUser.uid, otherUserId);
+  
+  // إنشاء واجهة المحادثة
+  const chatView = document.getElementById('chatView');
+  chatView.innerHTML = createChatViewHTML(userData, otherUserChatId);
+  chatView.classList.add('active');
+  
+  // تحميل الرسائل
+  loadMessages(chatId);
+  
+  // تحديث حالة القراءة
+  await db.collection('chats').doc(chatId).update({
+    [`unreadCount.${currentUser.uid}`]: 0
+  });
+}
+
+// إنشاء HTML لواجهة المحادثة
+function createChatViewHTML(userData, chatId) {
+  const isOnline = userData.lastOnline && (Date.now() - userData.lastOnline.toDate() < 300000);
+  const isAdmin = userData.chatId === ADMIN_ID;
+  
+  return `
+    <div class="chat-view-header">
+      <button class="chat-view-back" onclick="closeChatView()">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <div class="chat-view-avatar">
+        ${isAdmin ? '👑' : '👤'}
+      </div>
+      <div class="chat-view-info">
+        <div class="chat-view-name">
+          ${userData.username || 'مستخدم'}
+          ${isAdmin ? '<span class="whatsapp-admin-badge" style="font-size: 0.7rem;">أدمن</span>' : ''}
+        </div>
+        <div class="chat-view-status">
+          ${isOnline ? 'متصل الآن' : 'غير متصل'}
+        </div>
+      </div>
+      <div class="chat-view-actions">
+        <button class="chat-view-action">
+          <i class="fas fa-video"></i>
+        </button>
+        <button class="chat-view-action">
+          <i class="fas fa-phone"></i>
+        </button>
+        <button class="chat-view-action">
+          <i class="fas fa-ellipsis-v"></i>
+        </button>
+      </div>
+    </div>
+    
+    <div class="chat-messages-container" id="chatMessagesContainer">
+      <!-- الرسائل ستضاف هنا -->
+    </div>
+    
+    <div class="chat-input-container">
+      <div class="chat-input-wrapper">
+        <button class="chat-input-emoji" onclick="openEmojiPicker()">
+          <i class="far fa-smile"></i>
+        </button>
+        <textarea class="chat-input" id="messageInput" placeholder="اكتب رسالة..." rows="1" 
+                  onkeypress="handleMessageKeypress(event)" oninput="autoResizeTextarea(this)"></textarea>
+        <button class="chat-input-attach" onclick="attachFile()">
+          <i class="fas fa-paperclip"></i>
+        </button>
+      </div>
+      <button class="chat-send-btn" onclick="sendMessage()">
+        <i class="fas fa-paper-plane"></i>
+      </button>
+    </div>
+  `;
+}
+
+// إغلاق واجهة المحادثة
+function closeChatView() {
+  const chatView = document.getElementById('chatView');
+  if (chatView) {
+    chatView.classList.remove('active');
+    chatView.innerHTML = '';
+  }
+  
+  if (socialMessagesListener) {
+    socialMessagesListener();
+    socialMessagesListener = null;
+  }
+  
+  socialCurrentChat = null;
+}
+
+// تحميل الرسائل
+function loadMessages(chatId) {
+  const container = document.getElementById('chatMessagesContainer');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="text-center p-4">
+      <div class="loader" style="margin: 0 auto;"></div>
+    </div>
+  `;
+  
+  // الاستماع للرسائل في الوقت الحقيقي
+  socialMessagesListener = db.collection('chats').doc(chatId)
+    .collection('messages')
+    .orderBy('timestamp', 'asc')
+    .limitToLast(100)
+    .onSnapshot(snapshot => {
+      let html = '<div class="chat-date-divider"><span>اليوم</span></div>';
+      
+      snapshot.forEach(doc => {
+        const msg = doc.data();
+        html += createMessageHTML(msg);
+      });
+      
+      container.innerHTML = html;
+      container.scrollTop = container.scrollHeight;
+    });
+}
+
+// إنشاء HTML للرسالة
+function createMessageHTML(msg) {
+  const isSent = msg.senderId === currentUser.uid;
+  const time = msg.timestamp ? formatMessageTime(msg.timestamp) : '';
+  
+  return `
+    <div class="chat-message ${isSent ? 'outgoing' : 'incoming'}">
+      <div class="chat-message-text">${escapeHtml(msg.text)}</div>
+      <div class="chat-message-time">
+        ${time}
+        ${isSent ? `<i class="fas fa-check-double ${msg.read ? 'read' : ''}"></i>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// إرسال رسالة
+async function sendMessage() {
+  const input = document.getElementById('messageInput');
+  const text = input.value.trim();
+  
+  if (!text || !socialCurrentChat) return;
+  
+  const chatId = getChatDocumentId(currentUser.uid, socialCurrentChat);
+  
+  try {
+    // إضافة الرسالة
+    await db.collection('chats').doc(chatId).collection('messages').add({
+      text: text,
+      senderId: currentUser.uid,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      read: false
+    });
+    
+    // تحديث بيانات المحادثة
+    await db.collection('chats').doc(chatId).set({
+      participants: [currentUser.uid, socialCurrentChat],
+      lastMessage: text,
+      lastMessageSenderId: currentUser.uid,
+      lastMessageAt: firebase.firestore.FieldValue.serverTimestamp(),
+      [`unreadCount.${socialCurrentChat}`]: firebase.firestore.FieldValue.increment(1)
+    }, { merge: true });
+    
+    input.value = '';
+    autoResizeTextarea(input);
+    
+  } catch (error) {
+    console.error('Error sending message:', error);
+    showToast('حدث خطأ في إرسال الرسالة', 'error');
+  }
+}
+
+// بدء محادثة مع الأدمن
+async function startAdminChat() {
+  // البحث عن الأدمن بواسطة الـ ID
+  const adminSnap = await db.collection('users').where('chatId', '==', ADMIN_ID).limit(1).get();
+  
+  if (adminSnap.empty) {
+    showToast('الأدمن غير متاح حالياً', 'error');
+    return;
+  }
+  
+  const adminDoc = adminSnap.docs[0];
+  openChat(adminDoc.id, ADMIN_ID);
+}
+
+// =============================================
+// 2. فيسبوك الإسلامي
+// =============================================
+// function openFacebook() {
+//   closeSocialContainer();
+  
+//   let container = document.getElementById('facebookFullContainer');
+//   if (!container) {
+//     container = createFacebookContainer();
+//     document.body.appendChild(container);
+//   }
+  
+//   container.classList.add('active');
+//   socialCurrentView = 'facebook';
+  
+//   // تحميل المنشورات
+//   loadFacebookPosts();
+// }
+// فتح فيسبوك الإسلامي (صفحة خارجية)
+function openFacebook() {
+  window.location.href = 'facebook.html';
+}
+
+// إنشاء حاوية فيسبوك
+function createFacebookContainer() {
+  const container = document.createElement('div');
+  container.id = 'facebookFullContainer';
+  container.className = 'social-container';
+  container.innerHTML = `
+    <!-- الهيدر -->
+    <div class="social-header">
+      <button class="social-back-btn" onclick="closeFacebook()">
+        <i class="fas fa-arrow-right"></i>
+      </button>
+      <h1 class="social-header-title">فيسبوك الإسلامي</h1>
+      <div class="social-header-actions">
+        <button class="social-header-btn" onclick="openSearchUsers()">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="social-header-btn" onclick="openNotifications()">
+          <i class="fas fa-bell"></i>
+        </button>
+      </div>
+    </div>
+    
+    <!-- شريط التنبيهات -->
+    <div class="facebook-notifications" id="facebookNotifications">
+      <div class="facebook-notification-item" onclick="openFriendRequests()">
+        <i class="fas fa-user-plus" style="color: var(--facebook-blue);"></i>
+        <span class="badge" id="friendRequestBadge">0</span>
+      </div>
+      <div class="facebook-notification-item" onclick="openMessages()">
+        <i class="fas fa-comment-dots" style="color: var(--emerald-400);"></i>
+        <span class="badge" id="messagesBadge">0</span>
+      </div>
+      <div class="facebook-notification-item" onclick="openNotificationsList()">
+        <i class="fas fa-bell" style="color: #eab308;"></i>
+        <span class="badge" id="notificationsBadge">0</span>
+      </div>
+    </div>
+    
+    <!-- القصص -->
+    <div class="facebook-stories" id="facebookStories">
+      <div class="facebook-story">
+        <div class="facebook-story-avatar facebook-story-add">
+          <i class="fas fa-plus"></i>
+        </div>
+        <span class="facebook-story-name">إضافة</span>
+      </div>
+      <!-- القصص ستضاف هنا -->
+    </div>
+    
+    <!-- إنشاء منشور -->
+    <div class="facebook-create-post" onclick="openCreatePostModal()">
+      <div class="facebook-create-post-header">
+        <div class="facebook-create-post-avatar"></div>
+        <div class="facebook-create-post-input">
+          بم تفكر اليوم؟
+        </div>
+      </div>
+      <div class="facebook-create-post-actions">
+        <button class="facebook-create-post-action photo">
+          <i class="fas fa-image"></i>
+          صورة
+        </button>
+        <button class="facebook-create-post-action video">
+          <i class="fas fa-video"></i>
+          فيديو
+        </button>
+        <button class="facebook-create-post-action feeling">
+          <i class="fas fa-smile"></i>
+          شعور
+        </button>
+      </div>
+    </div>
+    
+    <!-- المنشورات -->
+    <div class="facebook-posts-feed" id="facebookPostsFeed">
+      <!-- المنشورات ستضاف هنا -->
+    </div>
+  `;
+  
+  return container;
+}
+
+// إغلاق فيسبوك
+function closeFacebook() {
+  const container = document.getElementById('facebookFullContainer');
+  if (container) {
+    container.classList.remove('active');
+  }
+  
+  if (socialPostsListener) {
+    socialPostsListener();
+    socialPostsListener = null;
+  }
+  
+  socialCurrentView = null;
+}
+
+// تحميل منشورات فيسبوك
+function loadFacebookPosts() {
+  const feed = document.getElementById('facebookPostsFeed');
+  if (!feed) return;
+  
+  feed.innerHTML = `
+    <div class="text-center p-4">
+      <div class="loader" style="margin: 0 auto;"></div>
+    </div>
+  `;
+  
+  socialPostsListener = db.collection('posts')
+    .orderBy('createdAt', 'desc')
+    .limit(20)
+    .onSnapshot(async snapshot => {
+      let html = '';
+      
+      for (const doc of snapshot.docs) {
+        const post = doc.data();
+        const authorDoc = await db.collection('users').doc(post.authorId).get();
+        const authorData = authorDoc.exists ? authorDoc.data() : {};
+        
+        html += createPostHTML(doc.id, post, authorData);
+      }
+      
+      feed.innerHTML = html || `
+        <div class="text-center p-8" style="color: var(--text-muted);">
+          <i class="fas fa-newspaper" style="font-size: 3rem; margin-bottom: 16px; opacity: 0.5;"></i>
+          <p>لا توجد منشورات بعد</p>
+          <p style="font-size: 0.85rem; margin-top: 8px;">كن أول من ينشر!</p>
+        </div>
+      `;
+    });
+}
+
+// إنشاء HTML للمنشور
+// إنشاء HTML للمنشور
+function createPostHTML(postId, post, authorData) {
+  const time = post.createdAt ? formatPostTime(post.createdAt) : '';
+  const isLiked = post.likedBy && post.likedBy.includes(currentUser.uid);
+  
+  return `
+    <div class="facebook-post">
+      <div class="facebook-post-header">
+        <div class="facebook-post-avatar">👤</div>
+        <div class="facebook-post-info">
+          <div class="facebook-post-name">
+            ${authorData.username || 'مستخدم'}
+            ${authorData.verified ? '<i class="fas fa-check-circle verified"></i>' : ''}
+          </div>
+          <div class="facebook-post-meta">
+            ${time} · <i class="fas fa-globe-americas"></i>
+          </div>
+        </div>
+        <button class="facebook-post-menu">
+          <i class="fas fa-ellipsis-h"></i>
+        </button>
+      </div>
+      
+      <div class="facebook-post-content">${escapeHtml(post.text)}</div>
+      
+      ${post.imageUrl ? `<img src="${post.imageUrl}" class="facebook-post-image" alt="">` : ''}
+      
+      <div class="facebook-post-stats">
+        <div class="facebook-post-likes">
+          <i class="fas fa-thumbs-up"></i>
+          <span>${post.likes || 0}</span>
+        </div>
+        <div class="facebook-post-comments-count" onclick="openCommentsModal('${postId}')" style="cursor: pointer;">
+          ${post.comments || 0} تعليق
+        </div>
+      </div>
+      
+      <div class="facebook-post-actions">
+        <button class="facebook-post-action ${isLiked ? 'liked' : ''}" onclick="togglePostLike('${postId}')">
+          <i class="fas fa-thumbs-up"></i>
+          أعجبني
+        </button>
+        <button class="facebook-post-action" onclick="openCommentsModal('${postId}')">
+          <i class="fas fa-comment"></i>
+          تعليق
+        </button>
+        <button class="facebook-post-action" onclick="sharePost('${postId}')">
+          <i class="fas fa-share"></i>
+          مشاركة
+        </button>
+      </div>
+    </div>
+  `;
+}
+// تبديل إعجاب المنشور
+async function togglePostLike(postId) {
+  const postRef = db.collection('posts').doc(postId);
+  const postDoc = await postRef.get();
+  
+  if (!postDoc.exists) return;
+  
+  const post = postDoc.data();
+  const likedBy = post.likedBy || [];
+  const isLiked = likedBy.includes(currentUser.uid);
+  
+  if (isLiked) {
+    await postRef.update({
+      likes: firebase.firestore.FieldValue.increment(-1),
+      likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+    });
+  } else {
+    await postRef.update({
+      likes: firebase.firestore.FieldValue.increment(1),
+      likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+    });
+  }
+}
+
+// إضافة تعليق
+async function addPostComment(postId) {
+  const input = document.getElementById(`commentInput-${postId}`);
+  const text = input.value.trim();
+  
+  if (!text) return;
+  
+  await db.collection('posts').doc(postId).collection('comments').add({
+    text: text,
+    authorId: currentUser.uid,
+    authorName: userData.username,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  
+  await db.collection('posts').doc(postId).update({
+    comments: firebase.firestore.FieldValue.increment(1)
+  });
+  
+  input.value = '';
+}
+
+// فتح مودال إنشاء منشور
+function openCreatePostModal() {
+  let modal = document.getElementById('createPostModal');
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'createPostModal';
+    modal.className = 'create-post-modal';
+    modal.innerHTML = `
+      <div class="create-post-card">
+        <div class="create-post-header">
+          <h3>إنشاء منشور</h3>
+          <button class="create-post-close" onclick="closeCreatePostModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="create-post-body">
+          <div class="create-post-user">
+            <div class="facebook-post-avatar">👤</div>
+            <div>
+              <div style="font-weight: 700;">${userData?.username || 'مستخدم'}</div>
+              <select style="font-size: 0.8rem; background: var(--bg-secondary); border: 1px solid var(--border-subtle); border-radius: 4px; padding: 2px 8px; color: var(--text-secondary);">
+                <option>🌏 عام</option>
+                <option>👥 أصدقاء</option>
+                <option>🔒 خاص</option>
+              </select>
+            </div>
+          </div>
+          <textarea class="create-post-textarea" id="newPostText" placeholder="بم تفكر اليوم؟"></textarea>
+        </div>
+        <div class="create-post-options">
+          <button class="create-post-option">
+            <i class="fas fa-image" style="color: #22c55e;"></i>
+            صورة
+          </button>
+          <button class="create-post-option">
+            <i class="fas fa-video" style="color: #ef4444;"></i>
+            فيديو
+          </button>
+          <button class="create-post-option">
+            <i class="fas fa-smile" style="color: #eab308;"></i>
+            شعور
+          </button>
+        </div>
+        <div class="create-post-footer">
+          <button class="create-post-submit" onclick="submitNewPost()">نشر</button>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  modal.classList.add('active');
+  document.getElementById('newPostText').focus();
+}
+
+// إغلاق مودال الإنشاء
+function closeCreatePostModal() {
+  const modal = document.getElementById('createPostModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+
+// نشر منشور جديد
+async function submitNewPost() {
+  const text = document.getElementById('newPostText').value.trim();
+  
+  if (!text) {
+    showToast('اكتب شيئاً أولاً', 'error');
+    return;
+  }
+  
+  try {
+    await db.collection('posts').add({
+      text: text,
+      authorId: currentUser.uid,
+      authorName: userData.username,
+      likes: 0,
+      comments: 0,
+      likedBy: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    closeCreatePostModal();
+    showToast('تم نشر المنشور بنجاح', 'success');
+    
+  } catch (error) {
+    console.error('Error creating post:', error);
+    showToast('حدث خطأ في النشر', 'error');
+  }
+}
+
+// =============================================
+// 3. البحث عن المستخدمين
+// =============================================
+function openSearchUsers() {
+  let overlay = document.getElementById('searchUsersOverlay');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'searchUsersOverlay';
+    overlay.className = 'social-search-overlay';
+    overlay.innerHTML = `
+      <div class="social-search-header">
+        <button class="social-back-btn" onclick="closeSearchUsers()">
+          <i class="fas fa-times"></i>
+        </button>
+        <input type="text" class="social-search-input" id="userSearchInput" 
+               placeholder="ابحث بالاسم أو الـ ID..." oninput="searchUsers(this.value)">
+      </div>
+      <div class="social-search-results" id="searchResults">
+        <div class="text-center p-4" style="color: var(--text-muted);">
+          ابحث عن مستخدمين للتواصل معهم
+        </div>
+      </div>
+    `;
+    document.body.appendChild(overlay);
+  }
+  
+  overlay.classList.add('active');
+  document.getElementById('userSearchInput').focus();
+}
+
+function closeSearchUsers() {
+  const overlay = document.getElementById('searchUsersOverlay');
+  if (overlay) {
+    overlay.classList.remove('active');
+  }
+}
+
+// البحث عن مستخدمين
+let searchTimeout = null;
+async function searchUsers(query) {
+  clearTimeout(searchTimeout);
+  
+  if (!query || query.length < 2) {
+    document.getElementById('searchResults').innerHTML = `
+      <div class="text-center p-4" style="color: var(--text-muted);">
+        ابحث عن مستخدمين للتواصل معهم
+      </div>
+    `;
+    return;
+  }
+  
+  searchTimeout = setTimeout(async () => {
+    const results = document.getElementById('searchResults');
+    results.innerHTML = '<div class="text-center p-4"><div class="loader" style="margin: 0 auto;"></div></div>';
+    
+    try {
+      // البحث بالاسم
+      const nameQuery = await db.collection('users')
+        .where('username', '>=', query)
+        .where('username', '<=', query + '\uf8ff')
+        .limit(10)
+        .get();
+      
+      // البحث بالـ ID
+      const idQuery = await db.collection('users')
+        .where('chatId', '==', query)
+        .limit(1)
+        .get();
+      
+      let html = '';
+      const addedIds = new Set();
+      
+      // إضافة نتائج الـ ID
+      idQuery.forEach(doc => {
+        if (!addedIds.has(doc.id)) {
+          addedIds.add(doc.id);
+          html += createUserSearchResult(doc.id, doc.data());
+        }
+      });
+      
+      // إضافة نتائج الاسم
+      nameQuery.forEach(doc => {
+        if (!addedIds.has(doc.id) && doc.id !== currentUser.uid) {
+          addedIds.add(doc.id);
+          html += createUserSearchResult(doc.id, doc.data());
+        }
+      });
+      
+      results.innerHTML = html || `
+        <div class="text-center p-4" style="color: var(--text-muted);">
+          لم يتم العثور على مستخدمين
+        </div>
+      `;
+      
+    } catch (error) {
+      console.error('Search error:', error);
+      results.innerHTML = `
+        <div class="text-center p-4" style="color: #ef4444;">
+          حدث خطأ في البحث
+        </div>
+      `;
+    }
+  }, 500);
+}
+
+// إنشاء HTML لنتيجة البحث
+function createUserSearchResult(userId, userData) {
+  const isAdmin = userData.chatId === ADMIN_ID;
+  
+  return `
+    <div class="social-search-result" onclick="startNewChat('${userId}', '${userData.chatId || ''}')">
+      <div class="social-search-avatar">
+        ${isAdmin ? '👑' : '👤'}
+      </div>
+      <div class="social-search-info">
+        <h4>${userData.username || 'مستخدم'} ${isAdmin ? '<span class="whatsapp-admin-badge">أدمن</span>' : ''}</h4>
+        <p>ID: ${userData.chatId || 'غير متوفر'}</p>
+      </div>
+    </div>
+  `;
+}
+
+// بدء محادثة جديدة
+async function startNewChat(userId, chatId) {
+  closeSearchUsers();
+  
+  if (socialCurrentView === 'whatsapp') {
+    openChat(userId, chatId);
+  } else {
+    // إذا كنا في فيسبوك، نفتح واتساب
+    closeFacebook();
+    setTimeout(() => {
+      openWhatsApp();
+      setTimeout(() => {
+        openChat(userId, chatId);
+      }, 500);
+    }, 300);
+  }
+}
+
+// =============================================
+// 4. دوال مساعدة
+// =============================================
+
+// الحصول على معرف وثيقة المحادثة
+function getChatDocumentId(id1, id2) {
+  return [id1, id2].sort().join('_');
+}
+
+// تنسيق وقت المحادثة
+function formatChatTime(timestamp) {
+  const date = timestamp.toDate();
+  const now = new Date();
+  const diff = (now - date) / 1000;
+  
+  if (diff < 60) return 'الآن';
+  if (diff < 3600) return `منذ ${Math.floor(diff / 60)} د`;
+  if (diff < 86400) return `منذ ${Math.floor(diff / 3600)} س`;
+  if (diff < 604800) return `منذ ${Math.floor(diff / 86400)} ي`;
+  
+  return date.toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' });
+}
+
+// تنسيق وقت الرسالة
+function formatMessageTime(timestamp) {
+  if (!timestamp) return '';
+  const date = timestamp.toDate();
+  return date.toLocaleTimeString('ar-EG', { hour: '2-digit', minute: '2-digit' });
+}
+
+// تنسيق وقت المنشور
+function formatPostTime(timestamp) {
+  if (!timestamp) return '';
+  const date = timestamp.toDate();
+  const now = new Date();
+  const diff = (now - date) / 1000;
+  
+  if (diff < 60) return 'الآن';
+  if (diff < 3600) return `منذ ${Math.floor(diff / 60)} دقيقة`;
+  if (diff < 86400) return `منذ ${Math.floor(diff / 3600)} ساعة`;
+  if (diff < 604800) return `منذ ${Math.floor(diff / 86400)} يوم`;
+  
+  return date.toLocaleDateString('ar-EG', { month: 'long', day: 'numeric' });
+}
+
+// تهريب HTML
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+// تعديل حجم textarea تلقائياً
+function autoResizeTextarea(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 100) + 'px';
+}
+
+// معالجة ضغط Enter
+function handleMessageKeypress(e) {
+  if (e.key === 'Enter' && !e.shiftKey) {
+    e.preventDefault();
+    sendMessage();
+  }
+}
+
+// إغلاق أي واجهة مفتوحة
+function closeSocialContainer() {
+  closeWhatsApp();
+  closeFacebook();
+  closeSearchUsers();
+}
+
+// عرض الـ ID الخاص بي
+function showMyChatId() {
+  showToast(`الـ ID الخاص بك: ${userData?.chatId || 'غير متوفر'}`, 'info');
+}
+
+// إرفاق ملف
+function attachFile() {
+  showToast('ميزة إرفاق الملفات قريباً', 'info');
+}
+
+// فتح منتقي الإيموجي
+function openEmojiPicker() {
+  showToast('منتقي الإيموجي قريباً', 'info');
+}
+
+// التركيز على تعليق المنشور
+function focusPostComment(postId) {
+  const input = document.getElementById(`commentInput-${postId}`);
+  if (input) input.focus();
+}
+
+// مشاركة منشور
+function sharePost(postId) {
+  showToast('ميزة المشاركة قريباً', 'info');
+}
+
+// فتح طلبات الصداقة
+function openFriendRequests() {
+  showToast('طلبات الصداقة قريباً', 'info');
+}
+
+// فتح الرسائل
+function openMessages() {
+  closeFacebook();
+  setTimeout(openWhatsApp, 300);
+}
+
+// فتح التنبيهات
+function openNotificationsList() {
+  showToast('التنبيهات قريباً', 'info');
+}
+
+// =============================================
+// 5. تهيئة النظام
+// =============================================
+document.addEventListener('DOMContentLoaded', () => {
+  // تحديث معرف المحادثة للمستخدم
+  setTimeout(() => {
+    if (currentUser && !userData?.chatId) {
+      const newChatId = generateChatId();
+      db.collection('users').doc(currentUser.uid).update({
+        chatId: newChatId
+      });
+    }
+  }, 2000);
+});
+
+// توليد ID عشوائي
+function generateChatId() {
+  const chars = '0123456789';
+  let id = '';
+  for (let i = 0; i < 10; i++) {
+    id += chars.charAt(Math.floor(Math.random() * chars.length));
+  }
+  return id;
+}
+
+// =============================================
+// COMMENTS MODAL - نافذة التعليقات الكاملة
+// =============================================
+
+// فتح نافذة التعليقات
+async function openCommentsModal(postId) {
+  let modal = document.getElementById('commentsModal');
+  
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'commentsModal';
+    modal.className = 'comments-modal-overlay';
+    modal.innerHTML = `
+      <div class="comments-modal">
+        <div class="comments-modal-header">
+          <h3>التعليقات</h3>
+          <button class="comments-close-btn" onclick="closeCommentsModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="comments-modal-body" id="commentsModalBody">
+        </div>
+        <div class="comments-modal-footer">
+          <div class="comments-input-wrapper">
+            <input type="text" id="commentInputField" placeholder="اكتب تعليقاً..." 
+                   onkeypress="if(event.key==='Enter')submitComment('${postId}')">
+            <button class="comments-send-btn" onclick="submitComment('${postId}')">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  // تحديث postId في الحقل
+  const inputField = document.getElementById('commentInputField');
+  if (inputField) {
+    inputField.setAttribute('onkeypress', `if(event.key==='Enter')submitComment('${postId}')`);
+  }
+  
+  const sendBtn = modal.querySelector('.comments-send-btn');
+  if (sendBtn) {
+    sendBtn.setAttribute('onclick', `submitComment('${postId}')`);
+  }
+  
+  modal.classList.add('active');
+  loadComments(postId);
+}
+
+// إغلاق نافذة التعليقات
+function closeCommentsModal() {
+  const modal = document.getElementById('commentsModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+
+// تحميل التعليقات
+async function loadComments(postId) {
+  const container = document.getElementById('commentsModalBody');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="comments-loading">
+      <div class="loader" style="width:30px;height:30px;border-width:3px;margin:0 auto 12px;"></div>
+      <span>جاري تحميل التعليقات...</span>
+    </div>
+  `;
+  
+  try {
+    const commentsSnap = await db.collection('posts').doc(postId)
+      .collection('comments')
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+      .get();
+    
+    if (commentsSnap.empty) {
+      container.innerHTML = `
+        <div class="no-comments">
+          <i class="far fa-comment-alt" style="font-size:3rem;margin-bottom:16px;opacity:0.4;"></i>
+          <p style="font-size:1.1rem;font-weight:700;margin-bottom:8px;">لا توجد تعليقات بعد</p>
+          <span style="font-size:0.9rem;opacity:0.7;">كن أول من يعلق!</span>
+        </div>
+      `;
+      return;
+    }
+    
+    let html = '';
+    
+    for (const doc of commentsSnap.docs) {
+      const comment = doc.data();
+      const time = comment.createdAt ? formatCommentTime(comment.createdAt) : 'الآن';
+      const isOwner = comment.authorId === currentUser?.uid;
+      
+      // جلب الردود
+      const repliesSnap = await db.collection('posts').doc(postId)
+        .collection('comments').doc(doc.id)
+        .collection('replies')
+        .orderBy('createdAt', 'asc')
+        .get();
+      
+      let repliesHtml = '';
+      repliesSnap.forEach(replyDoc => {
+        const reply = replyDoc.data();
+        const replyTime = reply.createdAt ? formatCommentTime(reply.createdAt) : 'الآن';
+        repliesHtml += `
+          <div class="reply-item">
+            <div class="reply-avatar">👤</div>
+            <div class="reply-content">
+              <div class="reply-header">
+                <span class="reply-author">${reply.authorName || 'مستخدم'}</span>
+                <span class="reply-time">${replyTime}</span>
+              </div>
+              <p class="reply-text">${escapeHtml(reply.text)}</p>
+              <div class="reply-actions">
+                <button onclick="openReplyInput('${postId}', '${doc.id}', '${reply.authorName}')">
+                  <i class="far fa-comment"></i> رد
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        <div class="comment-item" id="comment-${doc.id}">
+          <div class="comment-main">
+            <div class="comment-avatar">
+              ${comment.authorPhoto ? `<img src="${comment.authorPhoto}" alt="" style="width:100%;height:100%;object-fit:cover;border-radius:50%;">` : '👤'}
+            </div>
+            <div class="comment-content">
+              <div class="comment-header">
+                <span class="comment-author">
+                  ${comment.authorName || 'مستخدم'}
+                  ${isOwner ? '<span class="author-badge">أنت</span>' : ''}
+                </span>
+                <span class="comment-time">${time}</span>
+              </div>
+              <p class="comment-text">${escapeHtml(comment.text)}</p>
+              <div class="comment-actions">
+                <button onclick="likeComment('${postId}', '${doc.id}')" class="action-btn">
+                  <i class="${comment.likedBy?.includes(currentUser?.uid) ? 'fas' : 'far'} fa-heart"></i>
+                  <span>${comment.likes || 0}</span>
+                </button>
+                <button onclick="openReplyInput('${postId}', '${doc.id}', '${comment.authorName}')" class="action-btn">
+                  <i class="far fa-comment"></i>
+                  <span>رد</span>
+                </button>
+                ${isOwner ? `
+                  <button onclick="deleteComment('${postId}', '${doc.id}')" class="action-btn delete">
+                    <i class="far fa-trash-alt"></i>
+                  </button>
+                ` : ''}
+              </div>
+              
+              <!-- حقل الرد -->
+              <div class="reply-input-container" id="replyInput-${doc.id}" style="display: none;">
+                <input type="text" placeholder="الرد على ${comment.authorName}..." 
+                       id="replyText-${doc.id}"
+                       onkeypress="if(event.key==='Enter')submitReply('${postId}', '${doc.id}')">
+                <div class="reply-input-actions">
+                  <button onclick="cancelReply('${doc.id}')" class="cancel-btn">إلغاء</button>
+                  <button onclick="submitReply('${postId}', '${doc.id}')" class="send-btn">إرسال</button>
+                </div>
+              </div>
+              
+              <!-- الردود -->
+              ${repliesHtml ? `<div class="replies-container">${repliesHtml}</div>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    container.innerHTML = html;
+    
+  } catch (error) {
+    console.error('Error loading comments:', error);
+    container.innerHTML = `
+      <div class="comments-error" style="text-align:center;padding:40px;color:#ef4444;">
+        <i class="fas fa-exclamation-circle" style="font-size:3rem;margin-bottom:16px;"></i>
+        <p>حدث خطأ في تحميل التعليقات</p>
+        <button onclick="loadComments('${postId}')" style="margin-top:16px;padding:10px 24px;background:var(--bg-secondary);border:1px solid var(--border-subtle);border-radius:12px;color:var(--text-primary);cursor:pointer;">إعادة المحاولة</button>
+      </div>
+    `;
+  }
+}
+
+// فتح حقل الرد
+function openReplyInput(postId, commentId, authorName) {
+  document.querySelectorAll('.reply-input-container').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  const replyInput = document.getElementById(`replyInput-${commentId}`);
+  if (replyInput) {
+    replyInput.style.display = 'block';
+    const input = document.getElementById(`replyText-${commentId}`);
+    if (input) {
+      input.focus();
+      input.placeholder = `الرد على ${authorName}...`;
+    }
+  }
+}
+
+// إلغاء الرد
+function cancelReply(commentId) {
+  const replyInput = document.getElementById(`replyInput-${commentId}`);
+  if (replyInput) {
+    replyInput.style.display = 'none';
+    const input = document.getElementById(`replyText-${commentId}`);
+    if (input) input.value = '';
+  }
+}
+
+// إرسال رد
+async function submitReply(postId, commentId) {
+  const input = document.getElementById(`replyText-${commentId}`);
+  const text = input?.value.trim();
+  
+  if (!text) return;
+  
+  try {
+    await db.collection('posts').doc(postId)
+      .collection('comments').doc(commentId)
+      .collection('replies').add({
+        text: text,
+        authorId: currentUser.uid,
+        authorName: userData.username,
+        authorPhoto: userData.photoURL || null,
+        likes: 0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    
+    input.value = '';
+    loadComments(postId);
+    showToast('تم إضافة الرد', 'success');
+    
+  } catch (error) {
+    console.error('Error submitting reply:', error);
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// إضافة تعليق جديد
+async function submitComment(postId) {
+  const input = document.getElementById('commentInputField');
+  const text = input?.value.trim();
+  
+  if (!text) return;
+  
+  try {
+    await db.collection('posts').doc(postId).collection('comments').add({
+      text: text,
+      authorId: currentUser.uid,
+      authorName: userData.username,
+      authorPhoto: userData.photoURL || null,
+      likes: 0,
+      likedBy: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    await db.collection('posts').doc(postId).update({
+      comments: firebase.firestore.FieldValue.increment(1)
+    });
+    
+    input.value = '';
+    loadComments(postId);
+    showToast('تم إضافة التعليق', 'success');
+    
+  } catch (error) {
+    console.error('Error submitting comment:', error);
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// الإعجاب بالتعليق
+async function likeComment(postId, commentId) {
+  const commentRef = db.collection('posts').doc(postId)
+    .collection('comments').doc(commentId);
+  
+  const commentDoc = await commentRef.get();
+  if (!commentDoc.exists) return;
+  
+  const comment = commentDoc.data();
+  const likedBy = comment.likedBy || [];
+  const isLiked = likedBy.includes(currentUser.uid);
+  
+  if (isLiked) {
+    await commentRef.update({
+      likes: firebase.firestore.FieldValue.increment(-1),
+      likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+    });
+  } else {
+    await commentRef.update({
+      likes: firebase.firestore.FieldValue.increment(1),
+      likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+    });
+  }
+  
+  loadComments(postId);
+}
+
+// حذف التعليق
+async function deleteComment(postId, commentId) {
+  if (!confirm('هل أنت متأكد من حذف هذا التعليق؟')) return;
+  
+  try {
+    await db.collection('posts').doc(postId)
+      .collection('comments').doc(commentId).delete();
+    
+    await db.collection('posts').doc(postId).update({
+      comments: firebase.firestore.FieldValue.increment(-1)
+    });
+    
+    loadComments(postId);
+    showToast('تم حذف التعليق', 'info');
+    
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// تنسيق وقت التعليق
+function formatCommentTime(timestamp) {
+  if (!timestamp) return 'الآن';
+  
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  const now = new Date();
+  const diff = (now - date) / 1000;
+  
+  if (diff < 60) return 'الآن';
+  if (diff < 3600) return `منذ ${Math.floor(diff / 60)} د`;
+  if (diff < 86400) return `منذ ${Math.floor(diff / 3600)} س`;
+  if (diff < 604800) return `منذ ${Math.floor(diff / 86400)} ي`;
+  
+  return date.toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' });
+}
+
+console.log('✅ Social System Loaded');// تحديث عرض الـ ID
+function updateChatIdDisplay() {
+  const el = document.getElementById('myChatIdDisplay');
+  if (el && userData && userData.chatId) {
+    el.textContent = userData.chatId;
+  }
+}
+
+// نسخ الـ ID
+function copyMyChatId() {
+  if (userData && userData.chatId) {
+    navigator.clipboard.writeText(userData.chatId).then(() => {
+      showToast('تم نسخ المعرف!', 'success');
+    });
+  } else {
+    showToast('المعرف غير متوفر بعد', 'error');
+  }
+}
+// =============================================
+// نافذة التعليقات الكاملة
+// =============================================
+
+// فتح نافذة التعليقات
+async function openCommentsModal(postId) {
+  let modal = document.getElementById('commentsModal');
+  
+  if (!modal) {
+    modal = document.createElement('div');
+    modal.id = 'commentsModal';
+    modal.className = 'comments-modal-overlay';
+    modal.innerHTML = `
+      <div class="comments-modal">
+        <div class="comments-modal-header">
+          <h3>التعليقات</h3>
+          <button class="comments-close-btn" onclick="closeCommentsModal()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        <div class="comments-modal-body" id="commentsModalBody">
+          <!-- التعليقات ستضاف هنا -->
+        </div>
+        <div class="comments-modal-footer">
+          <div class="comments-input-wrapper">
+            <input type="text" id="commentInput" placeholder="اكتب تعليقاً..." 
+                   onkeypress="if(event.key==='Enter')submitComment('${postId}')">
+            <button class="comments-send-btn" onclick="submitComment('${postId}')">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
+  }
+  
+  modal.classList.add('active');
+  loadComments(postId);
+}
+
+// إغلاق نافذة التعليقات
+function closeCommentsModal() {
+  const modal = document.getElementById('commentsModal');
+  if (modal) {
+    modal.classList.remove('active');
+  }
+}
+
+// تحميل التعليقات
+async function loadComments(postId) {
+  const container = document.getElementById('commentsModalBody');
+  if (!container) return;
+  
+  container.innerHTML = `
+    <div class="comments-loading">
+      <div class="loader"></div>
+      <span>جاري تحميل التعليقات...</span>
+    </div>
+  `;
+  
+  try {
+    const commentsSnap = await db.collection('posts').doc(postId)
+      .collection('comments')
+      .orderBy('createdAt', 'desc')
+      .limit(50)
+      .get();
+    
+    if (commentsSnap.empty) {
+      container.innerHTML = `
+        <div class="no-comments">
+          <i class="far fa-comment-alt"></i>
+          <p>لا توجد تعليقات بعد</p>
+          <span>كن أول من يعلق!</span>
+        </div>
+      `;
+      return;
+    }
+    
+    let html = '';
+    
+    for (const doc of commentsSnap.docs) {
+      const comment = doc.data();
+      const time = comment.createdAt ? formatCommentTime(comment.createdAt) : 'الآن';
+      const isOwner = comment.authorId === currentUser?.uid;
+      
+      // جلب الردود
+      const repliesSnap = await db.collection('posts').doc(postId)
+        .collection('comments').doc(doc.id)
+        .collection('replies')
+        .orderBy('createdAt', 'asc')
+        .get();
+      
+      let repliesHtml = '';
+      repliesSnap.forEach(replyDoc => {
+        const reply = replyDoc.data();
+        const replyTime = reply.createdAt ? formatCommentTime(reply.createdAt) : 'الآن';
+        repliesHtml += `
+          <div class="reply-item">
+            <div class="reply-avatar">👤</div>
+            <div class="reply-content">
+              <div class="reply-header">
+                <span class="reply-author">${reply.authorName || 'مستخدم'}</span>
+                <span class="reply-time">${replyTime}</span>
+              </div>
+              <p class="reply-text">${escapeHtml(reply.text)}</p>
+              <div class="reply-actions">
+                <button onclick="openReplyInput('${postId}', '${doc.id}', '${reply.authorName}')">
+                  <i class="far fa-comment"></i> رد
+                </button>
+                <button onclick="likeReply('${postId}', '${doc.id}', '${replyDoc.id}')">
+                  <i class="far fa-heart"></i> ${reply.likes || 0}
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      });
+      
+      html += `
+        <div class="comment-item" id="comment-${doc.id}">
+          <div class="comment-main">
+            <div class="comment-avatar">
+              ${comment.authorPhoto ? `<img src="${comment.authorPhoto}" alt="">` : '👤'}
+            </div>
+            <div class="comment-content">
+              <div class="comment-header">
+                <span class="comment-author">
+                  ${comment.authorName || 'مستخدم'}
+                  ${isOwner ? '<span class="author-badge">أنت</span>' : ''}
+                </span>
+                <span class="comment-time">${time}</span>
+              </div>
+              <p class="comment-text">${escapeHtml(comment.text)}</p>
+              <div class="comment-actions">
+                <button onclick="likeComment('${postId}', '${doc.id}')" class="action-btn">
+                  <i class="${comment.likedBy?.includes(currentUser?.uid) ? 'fas' : 'far'} fa-heart"></i>
+                  <span>${comment.likes || 0}</span>
+                </button>
+                <button onclick="openReplyInput('${postId}', '${doc.id}', '${comment.authorName}')" class="action-btn">
+                  <i class="far fa-comment"></i>
+                  <span>رد</span>
+                </button>
+                ${isOwner ? `
+                  <button onclick="deleteComment('${postId}', '${doc.id}')" class="action-btn delete">
+                    <i class="far fa-trash-alt"></i>
+                  </button>
+                ` : ''}
+              </div>
+              
+              <!-- حقل الرد -->
+              <div class="reply-input-container" id="replyInput-${doc.id}" style="display: none;">
+                <input type="text" placeholder="الرد على ${comment.authorName}..." 
+                       id="replyText-${doc.id}"
+                       onkeypress="if(event.key==='Enter')submitReply('${postId}', '${doc.id}')">
+                <div class="reply-input-actions">
+                  <button onclick="cancelReply('${doc.id}')" class="cancel-btn">إلغاء</button>
+                  <button onclick="submitReply('${postId}', '${doc.id}')" class="send-btn">إرسال</button>
+                </div>
+              </div>
+              
+              <!-- الردود -->
+              ${repliesHtml ? `<div class="replies-container">${repliesHtml}</div>` : ''}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    
+    container.innerHTML = html;
+    
+  } catch (error) {
+    console.error('Error loading comments:', error);
+    container.innerHTML = `
+      <div class="comments-error">
+        <i class="fas fa-exclamation-circle"></i>
+        <p>حدث خطأ في تحميل التعليقات</p>
+        <button onclick="loadComments('${postId}')">إعادة المحاولة</button>
+      </div>
+    `;
+  }
+}
+
+// فتح حقل الرد
+function openReplyInput(postId, commentId, authorName) {
+  // إخفاء جميع حقول الرد الأخرى
+  document.querySelectorAll('.reply-input-container').forEach(el => {
+    el.style.display = 'none';
+  });
+  
+  const replyInput = document.getElementById(`replyInput-${commentId}`);
+  if (replyInput) {
+    replyInput.style.display = 'block';
+    const input = document.getElementById(`replyText-${commentId}`);
+    if (input) {
+      input.focus();
+      input.placeholder = `الرد على ${authorName}...`;
+    }
+  }
+}
+
+// إلغاء الرد
+function cancelReply(commentId) {
+  const replyInput = document.getElementById(`replyInput-${commentId}`);
+  if (replyInput) {
+    replyInput.style.display = 'none';
+    const input = document.getElementById(`replyText-${commentId}`);
+    if (input) input.value = '';
+  }
+}
+
+// إرسال رد
+async function submitReply(postId, commentId) {
+  const input = document.getElementById(`replyText-${commentId}`);
+  const text = input?.value.trim();
+  
+  if (!text) return;
+  
+  try {
+    await db.collection('posts').doc(postId)
+      .collection('comments').doc(commentId)
+      .collection('replies').add({
+        text: text,
+        authorId: currentUser.uid,
+        authorName: userData.username,
+        authorPhoto: userData.photoURL || null,
+        likes: 0,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+    
+    input.value = '';
+    loadComments(postId);
+    showToast('تم إضافة الرد', 'success');
+    
+  } catch (error) {
+    console.error('Error submitting reply:', error);
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// إضافة تعليق جديد
+async function submitComment(postId) {
+  const input = document.getElementById('commentInput');
+  const text = input?.value.trim();
+  
+  if (!text) return;
+  
+  try {
+    await db.collection('posts').doc(postId).collection('comments').add({
+      text: text,
+      authorId: currentUser.uid,
+      authorName: userData.username,
+      authorPhoto: userData.photoURL || null,
+      likes: 0,
+      likedBy: [],
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    
+    // تحديث عدد التعليقات
+    await db.collection('posts').doc(postId).update({
+      comments: firebase.firestore.FieldValue.increment(1)
+    });
+    
+    input.value = '';
+    loadComments(postId);
+    showToast('تم إضافة التعليق', 'success');
+    
+  } catch (error) {
+    console.error('Error submitting comment:', error);
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// الإعجاب بالتعليق
+async function likeComment(postId, commentId) {
+  const commentRef = db.collection('posts').doc(postId)
+    .collection('comments').doc(commentId);
+  
+  const commentDoc = await commentRef.get();
+  if (!commentDoc.exists) return;
+  
+  const comment = commentDoc.data();
+  const likedBy = comment.likedBy || [];
+  const isLiked = likedBy.includes(currentUser.uid);
+  
+  if (isLiked) {
+    await commentRef.update({
+      likes: firebase.firestore.FieldValue.increment(-1),
+      likedBy: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)
+    });
+  } else {
+    await commentRef.update({
+      likes: firebase.firestore.FieldValue.increment(1),
+      likedBy: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)
+    });
+  }
+  
+  loadComments(postId);
+}
+
+// حذف التعليق
+async function deleteComment(postId, commentId) {
+  if (!confirm('هل أنت متأكد من حذف هذا التعليق؟')) return;
+  
+  try {
+    await db.collection('posts').doc(postId)
+      .collection('comments').doc(commentId).delete();
+    
+    await db.collection('posts').doc(postId).update({
+      comments: firebase.firestore.FieldValue.increment(-1)
+    });
+    
+    loadComments(postId);
+    showToast('تم حذف التعليق', 'info');
+    
+  } catch (error) {
+    console.error('Error deleting comment:', error);
+    showToast('حدث خطأ', 'error');
+  }
+}
+
+// تنسيق وقت التعليق
+function formatCommentTime(timestamp) {
+  if (!timestamp) return 'الآن';
+  
+  const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
+  const now = new Date();
+  const diff = (now - date) / 1000;
+  
+  if (diff < 60) return 'الآن';
+  if (diff < 3600) return `منذ ${Math.floor(diff / 60)} د`;
+  if (diff < 86400) return `منذ ${Math.floor(diff / 3600)} س`;
+  if (diff < 604800) return `منذ ${Math.floor(diff / 86400)} ي`;
+  
+  return date.toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' });
+}
+  </script>
+</body>
+</html>

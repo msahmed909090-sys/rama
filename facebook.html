@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>فيسبوك الإسلامي</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  
+  <!-- Styles -->
+  <link rel="stylesheet" href="facebook.css">
+</head>
+<body>
+  <!-- Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-icon">📘</div>
+      <h1 class="loading-title">فيسبوك الإسلامي</h1>
+      <p class="loading-text">جاري التحميل...</p>
+      <div class="loader"></div>
+    </div>
+  </div>
+
+  <!-- Auth Required Screen -->
+  <div id="authRequiredScreen" class="auth-required" style="display: none;">
+    <div class="auth-card">
+      <div class="auth-icon">🔒</div>
+      <h2>أنت غير مسجل بالتطبيق الأساسي</h2>
+      <p>يجب تسجيل الدخول في "لمة رمضان" أولاً للوصول إلى فيسبوك الإسلامي</p>
+      <button class="btn-primary" onclick="redirectToMain()">
+        <i class="fas fa-home"></i> العودة للرئيسية
+      </button>
+    </div>
+  </div>
+
+  <!-- Main App Container -->
+  <div id="appContainer" style="display: none;">
+    
+    <!-- Mobile Header -->
+    <header class="mobile-header">
+      <div class="mobile-header-content">
+        <button class="back-btn" onclick="goBack()" id="mobileBackBtn" style="display: none;">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <div class="logo" onclick="showSection('home')">
+          <span class="logo-icon">📘</span>
+          <span class="logo-text">فيسبوك الإسلامي</span>
+        </div>
+        <div class="header-actions">
+          <button class="header-icon-btn" onclick="showSection('search')">
+            <i class="fas fa-search"></i>
+          </button>
+          <button class="header-icon-btn" onclick="showSection('messages')">
+            <i class="fas fa-comment-dots"></i>
+            <span class="badge" id="messageBadgeHeader">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Desktop Header -->
+    <header class="desktop-header">
+      <div class="header-container">
+        <div class="header-left">
+          <div class="logo">
+            <span class="logo-icon">📘</span>
+            <span class="logo-text">فيسبوك الإسلامي</span>
+          </div>
+        </div>
+        
+        <div class="header-center">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="globalSearch" placeholder="ابحث..." aria-label="بحث">
+          </div>
+        </div>
+        
+        <div class="header-right">
+          <button class="header-btn active" onclick="showSection('home')" title="الرئيسية">
+            <i class="fas fa-home"></i>
+          </button>
+          <button class="header-btn" onclick="showSection('friends')" title="الأصدقاء">
+            <i class="fas fa-user-friends"></i>
+            <span class="badge" id="friendRequestBadgeHeader">0</span>
+          </button>
+          <button class="header-btn" onclick="showSection('messages')" title="الرسائل">
+            <i class="fas fa-comment-dots"></i>
+            <span class="badge" id="messageBadgeHeaderDesktop">0</span>
+          </button>
+          <button class="header-btn" onclick="showSection('notifications')" title="الإشعارات">
+            <i class="fas fa-bell"></i>
+            <span class="badge" id="notificationBadgeHeader">0</span>
+          </button>
+          <button class="header-btn" onclick="showSection('pages')" title="الصفحات">
+            <i class="fas fa-flag"></i>
+          </button>
+          <button class="header-btn" onclick="showSection('groups')" title="الجروبات">
+            <i class="fas fa-users"></i>
+          </button>
+          <div class="header-profile" onclick="showSection('profile')">
+            <img id="headerAvatar" src="" alt="الصورة الشخصية">
+          </div>
+          <button class="header-btn" onclick="toggleTheme()" title="تبديل السمة">
+            <i class="fas fa-moon" id="themeIcon"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      
+      <!-- Home Section -->
+      <section id="homeSection" class="section active">
+        <div class="home-layout">
+          
+          <!-- Left Sidebar -->
+          <aside class="left-sidebar">
+            <div class="sidebar-card">
+              <div class="user-card" onclick="showSection('profile')">
+                <img id="sidebarAvatar" src="" alt="">
+                <div class="user-info">
+                  <h4 id="sidebarName">المستخدم</h4>
+                  <span id="sidebarPhone">-</span>
+                </div>
+              </div>
+              
+              <nav class="sidebar-nav">
+                <a href="#" onclick="showSection('friends')">
+                  <i class="fas fa-user-friends"></i>
+                  <span>الأصدقاء</span>
+                  <span class="nav-badge" id="friendsCount">0</span>
+                </a>
+                <a href="#" onclick="showSection('pages')">
+                  <i class="fas fa-flag"></i>
+                  <span>الصفحات</span>
+                </a>
+                <a href="#" onclick="showSection('groups')">
+                  <i class="fas fa-users"></i>
+                  <span>الجروبات</span>
+                </a>
+                <a href="#" onclick="showSection('saved')">
+                  <i class="fas fa-bookmark"></i>
+                  <span>المحفوظات</span>
+                </a>
+              </nav>
+            </div>
+          </aside>
+
+          <!-- Main Feed -->
+          <div class="main-feed">
+            
+            <!-- Create Post -->
+            <div class="create-post-card">
+              <div class="create-post-header">
+                <img id="postCreatorAvatar" src="" alt="">
+                <button class="create-post-btn" onclick="openCreatePostModal()">
+                  بم تفكر اليوم يا <span id="postCreatorName">المستخدم</span>؟
+                </button>
+              </div>
+              <div class="create-post-actions">
+                <button onclick="openCreatePostModal('photo')">
+                  <i class="fas fa-image" style="color: #22c55e;"></i>
+                  <span>صورة</span>
+                </button>
+                <button onclick="openCreatePostModal('video')">
+                  <i class="fas fa-video" style="color: #ef4444;"></i>
+                  <span>فيديو</span>
+                </button>
+                <button onclick="openCreatePostModal('feeling')">
+                  <i class="fas fa-smile" style="color: #eab308;"></i>
+                  <span>شعور</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Stories -->
+            <div class="stories-container" id="storiesContainer">
+              <div class="story-item add-story" onclick="openStoryCreator()">
+                <div class="story-avatar add">
+                  <i class="fas fa-plus"></i>
+                </div>
+                <span>إنشاء قصة</span>
+              </div>
+            </div>
+
+            <!-- Posts Feed -->
+            <div id="postsFeed" class="posts-feed">
+              <!-- Posts will be loaded here -->
+            </div>
+            
+            <div id="loadMorePosts" class="load-more" style="display: none;">
+              <button onclick="loadMorePosts()">تحميل المزيد</button>
+            </div>
+          </div>
+
+          <!-- Right Sidebar -->
+          <aside class="right-sidebar">
+            <!-- WhatsApp Banner -->
+            <div class="whatsapp-banner" onclick="goToWhatsApp()">
+              <div class="whatsapp-icon">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="whatsapp-text">
+                <strong>واتساب الإسلامي</strong>
+                <span>محادثات خاصة آمنة</span>
+              </div>
+              <i class="fas fa-chevron-left"></i>
+            </div>
+            
+            <div class="sidebar-card">
+              <h4 class="sidebar-title">الأصدقاء المتصلين</h4>
+              <div id="onlineFriends" class="online-friends">
+                <!-- Online friends will be loaded here -->
+              </div>
+            </div>
+            
+            <div class="sidebar-card">
+              <h4 class="sidebar-title">صفحات مقترحة</h4>
+              <div id="suggestedPages" class="suggested-items">
+                <!-- Suggested pages will be loaded here -->
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <!-- Friends Section -->
+      <section id="friendsSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-user-friends"></i> الأصدقاء</h2>
+        </div>
+        
+        <!-- Friend Requests -->
+        <div class="friends-card">
+          <h3>طلبات الصداقة</h3>
+          <div id="friendRequestsList" class="friend-requests">
+            <p class="empty-state">لا توجد طلبات صداقة جديدة</p>
+          </div>
+        </div>
+        
+        <!-- Add Friend -->
+        <div class="friends-card">
+          <h3>إضافة صديق</h3>
+          <div class="add-friend-form">
+            <input type="text" id="friendPhoneInput" placeholder="أدخل رقم هاتف الصديق">
+            <button class="btn-primary" onclick="sendFriendRequest()">
+              <i class="fas fa-user-plus"></i> إرسال طلب
+            </button>
+          </div>
+        </div>
+        
+        <!-- Friends List -->
+        <div class="friends-card">
+          <h3>أصدقاؤك (<span id="totalFriendsCount">0</span>)</h3>
+          <div id="friendsList" class="friends-list">
+            <p class="empty-state">لم تقم بإضافة أصدقاء بعد</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Messages Section -->
+      <section id="messagesSection" class="section">
+        <div class="messages-layout">
+          <!-- Mobile: Chat List Overlay -->
+          <div class="mobile-chat-list" id="mobileChatList">
+            <div class="messages-header">
+              <h3>المحادثات</h3>
+              <button onclick="openNewChatModal()" title="محادثة جديدة">
+                <i class="fas fa-edit"></i>
+              </button>
+            </div>
+            
+            <!-- WhatsApp Banner for Mobile -->
+            <div class="whatsapp-banner mobile" onclick="goToWhatsApp()">
+              <div class="whatsapp-icon">
+                <i class="fab fa-whatsapp"></i>
+              </div>
+              <div class="whatsapp-text">
+                <strong>واتساب الإسلامي</strong>
+                <span>تجربة محادثات أفضل</span>
+              </div>
+              <i class="fas fa-external-link-alt"></i>
+            </div>
+            
+            <div class="messages-search">
+              <input type="text" id="chatSearchInput" placeholder="ابحث في المحادثات...">
+            </div>
+            <div id="chatsList" class="chats-list">
+              <p class="empty-state">لا توجد محادثات</p>
+            </div>
+          </div>
+          
+          <!-- Chat Area -->
+          <div class="messages-main" id="messagesMain">
+            <div id="chatArea" class="chat-area">
+              <div class="no-chat-selected">
+                <i class="fas fa-comments"></i>
+                <p>اختر محادثة للبدء</p>
+                <p class="hint">أو جرب واتساب الإسلامي لتجربة أفضل</p>
+                <button class="btn-whatsapp" onclick="goToWhatsApp()">
+                  <i class="fab fa-whatsapp"></i> واتساب الإسلامي
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Notifications Section -->
+      <section id="notificationsSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-bell"></i> الإشعارات</h2>
+          <button class="btn-secondary" onclick="markAllAsRead()">تحديد الكل كمقروء</button>
+        </div>
+        <div id="notificationsList" class="notifications-list">
+          <p class="empty-state">لا توجد إشعارات جديدة</p>
+        </div>
+      </section>
+
+      <!-- Pages Section -->
+      <section id="pagesSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-flag"></i> الصفحات</h2>
+          <button class="btn-primary" onclick="openCreatePageModal()">
+            <i class="fas fa-plus"></i> إنشاء صفحة
+          </button>
+        </div>
+        
+        <!-- My Pages -->
+        <div class="pages-section">
+          <h3>صفحاتك</h3>
+          <div id="myPagesList" class="pages-grid">
+            <p class="empty-state">لم تقم بإنشاء صفحات بعد</p>
+          </div>
+        </div>
+        
+        <!-- Followed Pages -->
+        <div class="pages-section">
+          <h3>الصفحات التي تتابعها</h3>
+          <div id="followedPagesList" class="pages-grid">
+            <p class="empty-state">لا تتابع أي صفحات</p>
+          </div>
+        </div>
+        
+        <!-- Suggested Pages -->
+        <div class="pages-section">
+          <h3>صفحات مقترحة</h3>
+          <div id="allPagesList" class="pages-grid">
+            <!-- Pages will be loaded here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Groups Section -->
+      <section id="groupsSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-users"></i> الجروبات</h2>
+          <button class="btn-primary" onclick="openCreateGroupModal()">
+            <i class="fas fa-plus"></i> إنشاء جروب
+          </button>
+        </div>
+        
+        <!-- My Groups -->
+        <div class="groups-section">
+          <h3>جروباتك</h3>
+          <div id="myGroupsList" class="groups-grid">
+            <p class="empty-state">لم تنضم لأي جروبات بعد</p>
+          </div>
+        </div>
+        
+        <!-- All Groups -->
+        <div class="groups-section">
+          <h3>جميع الجروبات</h3>
+          <div id="allGroupsList" class="groups-grid">
+            <!-- Groups will be loaded here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Profile Section -->
+      <section id="profileSection" class="section">
+        <div class="profile-container">
+          <!-- Cover Photo -->
+          <div class="profile-cover" id="profileCoverContainer">
+            <img id="profileCover" src="" alt="صورة الغلاف">
+            <button class="change-cover" onclick="changeCoverPhoto()">
+              <i class="fas fa-camera"></i>
+              <span>تغيير الغلاف</span>
+            </button>
+          </div>
+          
+          <!-- Profile Info -->
+          <div class="profile-info">
+            <div class="profile-avatar-container">
+              <img id="profileAvatar" src="" alt="الصورة الشخصية">
+              <button class="change-avatar" onclick="changeProfilePhoto()">
+                <i class="fas fa-camera"></i>
+              </button>
+            </div>
+            
+            <div class="profile-details">
+              <h1 id="profileName">المستخدم</h1>
+              <p id="profilePhone" class="profile-phone">-</p>
+              <p id="profileBio" class="profile-bio">لا توجد نبذة</p>
+            </div>
+            
+            <div class="profile-stats">
+              <div class="stat" onclick="showSection('friends')">
+                <span class="stat-value" id="profileFriendsCount">0</span>
+                <span class="stat-label">صديق</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value" id="profilePostsCount">0</span>
+                <span class="stat-label">منشور</span>
+              </div>
+              <div class="stat">
+                <span class="stat-value" id="profileFollowersCount">0</span>
+                <span class="stat-label">متابع</span>
+              </div>
+            </div>
+            
+            <div class="profile-actions">
+              <button class="btn-secondary" onclick="openEditProfileModal()">
+                <i class="fas fa-edit"></i> تعديل الملف الشخصي
+              </button>
+            </div>
+          </div>
+          
+          <!-- Profile Content -->
+          <div class="profile-content">
+            <div class="profile-sidebar">
+              <div class="info-card">
+                <h4>المعلومات</h4>
+                <div class="info-item">
+                  <i class="fas fa-envelope"></i>
+                  <span id="profileEmail">-</span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-phone"></i>
+                  <span id="profilePhoneInfo">-</span>
+                </div>
+                <div class="info-item">
+                  <i class="fas fa-calendar"></i>
+                  <span>انضم في <span id="profileJoinDate">-</span></span>
+                </div>
+              </div>
+              
+              <div class="info-card">
+                <h4>الصفحات</h4>
+                <div id="profilePages">
+                  <p class="empty-state-small">لا توجد صفحات</p>
+                </div>
+              </div>
+              
+              <div class="info-card">
+                <h4>الجروبات</h4>
+                <div id="profileGroups">
+                  <p class="empty-state-small">لا توجد جروبات</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="profile-posts">
+              <div class="profile-posts-header">
+                <h4>المنشورات</h4>
+              </div>
+              <div id="profilePosts" class="posts-feed">
+                <p class="empty-state">لا توجد منشورات بعد</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Saved Section -->
+      <section id="savedSection" class="section">
+        <div class="section-header">
+          <h2><i class="fas fa-bookmark"></i> المحفوظات</h2>
+        </div>
+        <div id="savedPosts" class="posts-feed">
+          <p class="empty-state">لم تقم بحفظ أي منشورات</p>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav">
+      <button class="nav-item active" data-section="home" onclick="showSection('home')">
+        <i class="fas fa-home"></i>
+        <span>الرئيسية</span>
+      </button>
+      <button class="nav-item" data-section="friends" onclick="showSection('friends')">
+        <i class="fas fa-user-friends"></i>
+        <span>أصدقاء</span>
+        <span class="nav-badge" id="friendRequestBadgeMobile"></span>
+      </button>
+      <button class="nav-item" data-section="messages" onclick="showSection('messages')">
+        <i class="fas fa-comment-dots"></i>
+        <span>رسائل</span>
+        <span class="nav-badge" id="messageBadgeMobile"></span>
+      </button>
+      <button class="nav-item" data-section="notifications" onclick="showSection('notifications')">
+        <i class="fas fa-bell"></i>
+        <span>إشعارات</span>
+        <span class="nav-badge" id="notificationBadgeMobile"></span>
+      </button>
+      <button class="nav-item" data-section="profile" onclick="showSection('profile')">
+        <i class="fas fa-user"></i>
+        <span>حسابي</span>
+      </button>
+    </nav>
+
+    <!-- Floating Action Button -->
+    <button class="fab" onclick="openCreatePostModal()" title="إنشاء منشور">
+      <i class="fas fa-plus"></i>
+    </button>
+
+    <!-- Back to Main Button -->
+    <button class="back-to-main" onclick="redirectToMain()" title="العودة للرئيسية">
+      <i class="fas fa-home"></i>
+    </button>
+  </div>
+
+  <!-- Toast Container -->
+  <div id="toastContainer" class="toast-container"></div>
+
+  <!-- Modals -->
+  
+  <!-- Create Post Modal -->
+  <div id="createPostModal" class="modal">
+    <div class="modal-content create-post-modal-content">
+      <div class="modal-header">
+        <h3>إنشاء منشور</h3>
+        <button class="modal-close" onclick="closeModal('createPostModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="post-creator-info">
+          <img id="modalPostAvatar" src="" alt="">
+          <div>
+            <span id="modalPostName">المستخدم</span>
+            <select id="postPrivacy">
+              <option value="public">🌍 عام</option>
+              <option value="friends">👥 الأصدقاء</option>
+              <option value="private">🔒 خاص</option>
+            </select>
+          </div>
+        </div>
+        
+        <textarea id="postContent" placeholder="بم تفكر اليوم؟" rows="4"></textarea>
+        
+        <div id="postImagePreview" class="post-image-preview" style="display: none;">
+          <img id="previewImage" src="" alt="">
+          <button class="remove-image" onclick="removePostImage()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+        
+        <div class="post-attachments">
+          <label class="attachment-btn">
+            <input type="file" id="postImageInput" accept="image/*" style="display: none;" onchange="handlePostImage(event)">
+            <i class="fas fa-image" style="color: #22c55e;"></i>
+            <span>صورة</span>
+          </label>
+          <button class="attachment-btn">
+            <i class="fas fa-video" style="color: #ef4444;"></i>
+            <span>فيديو</span>
+          </button>
+          <button class="attachment-btn">
+            <i class="fas fa-smile" style="color: #eab308;"></i>
+            <span>شعور</span>
+          </button>
+          <button class="attachment-btn">
+            <i class="fas fa-map-marker-alt" style="color: #f43f5e;"></i>
+            <span>موقع</span>
+          </button>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('createPostModal')">إلغاء</button>
+        <button class="btn-primary" onclick="createPost()">نشر</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Post Modal -->
+  <div id="editPostModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>تعديل المنشور</h3>
+        <button class="modal-close" onclick="closeModal('editPostModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <textarea id="editPostContent" placeholder="محتوى المنشور" rows="4"></textarea>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('editPostModal')">إلغاء</button>
+        <button class="btn-primary" onclick="saveEditedPost()">حفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Page Modal -->
+  <div id="createPageModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>إنشاء صفحة جديدة</h3>
+        <button class="modal-close" onclick="closeModal('createPageModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>اسم الصفحة</label>
+          <input type="text" id="pageName" placeholder="أدخل اسم الصفحة">
+        </div>
+        <div class="form-group">
+          <label>وصف الصفحة</label>
+          <textarea id="pageDescription" placeholder="أدخل وصفاً للصفحة" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>تصنيف الصفحة</label>
+          <select id="pageCategory">
+            <option value="dawah">دعوة وإرشاد</option>
+            <option value="quran">قرآن وتجويد</option>
+            <option value="hadith">حديث وسنة</option>
+            <option value="fikih">فقه وعلوم</option>
+            <option value="charity">خيرية وإغاثة</option>
+            <option value="education">تعليمية</option>
+            <option value="other">أخرى</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>صورة الصفحة</label>
+          <label class="upload-area">
+            <input type="file" id="pageImageInput" accept="image/*" style="display: none;">
+            <div class="upload-content">
+              <i class="fas fa-cloud-upload-alt"></i>
+              <span>اضغط لرفع صورة</span>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('createPageModal')">إلغاء</button>
+        <button class="btn-primary" onclick="createPage()">إنشاء الصفحة</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Create Group Modal -->
+  <div id="createGroupModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>إنشاء جروب جديد</h3>
+        <button class="modal-close" onclick="closeModal('createGroupModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>اسم الجروب</label>
+          <input type="text" id="groupName" placeholder="أدخل اسم الجروب">
+        </div>
+        <div class="form-group">
+          <label>وصف الجروب</label>
+          <textarea id="groupDescription" placeholder="أدخل وصفاً للجروب" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>تصنيف الجروب</label>
+          <select id="groupCategory">
+            <option value="quran">قرآن وتجويد</option>
+            <option value="hadith">حديث وسنة</option>
+            <option value="fikih">فقه وعلوم</option>
+            <option value="general">عام</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>خصوصية الجروب</label>
+          <select id="groupPrivacy">
+            <option value="public">عام - يمكن للجميع الانضمام</option>
+            <option value="private">خاص - بدعوة فقط</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('createGroupModal')">إلغاء</button>
+        <button class="btn-primary" onclick="createGroup()">إنشاء الجروب</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Profile Modal -->
+  <div id="editProfileModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>تعديل الملف الشخصي</h3>
+        <button class="modal-close" onclick="closeModal('editProfileModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>الاسم</label>
+          <input type="text" id="editName" placeholder="الاسم">
+        </div>
+        <div class="form-group">
+          <label>نبذة عنك</label>
+          <textarea id="editBio" placeholder="اكتب نبذة عن نفسك" rows="3"></textarea>
+        </div>
+        <div class="form-group">
+          <label>صورة الملف الشخصي</label>
+          <label class="upload-area">
+            <input type="file" id="editAvatarInput" accept="image/*" style="display: none;" onchange="handleAvatarChange(event)">
+            <div class="upload-preview" id="avatarPreview">
+              <i class="fas fa-user-circle"></i>
+              <span>اختر صورة جديدة</span>
+            </div>
+          </label>
+        </div>
+        <div class="form-group">
+          <label>صورة الغلاف</label>
+          <label class="upload-area">
+            <input type="file" id="editCoverInput" accept="image/*" style="display: none;" onchange="handleCoverChange(event)">
+            <div class="upload-preview" id="coverPreview">
+              <i class="fas fa-image"></i>
+              <span>اختر صورة غلاف</span>
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-secondary" onclick="closeModal('editProfileModal')">إلغاء</button>
+        <button class="btn-primary" onclick="saveProfile()">حفظ التغييرات</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Viewer Modal -->
+  <div id="imageViewerModal" class="modal image-viewer-modal">
+    <button class="image-viewer-close" onclick="closeModal('imageViewerModal')">
+      <i class="fas fa-times"></i>
+    </button>
+    <img id="viewerImage" src="" alt="">
+  </div>
+
+  <!-- Comments Modal -->
+  <div id="commentsModal" class="modal">
+    <div class="modal-content comments-modal-content">
+      <div class="modal-header">
+        <h3>التعليقات</h3>
+        <button class="modal-close" onclick="closeModal('commentsModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div id="commentsContainer" class="modal-body comments-body">
+        <!-- Comments will be loaded here -->
+      </div>
+      <div class="modal-footer comment-input-area">
+        <img id="commentUserAvatar" src="" alt="">
+        <input type="text" id="commentInput" placeholder="اكتب تعليقاً...">
+        <button class="btn-primary btn-sm" onclick="addComment()">إرسال</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Post Options Modal -->
+  <div id="postOptionsModal" class="modal">
+    <div class="modal-content options-modal">
+      <div class="options-list">
+        <button class="option-btn" onclick="editPost()">
+          <i class="fas fa-edit"></i>
+          <span>تعديل المنشور</span>
+        </button>
+        <button class="option-btn" onclick="savePost()">
+          <i class="fas fa-bookmark"></i>
+          <span>حفظ المنشور</span>
+        </button>
+        <button class="option-btn danger" onclick="deletePost()">
+          <i class="fas fa-trash"></i>
+          <span>حذف المنشور</span>
+        </button>
+      </div>
+      <button class="btn-secondary full-width" onclick="closeModal('postOptionsModal')">إلغاء</button>
+    </div>
+  </div>
+
+  <!-- New Chat Modal -->
+  <div id="newChatModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>محادثة جديدة</h3>
+        <button class="modal-close" onclick="closeModal('newChatModal')">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>اختر صديقاً</label>
+          <div id="friendsForChat" class="friends-select-list">
+            <!-- Friends will be loaded here -->
+          </div>
+        </div>
+        <div class="whatsapp-suggestion">
+          <p>💡 للمحادثات الخاصة والآمنة</p>
+          <button class="btn-whatsapp" onclick="goToWhatsApp()">
+            <i class="fab fa-whatsapp"></i> واتساب الإسلامي
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-storage-compat.js"></script>
+  
+  <!-- App Script -->
+  <script src="facebook.js"></script>
+</body>
+</html>
