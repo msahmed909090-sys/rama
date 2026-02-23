@@ -145,13 +145,17 @@ function formatTime(timestamp) {
             if (userDoc.exists) {
               userData = userDoc.data();
               
-              // التأكد من وجود chatId
-              if (!userData.chatId) {
-                // إنشاء chatId بناءً على رقم الهاتف أو معرف عشوائي
-                const chatId = userData.phone || generateChatId();
-                await db.collection('users').doc(user.uid).update({ chatId });
-                userData.chatId = chatId;
-              }
+// بعد تحميل userData من Firestore
+if (!userData.chatId) {
+  // chatId غير موجود (مستخدم قديم أو خطأ) → ننشئ واحداً جديداً
+  const chatId = generateChatId();
+  await db.collection('users').doc(currentUser.uid).update({ chatId });
+  userData.chatId = chatId;
+  console.log('تم إنشاء chatId جديد للمستخدم:', chatId);
+} else {
+  // chatId موجود بالفعل، نستخدمه كما هو
+  console.log('chatId موجود:', userData.chatId);
+}
               
               resolve(true);
             } else {

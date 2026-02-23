@@ -562,30 +562,51 @@ const firebaseConfig = {
             const mainUserData = userDoc.data();
             currentUserPhone = mainUserData.chatId || mainUserData.phone || `user_${user.uid.substring(0, 8)}`;
             
-            let fbUser = await FirebaseDB.getUser(currentUserPhone);
-            
-            if (!fbUser) {
-              fbUser = await FirebaseDB.saveUser(currentUserPhone, {
-                name: mainUserData.username || user.displayName || 'مستخدم',
-                email: mainUserData.email || user.email || '',
-                photoURL: mainUserData.photoURL || user.photoURL || '',
-                coverPhoto: null,
-                bio: '',
-                friends: [],
-                friendRequests: [],
-                sentRequests: [],
-                blockedUsers: [],
-                followers: [],
-                following: [],
-                savedPosts: []
-              });
-            } else {
-              await FirebaseDB.updateUser(fbUser.id, {
-                name: mainUserData.username || user.displayName || fbUser.name,
-                email: mainUserData.email || user.email || fbUser.email,
-                photoURL: mainUserData.photoURL || user.photoURL || fbUser.photoURL
-              });
-            }
+// محاولة جلب مستخدم فيسبوك باستخدام currentUserPhone
+let fbUser = await FirebaseDB.getUser(currentUserPhone);
+
+if (!fbUser) {
+    // لم نجد المستخدم في فيسبوك، قد يكون chatId تغير
+    console.warn('لم يتم العثور على مستخدم فيسبوك بالرقم:', currentUserPhone);
+    
+    // نعيد جلب بيانات المستخدم من users للتأكد من chatId الصحيح
+    const userDocRefresh = await db.collection('users').doc(user.uid).get();
+    if (userDocRefresh.exists) {
+        const refreshedData = userDocRefresh.data();
+        const correctPhone = refreshedData.chatId;
+        
+        // إذا كان الرقم مختلفاً عما لدينا، نستخدم الصحيح ونحاول مجدداً
+        if (correctPhone && correctPhone !== currentUserPhone) {
+            console.log('تصحيح chatId:', correctPhone);
+            currentUserPhone = correctPhone;
+            fbUser = await FirebaseDB.getUser(currentUserPhone);
+        }
+    }
+    
+    // إذا ما زلنا لم نجد المستخدم، نتحقق إذا كان هناك مستخدم قديم بنفس البريد أو UID
+    if (!fbUser) {
+        // محاولة البحث عن مستخدم فيسبوك باستخدام UID (إذا كنت قد خزنت UID في fb_users)
+        // يمكنك إضافة حقل `authUID` في مستند fb_users لتسهيل البحث
+        // لكن حالياً ليس لدينا، لذا سننشئ مستخدم جديد
+        console.log('لم يتم العثور على مستخدم فيسبوك حتى بعد التصحيح، سيتم إنشاء جديد');
+        fbUser = await FirebaseDB.saveUser(currentUserPhone, {
+            name: mainUserData.username || user.displayName || 'مستخدم',
+            email: mainUserData.email || user.email || '',
+            photoURL: mainUserData.photoURL || user.photoURL || '',
+            // ... باقي البيانات
+        });
+    } else {
+        // تم العثور على المستخدم بعد التصحيح
+        console.log('تم العثور على المستخدم بعد التصحيح');
+    }
+} else {
+    // المستخدم موجود، نقوم بتحديث بياناته
+    await FirebaseDB.updateUser(fbUser.id, {
+        name: mainUserData.username || user.displayName || fbUser.name,
+        email: mainUserData.email || user.email || fbUser.email,
+        photoURL: mainUserData.photoURL || user.photoURL || fbUser.photoURL
+    });
+}
             
             showApp();
             initializeApp();
