@@ -1421,16 +1421,17 @@
   </div>
 
   <!-- معلومات الـ ID -->
-  <div class="glass-card p-6 text-center">
-    <h3 class="font-bold mb-3">معرفك الشخصي</h3>
-    <div class="id-badge mb-4" id="myChatIdDisplay">-</div>
-    <p class="text-sm" style="color: var(--text-muted);">
-      شارك هذا المعرف مع أصدقائك للتواصل
-    </p>
-    <button class="btn btn-gold mt-4" onclick="copyMyChatId()">
-      <i class="fas fa-copy"></i> نسخ المعرف
-    </button>
-  </div>
+<!-- معلومات البريد الإلكتروني -->
+<div class="glass-card p-6 text-center">
+  <h3 class="font-bold mb-3">بريدك الإلكتروني</h3>
+  <div class="id-badge mb-4" id="myEmailDisplay">-</div>
+  <p class="text-sm" style="color: var(--text-muted);">
+    شارك هذا البريد مع أصدقائك للتواصل
+  </p>
+  <button class="btn btn-gold mt-4" onclick="copyMyEmail()">
+    <i class="fas fa-copy"></i> نسخ البريد
+  </button>
+</div>
 </div>
 
 <!-- Chat Modal -->
@@ -1793,63 +1794,64 @@ const safeSetStyle = (id, prop, value) => {
     }
 
     async function handleRegister(e) {
-      e.preventDefault();
-      const username = document.getElementById('regUsername').value;
-      const email = document.getElementById('regEmail').value;
-      const password = document.getElementById('regPassword').value;
-      try {
-        const cred = await auth.createUserWithEmailAndPassword(email, password);
-        await cred.user.updateProfile({ displayName: username });
-        const usersSnap = await db.collection('users').limit(2).get();
-        const isFirstUser = usersSnap.empty || usersSnap.size === 0;
-        
-        // === التعديل: توليد chatId فوراً عند التسجيل ===
-        const newChatId = generateChatId(); 
-        
-        await db.collection('users').doc(cred.user.uid).set({
-          username, email,
-          photoURL: cred.user.photoURL || '',
-    chatId: cred.user.uid, // استخدم UID بدل الرقم العشوائي
-          level: 1, points: 0, streakDays: 0,
-          totalKhatma: 0, salawatCount: 0,
-          dailySalawatGoal: 100,
-          role: isFirstUser ? 'admin' : 'user',
-          createdAt: firebase.firestore.FieldValue.serverTimestamp()
-        });
-        showToast('تم إنشاء الحساب بنجاح! 🎉', 'success');
-      } catch (error) {
-        showToast(getFirebaseError(error), 'error');
-      }
-    }
+  e.preventDefault();
+  const username = document.getElementById('regUsername').value;
+  const email = document.getElementById('regEmail').value;
+  const password = document.getElementById('regPassword').value;
+  try {
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+    await cred.user.updateProfile({ displayName: username });
+    const usersSnap = await db.collection('users').limit(2).get();
+    const isFirstUser = usersSnap.empty || usersSnap.size === 0;
+    
+    await db.collection('users').doc(cred.user.uid).set({
+      username, 
+      email,
+      photoURL: cred.user.photoURL || '',
+      // تم إلغاء chatId - نستخدم الإيميل كمعرف فريد
+      level: 1, 
+      points: 0, 
+      streakDays: 0,
+      totalKhatma: 0, 
+      salawatCount: 0,
+      dailySalawatGoal: 100,
+      role: isFirstUser ? 'admin' : 'user',
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    });
+    showToast('تم إنشاء الحساب بنجاح! 🎉', 'success');
+  } catch (error) {
+    showToast(getFirebaseError(error), 'error');
+  }
+}
     async function handleGoogleLogin() {
-      try {
-        const result = await auth.signInWithPopup(googleProvider);
-        const user = result.user;
-        const userDoc = await db.collection('users').doc(user.uid).get();
-        if (!userDoc.exists) {
-          const usersSnap = await db.collection('users').limit(1).get();
-          const isFirstUser = usersSnap.empty;
-          
-          // === التعديل: توليد chatId فوراً عند التسجيل بجوجل ===
-          const newChatId = generateChatId();
-          
-          await db.collection('users').doc(user.uid).set({
-            username: user.displayName || 'مستخدم',
-            email: user.email,
-            photoURL: user.photoURL || '',
-            chatId: newChatId, // <--- إضافة المعرف هنا
-            level: 1, points: 0, streakDays: 0,
-            totalKhatma: 0, salawatCount: 0,
-            dailySalawatGoal: 100,
-            role: isFirstUser ? 'admin' : 'user',
-            createdAt: firebase.firestore.FieldValue.serverTimestamp()
-          });
-        }
-        showToast('أهلاً بك! 🌙', 'success');
-      } catch (error) {
-        showToast(getFirebaseError(error), 'error');
-      }
+  try {
+    const result = await auth.signInWithPopup(googleProvider);
+    const user = result.user;
+    const userDoc = await db.collection('users').doc(user.uid).get();
+    if (!userDoc.exists) {
+      const usersSnap = await db.collection('users').limit(1).get();
+      const isFirstUser = usersSnap.empty;
+      
+      await db.collection('users').doc(user.uid).set({
+        username: user.displayName || 'مستخدم',
+        email: user.email,
+        photoURL: user.photoURL || '',
+        // تم إلغاء chatId
+        level: 1, 
+        points: 0, 
+        streakDays: 0,
+        totalKhatma: 0, 
+        salawatCount: 0,
+        dailySalawatGoal: 100,
+        role: isFirstUser ? 'admin' : 'user',
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
     }
+    showToast('أهلاً بك! 🌙', 'success');
+  } catch (error) {
+    showToast(getFirebaseError(error), 'error');
+  }
+}
     function handleLogout() {
       unsubscribers.forEach(unsub => unsub());
       unsubscribers = [];
@@ -1981,9 +1983,7 @@ function updateUI() {
   
   updateBadges();
   
-  // تحديث الـ ID - استخدام العنصر الصحيح
-  safeSetText('myChatIdDisplay', userData?.chatId || 'جاري التحميل...');
-  safeSetText('myChatId', userData?.chatId || '-');
+safeSetText('myEmailDisplay', userData?.email || 'جاري التحميل...');
   
 }
     // =============================================
@@ -4607,11 +4607,11 @@ async function searchUsers(query) {
         .limit(10)
         .get();
       
-      // البحث بالـ ID
-      const idQuery = await db.collection('users')
-        .where('chatId', '==', query)
-        .limit(1)
-        .get();
+// البحث بالإيميل
+const emailQuery = await db.collection('users')
+  .where('email', '==', query)
+  .limit(1)
+  .get();
       
       let html = '';
       const addedIds = new Set();
@@ -4651,16 +4651,16 @@ async function searchUsers(query) {
 
 // إنشاء HTML لنتيجة البحث
 function createUserSearchResult(userId, userData) {
-  const isAdmin = userData.chatId === ADMIN_ID;
+  const isAdmin = userData.role === 'admin';
   
   return `
-    <div class="social-search-result" onclick="startNewChat('${userId}', '${userData.chatId || ''}')">
+    <div class="social-search-result" onclick="startNewChat('${userId}', '${userData.email || ''}')">
       <div class="social-search-avatar">
         ${isAdmin ? '👑' : '👤'}
       </div>
       <div class="social-search-info">
         <h4>${userData.username || 'مستخدم'} ${isAdmin ? '<span class="whatsapp-admin-badge">أدمن</span>' : ''}</h4>
-        <p>ID: ${userData.chatId || 'غير متوفر'}</p>
+        <p>Email: ${userData.email || 'غير متوفر'}</p>
       </div>
     </div>
   `;
@@ -4814,15 +4814,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }, 2000);
 });
 
-// توليد ID عشوائي
-function generateChatId() {
-  const chars = '0123456789';
-  let id = '';
-  for (let i = 0; i < 10; i++) {
-    id += chars.charAt(Math.floor(Math.random() * chars.length));
-  }
-  return id;
-}
+
 
 // =============================================
 // COMMENTS MODAL - نافذة التعليقات الكاملة
@@ -5165,7 +5157,16 @@ function formatCommentTime(timestamp) {
   
   return date.toLocaleDateString('ar-EG', { month: 'short', day: 'numeric' });
 }
-
+// نسخ البريد الإلكتروني
+function copyMyEmail() {
+  if (userData && userData.email) {
+    navigator.clipboard.writeText(userData.email).then(() => {
+      showToast('تم نسخ البريد الإلكتروني!', 'success');
+    });
+  } else {
+    showToast('البريد غير متوفر', 'error');
+  }
+}
 console.log('✅ Social System Loaded');// تحديث عرض الـ ID
 function updateChatIdDisplay() {
   const el = document.getElementById('myChatIdDisplay');
@@ -5175,15 +5176,7 @@ function updateChatIdDisplay() {
 }
 
 // نسخ الـ ID
-function copyMyChatId() {
-  if (userData && userData.chatId) {
-    navigator.clipboard.writeText(userData.chatId).then(() => {
-      showToast('تم نسخ المعرف!', 'success');
-    });
-  } else {
-    showToast('المعرف غير متوفر بعد', 'error');
-  }
-}
+
 // =============================================
 // نافذة التعليقات الكاملة
 // =============================================

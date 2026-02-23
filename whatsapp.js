@@ -145,17 +145,7 @@ function formatTime(timestamp) {
             if (userDoc.exists) {
               userData = userDoc.data();
               
-// بعد تحميل userData من Firestore
-if (!userData.chatId) {
-  // chatId غير موجود (مستخدم قديم أو خطأ) → ننشئ واحداً جديداً
-  const chatId = generateChatId();
-  await db.collection('users').doc(currentUser.uid).update({ chatId });
-  userData.chatId = chatId;
-  console.log('تم إنشاء chatId جديد للمستخدم:', chatId);
-} else {
-  // chatId موجود بالفعل، نستخدمه كما هو
-  console.log('chatId موجود:', userData.chatId);
-}
+
               
               resolve(true);
             } else {
@@ -175,14 +165,7 @@ if (!userData.chatId) {
   /**
    * توليد معرف محادثة عشوائي
    */
-  function generateChatId() {
-    const chars = '0123456789';
-    let id = '';
-    for (let i = 0; i < 10; i++) {
-      id += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    return id;
-  }
+
   
   // ============================================
   // تهيئة التطبيق
@@ -1314,47 +1297,47 @@ try {
     let communityAvatar = null;
     
     // إضافة عضو
-    document.getElementById('addMemberBtn').addEventListener('click', async () => {
-      const phone = document.getElementById('memberPhoneInput').value.trim();
-      
-      if (!phone) {
-        showToast('أدخل رقم الهاتف', 'error');
-        return;
-      }
-      
-      if (members.includes(phone)) {
-        showToast('العضو موجود بالفعل', 'error');
-        return;
-      }
-      
-      // البحث عن المستخدم برقم الهاتف
-      const userSnapshot = await db.collection('users')
-        .where('chatId', '==', phone)
-        .limit(1)
-        .get();
-      
-      if (userSnapshot.empty) {
-        showToast('لم يتم العثور على المستخدم', 'error');
-        return;
-      }
-      
-      const userDoc = userSnapshot.docs[0];
-      members.push(userDoc.id);
-      
-      // إضافة العضو للقائمة
-      const memberList = document.getElementById('addedMembersList');
-      const userData = userDoc.data();
-      
-      const tag = document.createElement('div');
-      tag.className = 'member-tag';
-      tag.innerHTML = `
-        <span>${userData.username || phone}</span>
-        <button onclick="this.parentElement.remove(); members = members.filter(m => m !== '${userDoc.id}');">×</button>
-      `;
-      memberList.appendChild(tag);
-      
-      document.getElementById('memberPhoneInput').value = '';
-    });
+document.getElementById('addMemberBtn').addEventListener('click', async () => {
+  const email = document.getElementById('memberEmailInput').value.trim();
+  
+  if (!email) {
+    showToast('أدخل البريد الإلكتروني', 'error');
+    return;
+  }
+  
+  if (members.includes(email)) {
+    showToast('العضو موجود بالفعل', 'error');
+    return;
+  }
+  
+  // البحث عن المستخدم بالبريد الإلكتروني
+  const userSnapshot = await db.collection('users')
+    .where('email', '==', email)
+    .limit(1)
+    .get();
+  
+  if (userSnapshot.empty) {
+    showToast('لم يتم العثور على المستخدم', 'error');
+    return;
+  }
+  
+  const userDoc = userSnapshot.docs[0];
+  const foundUserData = userDoc.data();
+  members.push(userDoc.id);
+  
+  // إضافة العضو للقائمة
+  const memberList = document.getElementById('addedMembersList');
+  
+  const tag = document.createElement('div');
+  tag.className = 'member-tag';
+  tag.innerHTML = `
+    <span>${foundUserData.username || email}</span>
+    <button onclick="this.parentElement.remove(); members = members.filter(m => m !== '${userDoc.id}');">×</button>
+  `;
+  memberList.appendChild(tag);
+  
+  document.getElementById('memberEmailInput').value = '';
+});
     
     // رفع صورة المجتمع
     document.getElementById('communityAvatarUpload').addEventListener('click', () => {
@@ -1426,40 +1409,40 @@ try {
   // البحث عن مستخدمين
   // ============================================
   
-  document.getElementById('searchBtn').addEventListener('click', () => {
-    const phone = prompt('أدخل رقم الهاتف أو ID المستخدم:');
-    
-    if (phone && phone.trim()) {
-      searchUserByPhone(phone.trim());
-    }
-  });
+document.getElementById('searchBtn').addEventListener('click', () => {
+  const email = prompt('أدخل البريد الإلكتروني للمستخدم:');
   
-  async function searchUserByPhone(phone) {
-    try {
-      const userSnapshot = await db.collection('users')
-        .where('chatId', '==', phone)
-        .limit(1)
-        .get();
-      
-      if (userSnapshot.empty) {
-        showToast('لم يتم العثور على المستخدم', 'error');
-        return;
-      }
-      
-      const userDoc = userSnapshot.docs[0];
-      const userData = userDoc.data();
-      
-      // فتح محادثة مع المستخدم
-      const avatar = userData.photoURL || 
-        `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23075e54" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="40">${(userData.username || 'م')[0]}</text></svg>`;
-      
-      openChat(userDoc.id, userData.username, avatar);
-      
-    } catch (error) {
-      console.error('Error searching user:', error);
-      showToast('حدث خطأ في البحث', 'error');
-    }
+  if (email && email.trim()) {
+    searchUserByEmail(email.trim());
   }
+});
+  
+async function searchUserByEmail(email) {
+  try {
+    const userSnapshot = await db.collection('users')
+      .where('email', '==', email)
+      .limit(1)
+      .get();
+    
+    if (userSnapshot.empty) {
+      showToast('لم يتم العثور على المستخدم', 'error');
+      return;
+    }
+    
+    const userDoc = userSnapshot.docs[0];
+    const userData = userDoc.data();
+    
+    // فتح محادثة مع المستخدم
+    const avatar = userData.photoURL || 
+      `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23075e54" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="40">${(userData.username || 'م')[0]}</text></svg>`;
+    
+    openChat(userDoc.id, userData.username, avatar);
+    
+  } catch (error) {
+    console.error('Error searching user:', error);
+    showToast('حدث خطأ في البحث', 'error');
+  }
+}
   
   // ============================================
   // بدء التطبيق
