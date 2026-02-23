@@ -2198,7 +2198,20 @@ function updateUI() {
         showToast('حدث خطأ', 'error');
       }
     }
-
+    async function saveAnsweredQuestion(questionId) {
+  if (!currentUser) return;
+  
+  try {
+    await db.collection('users').doc(currentUser.uid)
+      .collection('answeredQuestions')
+      .doc(questionId)
+      .set({
+        answeredAt: firebase.firestore.FieldValue.serverTimestamp()
+      });
+  } catch (error) {
+    console.log("Error saving answered question:", error);
+  }
+}
     // =============================================
     // LEVEL SYSTEM
     // =============================================
@@ -2224,8 +2237,8 @@ function updateUI() {
         let query = db.collection('questions')
           .where('type', '==', type)
           .where('isActive', '==', true)
-          .where('levelRequired', '<=', userLevel);
-        const snap = await query.get();
+          .where('levelRequired', '<=', userData?.level || 1)
+          const snap = await query.get();
         if (snap.empty) {
           showToast('لا توجد أسئلة متاحة حالياً', 'info');
           return;
@@ -3285,21 +3298,26 @@ async function initUserChatId() {
   
   const userDoc = await db.collection('users').doc(currentUser.uid).get();
   const data = userDoc.data();
-  
+
   if (!data.chatId) {
     const newChatId = generateChatId();
-    await db.collection('users').doc(currentUser.uid).update({
-      chatId: newChatId
-    });
-    document.getElementById('myChatId').textContent = newChatId;
+    await db.collection('users').doc(currentUser.uid).update({ chatId: newChatId });
+    currentUserChatId = newChatId;
   } else {
-    document.getElementById('myChatId').textContent = data.chatId;
+    currentUserChatId = data.chatId;
+  }
+
+  // الحل: التحقق من وجود العنصر قبل التحديث
+  const el = document.getElementById('myChatId');
+  if (el) {
+    el.textContent = currentUserChatId;
   }
   
-  // تسجيل بصمة الجهاز
-  AntiCheat.registerDevice(currentUser.uid);
+  const elDisplay = document.getElementById('myChatIdDisplay');
+  if (elDisplay) {
+      elDisplay.textContent = currentUserChatId;
+  }
 }
-
 // فتح تطبيق سوشيال
 function openSocialApp(app) {
   document.getElementById('whatsappSection').style.display = app === 'whatsapp' ? 'block' : 'none';
