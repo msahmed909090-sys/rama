@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>القرآن الكريم - عرض المصحف</title>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri+Quran&family=Amiri:wght@400;700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-app: #1a1a1a;
+            --bg-page: #fffef5; /* لون ورقي */
+            --text-quran: #1a1a1a;
+            --text-ui: #ffffff;
+            --accent: #bfa15e; /* ذهبي تراثي */
+            --accent-dark: #8f7342;
+            --border-frame: #bfa15e;
+            --bg-overlay: rgba(0,0,0,0.85);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+            user-select: none;
+        }
+
+        body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-app);
+            color: var(--text-ui);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header --- */
+        .header {
+            height: 55px;
+            background: #000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 15px;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-title {
+            font-family: 'Amiri', serif;
+            font-size: 1.3rem;
+            color: var(--accent);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .icon-btn {
+            background: none;
+            border: none;
+            color: var(--text-ui);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 11;
+            transition: transform 0.2s;
+        }
+
+        .icon-btn:active { transform: scale(0.9); }
+
+        .menu-dots {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .menu-dots span {
+            display: block;
+            width: 4px;
+            height: 4px;
+            background: currentColor;
+            border-radius: 50%;
+        }
+
+        /* --- Main Quran View --- */
+        .quran-viewer {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #222;
+        }
+
+        .page-container {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.3s ease;
+        }
+
+        /* --- Quran Page Styling (Mushaf Look) --- */
+        .mushaf-page {
+            width: 100%;
+            max-width: 600px; /* عرض مناسب للهواتف */
+            height: 100%;
+            background-color: var(--bg-page);
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.08'/%3E%3C/svg%3E");
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0,0,0,0.5);
+        }
+
+        /* الإطار الزخرفي */
+        .page-frame {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            right: 10px;
+            bottom: 10px;
+            border: 2px solid var(--border-frame);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .page-frame::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            right: 4px;
+            bottom: 4px;
+            border: 1px solid rgba(191, 161, 94, 0.3);
+        }
+
+        /* محتوى الصفحة */
+.page-content {
+    flex: 1;
+    padding: 35px 25px 20px;
+    display: flex;
+    flex-direction: column;
+    /* السماح للعناصر بالتمدد للأسفل بدلاً من التمدد المتساوي */
+    justify-content: flex-start; 
+    overflow-y: auto; /* هذا هو السطر الأهم: يظهر شريط تمرير عند الحاجة */
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch; /* لجعل التمرير سلساً جداً على الآيفون */
+    position: relative;
+    z-index: 2;
+    /* إخفاء شريط التمرير القبيح للحفاظ على جمال المصحف (اختياري) */
+    scrollbar-width: none; /* لفايرفوكس */
+}
+.page-content::-webkit-scrollbar {
+    display: none; /* لمتصفحات كروم وسفاري */
+}
+
+        .surah-header {
+            text-align: center;
+            margin-bottom: 15px;
+            display: none; /* يظهر فقط في بداية السور */
+        }
+
+        .surah-header.visible { display: block; }
+
+        .surah-title-box {
+            display: inline-block;
+            padding: 8px 30px;
+            background: linear-gradient(to bottom, #f5f5f5, #e0e0e0);
+            border: 1px solid var(--accent);
+            border-radius: 20px;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .surah-title {
+            font-family: 'Amiri', serif;
+            font-size: 1.4rem;
+            color: var(--accent-dark);
+            font-weight: 700;
+        }
+
+        .bismillah {
+            text-align: center;
+            font-family: 'Amiri Quran', serif;
+            font-size: 1.3rem;
+            color: #444;
+            margin-bottom: 15px;
+            display: none;
+        }
+        
+        .bismillah.visible { display: block; }
+
+.verses-wrapper {
+    text-align: justify;
+    line-height: 2.35;
+    font-family: 'Amiri Quran', serif;
+    font-size: 1.4rem; /* يمكن تصغير الخط قليلاً ليناسب الشاشات الصغيرة */
+    color: var(--text-quran);
+    /* تغليف النص ليأخذ المساحة المتاحة */
+    flex: 1;
+    width: 100%;
+}
+
+        .verse-text {
+            display: inline;
+        }
+
+        .verse-number {
+            display: inline-block;
+            width: 25px;
+            height: 25px;
+            line-height: 25px;
+            text-align: center;
+            background: var(--accent);
+            color: #fff;
+            border-radius: 50%;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.5rem; /* صغير ليتناسب مع الخط */
+            margin: 0 2px;
+            vertical-align: middle;
+        }
+
+.page-footer {
+    text-align: center;
+    padding-top: 10px;
+    /* جعله ثابتاً في أسفل الصندوق */
+    flex-shrink: 0; 
+    background: var(--bg-page); /* خلفية بلون الورق ليغطي ما تحته */
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+}
+
+        .page-num-box {
+            display: inline-block;
+            padding: 2px 12px;
+            border: 1px solid rgba(0,0,0,0.1);
+            border-radius: 4px;
+            color: #666;
+            font-family: 'Tajawal', sans-serif;
+            font-size: 0.8rem;
+            background: rgba(0,0,0,0.02);
+        }
+
+        /* --- Navigation Arrows --- */
+        .nav-trigger {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 20%;
+            z-index: 20;
+            cursor: pointer;
+        }
+
+        .nav-left { left: 0; }
+        .nav-right { right: 0; }
+
+        /* --- Bottom Navigation Bar --- */
+        .bottom-nav {
+            height: 50px;
+            background: #000;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid #333;
+            z-index: 10;
+        }
+
+        .nav-btn {
+            background: none;
+            border: none;
+            color: #aaa;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            font-size: 0.65rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+        
+        .nav-btn.active { color: var(--accent); }
+
+        /* --- Side Menu (Surah List) --- */
+        .side-menu-overlay {
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: var(--bg-overlay);
+            z-index: 100;
+            visibility: hidden;
+            opacity: 0;
+            transition: all 0.3s;
+        }
+
+        .side-menu-overlay.active { visibility: visible; opacity: 1; }
+
+        .side-menu {
+            position: fixed;
+            top: 0; right: 0; bottom: 0;
+            width: 300px;
+            background: #111;
+            transform: translateX(100%);
+            transition: transform 0.3s ease-out;
+            z-index: 101;
+            display: flex;
+            flex-direction: column;
+            border-left: 1px solid #333;
+        }
+
+        .side-menu-overlay.active .side-menu { transform: translateX(0); }
+
+        .menu-header {
+            padding: 20px;
+            background: #000;
+            border-bottom: 1px solid #333;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background: #222;
+            color: #fff;
+            font-family: 'Tajawal', sans-serif;
+            outline: none;
+        }
+
+        .menu-list {
+            flex: 1;
+            overflow-y: auto;
+            padding-bottom: 20px;
+        }
+
+        .menu-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 20px;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .menu-item:active { background: #222; }
+
+        .item-name { font-family: 'Amiri', serif; font-size: 1.1rem; }
+        .item-page { font-size: 0.8rem; color: #666; }
+
+        /* --- Loading Screen --- */
+        .loading-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--bg-app);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            transition: opacity 0.5s;
+        }
+        
+        .spinner {
+            width: 50px; height: 50px;
+            border: 3px solid #333;
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* --- Utilities --- */
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loadingScreen">
+        <div class="spinner"></div>
+        <p style="margin-top: 20px; color: #aaa;">جاري تحميل المصحف...</p>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+        <button class="icon-btn" id="jumpToPageBtn">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+        </button>
+        <h1 class="header-title">القرآن الكريم</h1>
+<a href="index.html">
+            <button class="icon-btn" id="menuOpenBtn">
+            <div class="menu-dots">
+                <span></span><span></span><span></span>
+            </div>
+        </button>
+</a>
+    </header>
+
+    <!-- Main Content -->
+    <main class="quran-viewer">
+        <div class="nav-trigger nav-left" id="prevPageTrigger"></div>
+        
+        <div class="page-container">
+            <div class="mushaf-page">
+                <div class="page-frame"></div>
+                <div class="page-content" id="pageContent">
+                    <!-- Dynamic Content Here -->
+                </div>
+            </div>
+        </div>
+
+        <div class="nav-trigger nav-right" id="nextPageTrigger"></div>
+    </main>
+
+    <!-- Bottom Nav -->
+    <nav class="bottom-nav">
+        <button class="nav-btn" id="navPrev">
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7"/></svg>
+            <span>السابق</span>
+        </button>
+        <button class="nav-btn" id="navNext">
+            <span>التالي</span>
+            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+    </nav>
+
+    <!-- Side Menu -->
+    <div class="side-menu-overlay" id="menuOverlay">
+        <div class="side-menu">
+            <div class="menu-header">
+                <input type="text" class="search-input" id="searchInput" placeholder="ابحث عن سورة...">
+            </div>
+            <div class="menu-list" id="surahList">
+                <!-- List Items -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- Configuration ---
+        const API_URL = 'https://api.alquran.cloud/v1/quran/quran-uthmani';
+        const STORAGE_KEY = 'fullQuranData_v1';
+        
+        // --- App State ---
+        let quranData = null; // Holds the full data organized by pages
+        let currentPage = 1;
+        const TOTAL_PAGES = 604;
+        let surahMeta = []; // For search list
+
+        // --- DOM Elements ---
+        const els = {
+            loading: document.getElementById('loadingScreen'),
+            pageContent: document.getElementById('pageContent'),
+            menuOverlay: document.getElementById('menuOverlay'),
+            menuOpenBtn: document.getElementById('menuOpenBtn'),
+            searchInput: document.getElementById('searchInput'),
+            surahList: document.getElementById('surahList'),
+            prevTrigger: document.getElementById('prevPageTrigger'),
+            nextTrigger: document.getElementById('nextPageTrigger'),
+            navPrev: document.getElementById('navPrev'),
+            navNext: document.getElementById('navNext'),
+            jumpBtn: document.getElementById('jumpToPageBtn')
+        };
+
+        // --- Initialization ---
+        async function init() {
+            // Check LocalStorage first
+            const stored = localStorage.getItem(STORAGE_KEY);
+            if (stored) {
+                console.log("Loaded from cache");
+                quranData = JSON.parse(stored);
+                setupApp();
+            } else {
+                console.log("Fetching from API");
+                await fetchQuran();
+            }
+        }
+
+        async function fetchQuran() {
+            try {
+                const response = await fetch(API_URL);
+                const data = await response.json();
+                if (data.code === 200) {
+                    processData(data.data);
+                    localStorage.setItem(STORAGE_KEY, JSON.stringify(quranData));
+                    setupApp();
+                } else {
+                    throw new Error("API Error");
+                }
+            } catch (error) {
+                els.loading.innerHTML = `
+                    <div style="text-align:center; padding:20px;">
+                        <p style="color:red; margin-bottom:15px;">حدث خطأ في التحميل</p>
+                        <button onclick="location.reload()" style="padding:10px 20px; background:#bfa15e; border:none; border-radius:5px; color:#000;">إعادة المحاولة</button>
+                    </div>
+                `;
+            }
+        }
+
+        // --- Data Processing (The Core Logic) ---
+        function processData(data) {
+            // 1. Extract Surah Meta for Menu
+            surahMeta = data.surahs.references ? data.surahs.references.map(s => ({
+                n: s.number, name: s.name, page: s.ayahs[0].page
+            })) : data.surahs.map(s => ({
+                n: s.number, name: s.name, page: s.ayahs[0].page
+            }));
+
+            // 2. Build Pages Array (Pages 1 to 604)
+            quranData = [];
+            // Initialize empty pages
+            for(let i=1; i<=TOTAL_PAGES; i++) {
+                quranData[i] = { pageNum: i, ayahs: [] };
+            }
+
+            // 3. Fill Pages with Ayahs
+            data.surahs.forEach(surah => {
+                surah.ayahs.forEach(ayah => {
+                    // Attach surah info to ayah for rendering logic
+                    const ayahData = {
+                        number: ayah.numberInSurah,
+                        text: ayah.text,
+                        surahName: surah.name,
+                        surahNumber: surah.number,
+                        page: ayah.page
+                    };
+                    
+                    if (quranData[ayah.page]) {
+                        quranData[ayah.page].ayahs.push(ayahData);
+                    }
+                });
+            });
+        }
+
+        function setupApp() {
+            els.loading.style.opacity = '0';
+            setTimeout(() => els.loading.classList.add('hidden'), 500);
+            
+            populateMenu();
+            
+            // Get last read page or default to 1
+            const lastPage = localStorage.getItem('lastQuranPage');
+            currentPage = lastPage ? parseInt(lastPage) : 1;
+            
+            renderPage(currentPage);
+            setupEvents();
+        }
+
+        // --- Rendering ---
+        function renderPage(pageNum) {
+            if (pageNum < 1 || pageNum > TOTAL_PAGES) return;
+            
+            currentPage = pageNum;
+            localStorage.setItem('lastQuranPage', pageNum);
+            
+            const pageData = quranData[pageNum];
+            let html = '';
+
+            // Check for Surah Header
+            // If the first ayah of the page is the first ayah of a Surah
+            const firstAyah = pageData.ayahs[0];
+            
+            // Start of Page logic
+            html += '<div class="verses-wrapper">';
+            
+            // Handle Surah Headers & Bismillah
+            let surahStarted = false;
+            
+            pageData.ayahs.forEach((ayah, index) => {
+                // Is this the first ayah of a Surah?
+                if (ayah.number === 1) {
+                    // Close previous div if open
+                    if (index > 0) html += '</div><div class="verses-wrapper">';
+                    
+                    // Surah Header
+                    html += `
+                        <div class="surah-header visible">
+                            <div class="surah-title-box">
+                                <span class="surah-title">${ayah.surahName}</span>
+                            </div>
+                        </div>
+                    `;
+                    
+                    // Bismillah (Except for Surah Tawbah)
+                    if (ayah.surahNumber !== 9 && ayah.surahNumber !== 1) {
+                         html += `<div class="bismillah visible">بِسْمِ اللَّهِ الرَّحْمَٰنِ الرَّحِيمِ</div>`;
+                    }
+                    // Special case: Al-Fatiha is usually integrated, but here we just show title
+                    if (ayah.surahNumber === 1) {
+                         // No bismillah for Fatiha visual typically in some mushafs, 
+                         // or shown as verse 1 in others. API usually includes it.
+                    }
+                }
+
+                // Add Verse Text
+                html += `<span class="verse-text">${ayah.text}</span>`;
+                html += `<span class="verse-number">${ayah.number}</span>`;
+            });
+
+            html += '</div>'; // Close verses wrapper
+
+            // Footer
+            html += `
+                <div class="page-footer">
+                    <div class="page-num-box">${pageNum}</div>
+                </div>
+            `;
+
+            els.pageContent.innerHTML = html;
+            
+            // Scroll to top of new page
+            els.pageContent.scrollTop = 0;
+        }
+
+        // --- Menu & Search ---
+        function populateMenu() {
+            const listHtml = surahMeta.map(s => `
+                <div class="menu-item" data-page="${s.page}">
+                    <span class="item-name">${s.n}. ${s.name}</span>
+                    <span class="item-page">صفحة ${s.page}</span>
+                </div>
+            `).join('');
+            els.surahList.innerHTML = listHtml;
+        }
+
+        // --- Events ---
+        function setupEvents() {
+            // Navigation
+            const goNext = () => renderPage(currentPage + 1);
+            const goPrev = () => renderPage(currentPage - 1);
+
+            els.navNext.addEventListener('click', goNext);
+            els.nextTrigger.addEventListener('click', goNext);
+            
+            els.navPrev.addEventListener('click', goPrev);
+            els.prevTrigger.addEventListener('click', goPrev);
+
+            // Swipe Support
+            let touchStartX = 0;
+            els.pageContent.parentElement.addEventListener('touchstart', e => touchStartX = e.changedTouches[0].screenX, {passive: true});
+            els.pageContent.parentElement.addEventListener('touchend', e => {
+                const diff = touchStartX - e.changedTouches[0].screenX;
+                if (Math.abs(diff) > 50) {
+                    if (diff > 0) goNext(); else goPrev();
+                }
+            }, {passive: true});
+
+            // Menu
+            els.menuOpenBtn.addEventListener('click', () => {
+                els.menuOverlay.classList.add('active');
+                els.searchInput.focus();
+            });
+
+            els.menuOverlay.addEventListener('click', (e) => {
+                if (e.target === els.menuOverlay) els.menuOverlay.classList.remove('active');
+            });
+// Search - محرك البحث المحسن
+els.searchInput.addEventListener('input', (e) => {
+    const term = e.target.value.trim();
+    const items = els.surahList.querySelectorAll('.menu-item');
+    
+    items.forEach(item => {
+        const nameElement = item.querySelector('.item-name');
+        const pageElement = item.querySelector('.item-page');
+        
+        // جلب النصوص
+        const nameText = nameElement.textContent; // مثال: "2. البقرة"
+        const pageText = pageElement.textContent; // مثال: "صفحة 2"
+        
+        // التحقق: هل النص موجود في الاسم أو رقم الصفحة؟
+        // هذا يسمح بالبحث بكلمة "البقرة" أو رقم "2"
+        const isMatch = nameText.includes(term) || pageText.includes(term);
+        
+        // إظهار أو إخفاء العنصر
+        item.style.display = isMatch ? 'flex' : 'none';
+    });
+});
+
+
+
+            // Surah Click
+            els.surahList.addEventListener('click', (e) => {
+                const item = e.target.closest('.menu-item');
+                if (item) {
+                    renderPage(parseInt(item.dataset.page));
+                    els.menuOverlay.classList.remove('active');
+                }
+            });
+
+            // Jump to page button (cycles pages)
+            els.jumpBtn.addEventListener('click', () => {
+                let p = prompt("انتقل إلى صفحة:", currentPage);
+                if (p) {
+                    p = parseInt(p);
+                    if (p >= 1 && p <= TOTAL_PAGES) renderPage(p);
+                }
+            });
+        }
+
+        // Start
+        init();
+    </script>
+</body>
+</html>
