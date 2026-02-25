@@ -2013,23 +2013,23 @@ async toggleEarpiece() {
 // تبديل إلى سماعة الأذن (صوت منخفض للخصوصية)
 // ============================================
 async toggleEarpiece() {
-  const speakerBtn = document.getElementById('speakerBtn');
-  const earpieceBtn = document.getElementById('earpieceBtn');
-  
-  // تفعيل سماعة الأذن
-  this.isSpeaker = false;
-  this.isEarpiece = true;
-  
-  // تحديث واجهة الأزرار
-  speakerBtn.classList.remove('active');
-  earpieceBtn.classList.add('active');
-  
-  // تخفيض الصوت جداً (فقط من يضع أذنه يسمع)
-  if (this.audioElement) {
-      this.audioElement.volume = 0.15; // 15% فقط
-  }
-  
-  showToast('🎧 سماعة الأذن', 'info');
+    const speakerBtn = document.getElementById('speakerBtn');
+    const earpieceBtn = document.getElementById('earpieceBtn');
+    
+    // تفعيل سماعة الأذن
+    this.isSpeaker = false;
+    this.isEarpiece = true;
+    
+    // تحديث واجهة الأزرار
+    speakerBtn.classList.remove('active');
+    earpieceBtn.classList.add('active');
+    
+    // تخفيض الصوت جداً (فقط من يضع أذنه يسمع)
+    if (this.audioElement) {
+        this.audioElement.volume = 0.15; // 15% فقط
+    }
+    
+    showToast('🎧 سماعة الأذن', 'info');
 }
   
     // ============================================
@@ -2064,7 +2064,79 @@ async toggleEarpiece() {
           text.textContent = 'جاري الاتصال...';
       }
     }
+  // ============================================
+// تشغيل الصوت البعيد - سماعة الأذن افتراضياً
+// ============================================
+async playRemoteAudio() {
+  // الحصول على عنصر الصوت
+  this.audioElement = document.getElementById('callAudioElement');
   
+  if (!this.audioElement || !this.remoteStream) return;
+  
+  // ربط البث بعنصر الصوت
+  this.audioElement.srcObject = this.remoteStream;
+  
+  // تشغيل الصوت
+  try {
+      await this.audioElement.play();
+      console.log('✅ Audio playing');
+  } catch (e) {
+      console.error('Could not play audio:', e);
+  }
+  
+  // افتراضياً: سماعة الأذن = صوت منخفض
+  this.audioElement.volume = 0.15;
+  this.isSpeaker = false;
+  this.isEarpiece = true;
+  
+  // تحديث الأزرار
+  const earpieceBtn = document.getElementById('earpieceBtn');
+  const speakerBtn = document.getElementById('speakerBtn');
+  if (earpieceBtn) earpieceBtn.classList.add('active');
+  if (speakerBtn) speakerBtn.classList.remove('active');
+}
+
+// ============================================
+// تبديل إلى مكبر الصوت (صوت عالي)
+// ============================================
+async toggleSpeaker() {
+  const speakerBtn = document.getElementById('speakerBtn');
+  const earpieceBtn = document.getElementById('earpieceBtn');
+  
+  this.isSpeaker = true;
+  this.isEarpiece = false;
+  
+  if (speakerBtn) speakerBtn.classList.add('active');
+  if (earpieceBtn) earpieceBtn.classList.remove('active');
+  
+  // رفع الصوت للحد الأقصى
+  if (this.audioElement) {
+      this.audioElement.volume = 1.0;
+  }
+  
+  showToast('🔊 تم تفعيل مكبر الصوت', 'info');
+}
+
+// ============================================
+// تبديل إلى سماعة الأذن (صوت منخفض)
+// ============================================
+async toggleEarpiece() {
+  const speakerBtn = document.getElementById('speakerBtn');
+  const earpieceBtn = document.getElementById('earpieceBtn');
+  
+  this.isSpeaker = false;
+  this.isEarpiece = true;
+  
+  if (speakerBtn) speakerBtn.classList.remove('active');
+  if (earpieceBtn) earpieceBtn.classList.add('active');
+  
+  // تخفيض الصوت
+  if (this.audioElement) {
+      this.audioElement.volume = 0.15;
+  }
+  
+  showToast('🎧 سماعة الأذن', 'info');
+}
     // ============================================
     // إنهاء المكالمة
     // ============================================

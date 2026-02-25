@@ -2345,3 +2345,9 @@
   background: var(--accent-green) !important;
   box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
 }
+/* أزرار الصوت */
+.call-action-btn.earpiece.active,
+.call-action-btn.speaker.active {
+    background: var(--accent-green) !important;
+    box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+}
