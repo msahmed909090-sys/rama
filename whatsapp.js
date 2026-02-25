@@ -196,6 +196,8 @@ function formatTime(timestamp) {
 
 // الاستماع للمكالمات الواردة
 listenForIncomingCalls();
+// تهيئة نظام البروفايل
+initAfterAuth();
     // إظهار التطبيق
     document.getElementById('authCheckScreen').style.display = 'none';
     document.getElementById('mainApp').style.display = 'flex';
@@ -370,105 +372,166 @@ listenForIncomingCalls();
     });
   }
   
-  /**
-   * فتح محادثة
-   */
-  function openChat(userId, userName, userAvatar) {
-    currentChat = {
+/**
+ * فتح محادثة (معدلة لدعم الحظر)
+ */
+function openChat(userId, userName, userAvatar) {
+  // التحقق من الحظر
+  if (isUserBlocked(userId)) {
+      currentBlockUserId = userId;
+      document.getElementById('blockedAlertAvatar').src = userAvatar;
+      document.getElementById('blockedAlertName').textContent = userName;
+      document.getElementById('blockedUserAlertModal').classList.add('active');
+      return;
+  }
+  
+  currentChat = {
       id: userId,
       name: userName,
       avatar: userAvatar
-    };
-    
-    // تحديث واجهة المحادثة
-    document.getElementById('chatUserName').textContent = userName;
-    document.getElementById('chatUserAvatar').src = userAvatar;
-    document.getElementById('chatUserStatus').textContent = 'جاري التحميل...';
-    
-    // إظهار واجهة المحادثة
-    const chatView = document.getElementById('chatView');
-    chatView.classList.add('active');
-    
-    // تحميل الرسائل
-    loadMessages(userId);
-    
-    // التحقق من حالة الاتصال
-    checkUserOnlineStatus(userId);
-    
-    // إخفاء شارة الرسائل غير المقروءة
-    clearUnreadBadge(userId);
+  };
+  
+  // تحديث واجهة المحادثة
+  document.getElementById('chatUserName').textContent = userName;
+  document.getElementById('chatUserAvatar').src = userAvatar;
+  document.getElementById('chatUserStatus').textContent = 'جاري التحميل...';
+  
+  // إظهار واجهة المحادثة
+  const chatView = document.getElementById('chatView');
+  chatView.classList.add('active');
+  
+  // تحميل الرسائل
+  loadMessages(userId);
+  
+  // التحقق من حالة الاتصال
+  checkUserOnlineStatus(userId);
+  
+  // إخفاء شارة الرسائل غير المقروءة
+  clearUnreadBadge(userId);
+}
+
+/**
+* تحميل الرسائل (معدلة لإظهار حالة الحظر)
+*/
+async function loadMessages(otherUserId) {
+  const chatId = getChatId(currentUser.uid, otherUserId);
+  const messagesContainer = document.getElementById('chatMessages');
+  
+  // التحقق مما إذا كان الطرف الآخر قد حظرني
+  const iAmBlocked = await checkIfIAmBlocked(otherUserId);
+  
+  if (iAmBlocked) {
+      const statusEl = document.getElementById('chatUserStatus');
+      if (statusEl) {
+          statusEl.innerHTML = 'غير متصل <span class="blocked-badge"><i class="fas fa-ban"></i> حظرك</span>';
+      }
   }
   
-  /**
-   * تحميل الرسائل
-   */
-  function loadMessages(otherUserId) {
-    const chatId = getChatId(currentUser.uid, otherUserId);
-    const messagesContainer = document.getElementById('chatMessages');
-    
-    // إلغاء الاستماع السابق
-    if (messagesListener) {
+  // إلغاء الاستماع السابق
+  if (messagesListener) {
       messagesListener();
-    }
-    
-    // الاستماع للرسائل في الوقت الحقيقي
-    messagesListener = db.collection('chats').doc(chatId)
+  }
+  
+  // الاستماع للرسائل في الوقت الحقيقي
+  messagesListener = db.collection('chats').doc(chatId)
       .collection('messages')
       .orderBy('timestamp', 'asc')
       .limitToLast(100)
       .onSnapshot(snapshot => {
-        let messagesHtml = '';
-        
-        snapshot.forEach(doc => {
-          const msg = doc.data();
-          const isSent = msg.senderId === currentUser.uid;
+          let messagesHtml = '';
           
-          messagesHtml += createMessageHTML(msg, isSent);
-        });
-        
-        messagesContainer.innerHTML = messagesHtml;
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-        
-        // تحديث حالة القراءة
-        markMessagesAsRead(otherUserId);
+          snapshot.forEach(doc => {
+              const msg = doc.data();
+              const isSent = msg.senderId === currentUser.uid;
+              
+              messagesHtml += createMessageHTML(msg, isSent, doc.id);
+          });
+          
+          messagesContainer.innerHTML = messagesHtml;
+          messagesContainer.scrollTop = messagesContainer.scrollHeight;
+          
+          // تحديث حالة القراءة
+          markMessagesAsRead(otherUserId);
       });
+}
+
+/**
+* إنشاء HTML للرسالة (معدلة لإضافة messageId)
+*/
+/**
+ * إنشاء HTML للرسالة (معدلة لإضافة messageId و senderId)
+ */
+function createMessageHTML(msg, isSent, messageId = '') {
+  const time = formatMessageTime(msg.timestamp);
+  const messageClass = isSent ? 'sent' : 'received';
+  
+  let contentHtml = '';
+  
+  if (msg.type === 'image') {
+      contentHtml = `
+          <div class="message-media">
+              <img src="${msg.mediaUrl}" alt="صورة" onclick="viewImage('${msg.mediaUrl}')">
+          </div>
+      `;
+  } else if (msg.type === 'video') {
+      contentHtml = `
+          <div class="message-media">
+              <video src="${msg.mediaUrl}" controls></video>
+          </div>
+      `;
   }
   
-  /**
-   * إنشاء HTML للرسالة
-   */
-  function createMessageHTML(msg, isSent) {
-    const time = formatMessageTime(msg.timestamp);
-    const messageClass = isSent ? 'sent' : 'received';
-    
-    let contentHtml = '';
-    
-    if (msg.type === 'image') {
-      contentHtml = `
-        <div class="message-media">
-          <img src="${msg.mediaUrl}" alt="صورة" onclick="viewImage('${msg.mediaUrl}')">
+  contentHtml += `<div class="message-text">${escapeHtml(msg.text)}</div>`;
+  
+  // إضافة data-sender-id للتحقق عند الحذف
+  const senderId = msg.senderId || '';
+  
+  return `
+    <div class="message ${messageClass}" data-message-id="${messageId}" data-sender-id="${senderId}">
+      ${contentHtml}
+      <div class="message-meta">
+        <span class="message-time">${time}</span>
+        ${isSent ? `<span class="message-status ${msg.read ? 'read' : ''}"><i class="fas fa-check-double"></i></span>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+/**
+* إنشاء HTML لعنصر المحادثة (معدلة لدعم الحظر)
+*/
+function createChatItemHTML(chatId, chat, otherUser, isOnline, unreadCount, otherUserId) {
+  const avatar = otherUser.photoURL || 
+      `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23075e54" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="40">${(otherUser.username || 'م')[0]}</text></svg>`;
+  
+  const lastMessage = chat.lastMessage || '';
+  const time = formatTime(chat.lastMessageAt);
+  const isSent = chat.lastMessageSenderId === currentUser.uid;
+  
+  // التحقق من الحظر
+  const isBlocked = isUserBlocked(otherUserId);
+  const blockedClass = isBlocked ? 'blocked' : '';
+  
+  return `
+    <div class="chat-item ${blockedClass}" data-user-id="${otherUserId}" data-user-name="${otherUser.username || 'مستخدم'}" data-user-avatar="${avatar}">
+      <div class="chat-avatar">
+        <img src="${avatar}" alt="">
+        ${isOnline ? '<div class="online-dot"></div>' : ''}
+      </div>
+      <div class="chat-info">
+        <div class="chat-top">
+          <span class="chat-name">${otherUser.username || 'مستخدم'}</span>
+          <span class="chat-time">${time}</span>
         </div>
-      `;
-    } else if (msg.type === 'video') {
-      contentHtml = `
-        <div class="message-media">
-          <video src="${msg.mediaUrl}" controls></video>
-        </div>
-      `;
-    }
-    
-    contentHtml += `<div class="message-text">${escapeHtml(msg.text)}</div>`;
-    
-    return `
-      <div class="message ${messageClass}">
-        ${contentHtml}
-        <div class="message-meta">
-          <span class="message-time">${time}</span>
-          ${isSent ? `<span class="message-status ${msg.read ? 'read' : ''}"><i class="fas fa-check-double"></i></span>` : ''}
+        <div class="chat-preview">
+          ${isSent ? '<i class="fas fa-check-double read-status"></i>' : ''}
+          <span class="chat-preview-text">${lastMessage.substring(0, 40)}${lastMessage.length > 40 ? '...' : ''}</span>
         </div>
       </div>
-    `;
-  }
+      ${unreadCount > 0 ? `<div class="unread-badge">${unreadCount}</div>` : ''}
+    </div>
+  `;
+}
   
   /**
    * تحديث حالة القراءة
@@ -536,6 +599,8 @@ listenForIncomingCalls();
     
     // ملفات الرفع
     initFileUploads();
+        // تهيئة بروفايل المستخدم في الشات
+        initChatUserProfile();
   }
   
   /**
@@ -2680,9 +2745,660 @@ async function deleteCommunity(communityId) {
         showToast('حدث خطأ', 'error');
     }
 }
+// ============================================
+// نظام البروفايل والحظر
+// ============================================
+
+// متغيرات النظام
+let blockedUsers = [];
+let selectedMessages = new Set();
+let isSelectingMessages = false;
+let currentBlockUserId = null;
+
+// ============================================
+// تهيئة نظام البروفايل
+// ============================================
+
+function initProfileSystem() {
+    // فتح البروفايل عند الضغط على الصورة
+    document.getElementById('userProfileBtn').addEventListener('click', openProfile);
+    
+    // قائمة البروفايل المنسدلة
+    document.getElementById('profileMenuBtn').addEventListener('click', toggleProfileDropdown);
+    
+    // حفظ الوصف
+    document.getElementById('saveBioBtn').addEventListener('click', saveBio);
+    
+    // عداد الأحرف
+    document.getElementById('profileBioInput').addEventListener('input', updateBioCharCount);
+    
+    // المستخدمون المحظورون
+    document.getElementById('viewBlockedUsersBtn').addEventListener('click', openBlockedUsersModal);
+    
+    // تسجيل الخروج
+    document.getElementById('logoutBtn').addEventListener('click', logoutUser);
+    
+    // إغلاق القائمة عند النقر خارجها
+    document.addEventListener('click', (e) => {
+        const dropdown = document.getElementById('profileDropdownMenu');
+        const menuBtn = document.getElementById('profileMenuBtn');
+        if (!dropdown.contains(e.target) && !menuBtn.contains(e.target)) {
+            dropdown.classList.remove('active');
+        }
+    });
+    
+    // تحميل قائمة المحظورين
+    loadBlockedUsers();
+    
+    // تهيئة قائمة خيارات الشات
+    initChatOptionsMenu();
+}
+
+// ============================================
+// فتح البروفايل
+// ============================================
+
+function openProfile() {
+    // تعبئة البيانات من قاعدة البيانات
+    document.getElementById('profileModalAvatar').src = userData.photoURL || 
+        `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23075e54" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="40">${(userData.username || 'م')[0]}</text></svg>`;
+    
+    document.getElementById('profileModalName').textContent = userData.username || 'مستخدم';
+    document.getElementById('profileModalEmail').textContent = currentUser.email || '';
+    document.getElementById('profileBioInput').value = userData.bio || '';
+    updateBioCharCount();
+    
+    document.getElementById('profileModal').classList.add('active');
+}
+
+// ============================================
+// تحديث عداد الأحرف
+// ============================================
+
+function updateBioCharCount() {
+    const bio = document.getElementById('profileBioInput').value;
+    document.getElementById('bioCharCount').textContent = bio.length;
+}
+
+// ============================================
+// حفظ الوصف
+// ============================================
+
+async function saveBio() {
+    const bio = document.getElementById('profileBioInput').value.trim();
+    
+    try {
+        await db.collection('users').doc(currentUser.uid).update({
+            bio: bio
+        });
+        
+        userData.bio = bio;
+        showToast('تم حفظ الوصف', 'success');
+    } catch (error) {
+        console.error('Error saving bio:', error);
+        showToast('حدث خطأ', 'error');
+    }
+}
+
+// ============================================
+// قائمة البروفايل المنسدلة
+// ============================================
+
+function toggleProfileDropdown(e) {
+    e.stopPropagation();
+    const dropdown = document.getElementById('profileDropdownMenu');
+    
+    // تحديد موقع القائمة
+    const btn = document.getElementById('profileMenuBtn');
+    const rect = btn.getBoundingClientRect();
+    dropdown.style.top = `${rect.bottom + 10}px`;
+    dropdown.style.left = `${rect.left}px`;
+    
+    dropdown.classList.toggle('active');
+}
+
+// ============================================
+// تحميل قائمة المحظورين
+// ============================================
+
+async function loadBlockedUsers() {
+    try {
+        const userDoc = await db.collection('users').doc(currentUser.uid).get();
+        if (userDoc.exists) {
+            blockedUsers = userDoc.data().blockedUsers || [];
+        }
+    } catch (error) {
+        console.error('Error loading blocked users:', error);
+    }
+}
+
+// ============================================
+// التحقق من حظر مستخدم
+// ============================================
+
+function isUserBlocked(userId) {
+    return blockedUsers.includes(userId);
+}
+
+// ============================================
+// فتح مودال المستخدمين المحظورين
+// ============================================
+
+async function openBlockedUsersModal() {
+    document.getElementById('profileDropdownMenu').classList.remove('active');
+    document.getElementById('profileModal').classList.remove('active');
+    
+    const list = document.getElementById('blockedUsersList');
+    
+    if (blockedUsers.length === 0) {
+        list.innerHTML = `
+            <div class="empty-blocked">
+                <i class="fas fa-user-slash"></i>
+                <p>لا يوجد مستخدمون محظورون</p>
+            </div>
+        `;
+    } else {
+        list.innerHTML = '';
+        
+        for (const userId of blockedUsers) {
+            const userDoc = await db.collection('users').doc(userId).get();
+            if (userDoc.exists) {
+                const user = userDoc.data();
+                const avatar = user.photoURL || 
+                    `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23075e54" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="40">${(user.username || 'م')[0]}</text></svg>`;
+                
+                list.innerHTML += `
+                    <div class="blocked-user-item">
+                        <img src="${avatar}" alt="">
+                        <div class="blocked-user-info">
+                            <h4>${user.username || 'مستخدم'}</h4>
+                            <p>محظور منذ فترة</p>
+                        </div>
+                        <button class="unblock-btn-small" onclick="unblockUser('${userId}')">
+                            إلغاء الحظر
+                        </button>
+                    </div>
+                `;
+            }
+        }
+    }
+    
+    document.getElementById('blockedUsersModal').classList.add('active');
+}
+
+// ============================================
+// حظر مستخدم
+// ============================================
+
+function showBlockConfirmModal(userId, userName, userAvatar) {
+    currentBlockUserId = userId;
+    
+    document.getElementById('blockUserAvatar').src = userAvatar;
+    document.getElementById('blockUserName').textContent = userName;
+    
+    document.getElementById('blockConfirmModal').classList.add('active');
+}
+
+async function blockUser(userId) {
+    try {
+        // إضافة للمحظورين
+        await db.collection('users').doc(currentUser.uid).update({
+            blockedUsers: firebase.firestore.FieldValue.arrayUnion(userId)
+        });
+        
+        blockedUsers.push(userId);
+        
+        // إغلاق المودالات
+        document.getElementById('blockConfirmModal').classList.remove('active');
+        document.getElementById('chatOptionsMenu').classList.remove('active');
+        
+        // إغلاق الشات
+        closeChatView();
+        
+        showToast('تم حظر المستخدم', 'success');
+        
+        // تحديث قائمة المحادثات
+        loadChats();
+        
+    } catch (error) {
+        console.error('Error blocking user:', error);
+        showToast('حدث خطأ', 'error');
+    }
+}
+
+// ============================================
+// إلغاء حظر مستخدم
+// ============================================
+
+async function unblockUser(userId) {
+    try {
+        await db.collection('users').doc(currentUser.uid).update({
+            blockedUsers: firebase.firestore.FieldValue.arrayRemove(userId)
+        });
+        
+        blockedUsers = blockedUsers.filter(id => id !== userId);
+        
+        showToast('تم إلغاء الحظر', 'success');
+        
+        // تحديث القائمة
+        openBlockedUsersModal();
+        
+    } catch (error) {
+        console.error('Error unblocking user:', error);
+        showToast('حدث خطأ', 'error');
+    }
+}
+
+// ============================================
+// تسجيل الخروج
+// ============================================
+
+async function logoutUser() {
+    try {
+        await auth.signOut();
+        window.location.href = 'index.html';
+    } catch (error) {
+        console.error('Error signing out:', error);
+        showToast('حدث خطأ', 'error');
+    }
+}
+
+// ============================================
+// قائمة خيارات الشات
+// ============================================
+
+function initChatOptionsMenu() {
+    // زر القائمة في الشات
+    document.getElementById('chatMenuBtn').addEventListener('click', toggleChatOptionsMenu);
+    
+    // خيار حذف الرسائل
+    document.getElementById('deleteMessagesOption').addEventListener('click', startMessageSelection);
+    
+    // خيار حذف الدردشة
+    document.getElementById('deleteChatOption').addEventListener('click', confirmDeleteChat);
+    
+    // خيار حظر المستخدم
+    document.getElementById('blockUserOption').addEventListener('click', showBlockFromChat);
+    
+    // إغلاق القائمة عند النقر خارجها
+    document.addEventListener('click', (e) => {
+        const menu = document.getElementById('chatOptionsMenu');
+        const menuBtn = document.getElementById('chatMenuBtn');
+        if (!menu.contains(e.target) && !menuBtn.contains(e.target)) {
+            menu.classList.remove('active');
+        }
+    });
+    
+    // أزرار تحديد الرسائل
+    document.getElementById('cancelSelectionBtn').addEventListener('click', cancelMessageSelection);
+    document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelectedMessages);
+    
+    // أزرار الحظر
+    document.getElementById('confirmBlockBtn').addEventListener('click', () => {
+        if (currentBlockUserId) {
+            blockUser(currentBlockUserId);
+        }
+    });
+    
+    document.getElementById('cancelBlockBtn').addEventListener('click', () => {
+        document.getElementById('blockConfirmModal').classList.remove('active');
+    });
+    
+    // مودال إلغاء الحظر
+    document.getElementById('unblockUserBtn').addEventListener('click', () => {
+        if (currentBlockUserId) {
+            unblockUser(currentBlockUserId);
+            document.getElementById('unblockModal').classList.remove('active');
+        }
+    });
+    
+    document.getElementById('closeUnblockModalBtn').addEventListener('click', () => {
+        document.getElementById('unblockModal').classList.remove('active');
+    });
+    
+    // مودال التنبيه
+    document.getElementById('closeBlockedAlertBtn').addEventListener('click', () => {
+        document.getElementById('blockedUserAlertModal').classList.remove('active');
+    });
+    
+    document.getElementById('unblockFromAlertBtn').addEventListener('click', () => {
+        if (currentBlockUserId) {
+            unblockUser(currentBlockUserId);
+            document.getElementById('blockedUserAlertModal').classList.remove('active');
+        }
+    });
+}
+
+// ============================================
+// تبديل قائمة خيارات الشات
+// ============================================
+
+function toggleChatOptionsMenu(e) {
+    e.stopPropagation();
+    const menu = document.getElementById('chatOptionsMenu');
+    menu.classList.toggle('active');
+}
+
+// ============================================
+// بدء تحديد الرسائل للحذف
+// ============================================
+
+// ============================================
+// بدء تحديد الرسائل للحذف
+// ============================================
+
+function startMessageSelection() {
+  isSelectingMessages = true;
+  selectedMessages.clear();
+  
+  document.getElementById('chatOptionsMenu').classList.remove('active');
+  document.getElementById('messageSelectionBar').style.display = 'flex';
+  
+  // إضافة checkboxes للرسائل المرسلة فقط (ليس المستلمة)
+  document.querySelectorAll('.message').forEach(msg => {
+      const senderId = msg.dataset.senderId;
+      
+      // فقط الرسائل التي أرسلها المستخدم يمكن تحديدها
+      if (senderId === currentUser.uid) {
+          msg.classList.add('selectable');
+          msg.addEventListener('click', toggleMessageSelection);
+      } else {
+          // الرسائل المستلمة لا يمكن تحديدها
+          msg.classList.add('not-selectable');
+      }
+  });
+  
+  showToast('اضغط على رسائلك لتحديدها', 'info');
+}
+
+// ============================================
+// تبديل تحديد رسالة
+// ============================================
+
+function toggleMessageSelection(e) {
+  if (!isSelectingMessages) return;
+  
+  const messageEl = e.currentTarget;
+  const senderId = messageEl.dataset.senderId;
+  
+  // التحقق مرة أخرى أن الرسالة مرسلة من المستخدم
+  if (senderId !== currentUser.uid) {
+      showToast('يمكنك حذف رسائلك فقط', 'error');
+      return;
+  }
+  
+  const messageId = messageEl.dataset.messageId;
+  
+  if (selectedMessages.has(messageId)) {
+      selectedMessages.delete(messageId);
+      messageEl.classList.remove('selected');
+  } else {
+      selectedMessages.add(messageId);
+      messageEl.classList.add('selected');
+  }
+  
+  document.getElementById('selectedCount').textContent = selectedMessages.size;
+}
+
+// ============================================
+// إلغاء تحديد الرسائل
+// ============================================
+
+function cancelMessageSelection() {
+  isSelectingMessages = false;
+  selectedMessages.clear();
+  
+  document.getElementById('messageSelectionBar').style.display = 'none';
+  
+  document.querySelectorAll('.message').forEach(msg => {
+      msg.classList.remove('selected', 'selectable', 'not-selectable');
+      msg.removeEventListener('click', toggleMessageSelection);
+  });
+}
+
+// ============================================
+// بروفايل المستخدم في الشات
+// ============================================
+
+/**
+ * تهيئة أحداث بروفايل المستخدم في الشات
+ */
+function initChatUserProfile() {
+  // الضغط على معلومات المستخدم في الشات
+  const chatUserInfo = document.querySelector('.chat-user-info');
+  if (chatUserInfo) {
+      chatUserInfo.addEventListener('click', openChatUserProfile);
+  }
+  
+  // زر حظر المستخدم من البروفايل
+  document.getElementById('blockUserFromProfileBtn').addEventListener('click', () => {
+      if (currentChat) {
+          showBlockConfirmModal(currentChat.id, currentChat.name, currentChat.avatar);
+      }
+  });
+  
+  // زر حذف المحادثة من البروفايل
+  document.getElementById('deleteChatFromProfileBtn').addEventListener('click', () => {
+      confirmDeleteChat();
+      document.getElementById('chatUserProfileModal').classList.remove('active');
+  });
+}
+
+/**
+* فتح بروفايل المستخدم في الشات
+*/
+async function openChatUserProfile() {
+  if (!currentChat) return;
+  
+  // تعبئة البيانات
+  document.getElementById('chatProfileAvatar').src = currentChat.avatar;
+  document.getElementById('chatProfileName').textContent = currentChat.name;
+  
+  // جلب الوصف من قاعدة البيانات
+  try {
+      const userDoc = await db.collection('users').doc(currentChat.id).get();
+      if (userDoc.exists) {
+          const data = userDoc.data();
+          document.getElementById('chatProfileBio').textContent = data.bio || 'لا يوجد وصف';
+          
+          // حالة الاتصال
+          const isOnline = data.lastOnline && 
+              (Date.now() - data.lastOnline.toDate() < 300000);
+          
+          const statusEl = document.getElementById('chatProfileStatus');
+          if (isOnline) {
+              statusEl.innerHTML = '<span class="online-indicator">متصل الآن</span>';
+          } else {
+              statusEl.textContent = 'غير متصل';
+          }
+      }
+  } catch (error) {
+      console.error('Error fetching user profile:', error);
+      document.getElementById('chatProfileBio').textContent = 'لا يوجد وصف';
+      document.getElementById('chatProfileStatus').textContent = 'غير متصل';
+  }
+  
+  // تحديث زر الحظر حسب الحالة
+  const blockBtn = document.getElementById('blockUserFromProfileBtn');
+  if (isUserBlocked(currentChat.id)) {
+      blockBtn.innerHTML = '<i class="fas fa-unlock"></i> إلغاء الحظر';
+      blockBtn.classList.remove('danger');
+      blockBtn.classList.add('success');
+      blockBtn.onclick = () => {
+          unblockUser(currentChat.id);
+          // تحديث الزر
+          blockBtn.innerHTML = '<i class="fas fa-ban"></i> حظر المستخدم';
+          blockBtn.classList.remove('success');
+          blockBtn.classList.add('danger');
+      };
+  } else {
+      blockBtn.innerHTML = '<i class="fas fa-ban"></i> حظر المستخدم';
+      blockBtn.classList.remove('success');
+      blockBtn.classList.add('danger');
+      blockBtn.onclick = () => {
+          showBlockConfirmModal(currentChat.id, currentChat.name, currentChat.avatar);
+      };
+  }
+  
+  // إظهار المودال
+  document.getElementById('chatUserProfileModal').classList.add('active');
+}
+// ============================================
+// حذف الرسائل المحددة
+// ============================================
+
+async function deleteSelectedMessages() {
+  if (selectedMessages.size === 0) {
+      showToast('لم تحدد أي رسالة', 'error');
+      return;
+  }
+  
+  if (!confirm(`هل تريد حذف ${selectedMessages.size} رسالة؟`)) return;
+  
+  try {
+      const chatId = getChatId(currentUser.uid, currentChat.id);
+      const batch = db.batch();
+      
+      selectedMessages.forEach(messageId => {
+          // التحقق من أن الرسالة موجودة وأنها مرسلة من المستخدم
+          const messageEl = document.querySelector(`[data-message-id="${messageId}"]`);
+          if (messageEl && messageEl.dataset.senderId === currentUser.uid) {
+              const ref = db.collection('chats').doc(chatId).collection('messages').doc(messageId);
+              batch.delete(ref);
+          }
+      });
+      
+      await batch.commit();
+      
+      cancelMessageSelection();
+      showToast('تم حذف الرسائل', 'success');
+      
+  } catch (error) {
+      console.error('Error deleting messages:', error);
+      showToast('حدث خطأ', 'error');
+  }
+}
+
+// ============================================
+// تأكيد حذف الدردشة
+// ============================================
+
+function confirmDeleteChat() {
+    document.getElementById('chatOptionsMenu').classList.remove('active');
+    document.getElementById('chatUserProfileModal').classList.remove('active');
+    if (!confirm('هل تريد حذف هذه الدردشة بالكامل؟')) return;
+    
+    deleteEntireChat();
+}
+
+// ============================================
+// حذف الدردشة بالكامل
+// ============================================
+
+async function deleteEntireChat() {
+    try {
+        const chatId = getChatId(currentUser.uid, currentChat.id);
+        
+        // حذف جميع الرسائل
+        const messagesSnapshot = await db.collection('chats').doc(chatId)
+            .collection('messages').get();
+        
+        const batch = db.batch();
+        messagesSnapshot.forEach(doc => {
+            batch.delete(doc.ref);
+        });
+        await batch.commit();
+        
+        // حذف مستند المحادثة
+        await db.collection('chats').doc(chatId).delete();
+        
+        closeChatView();
+        loadChats();
+        
+        showToast('تم حذف الدردشة', 'success');
+        
+    } catch (error) {
+        console.error('Error deleting chat:', error);
+        showToast('حدث خطأ', 'error');
+    }
+}
+
+// ============================================
+// عرض الحظر من الشات
+// ============================================
+
+function showBlockFromChat() {
+    document.getElementById('chatOptionsMenu').classList.remove('active');
+    
+    if (!currentChat) return;
+    
+    currentBlockUserId = currentChat.id;
+    
+    document.getElementById('blockUserAvatar').src = currentChat.avatar;
+    document.getElementById('blockUserName').textContent = currentChat.name;
+    
+    document.getElementById('blockConfirmModal').classList.add('active');
+}
+
+// ============================================
+// تعديل دالة openChat لدعم الحظر
+// ============================================
+
+
+
+// ============================================
+// تعديل دالة createMessageHTML لإضافة messageId
+// ============================================
+
+
+
+// ============================================
+// التحقق مما إذا كان المستخدم الحالي محظوراً
+// ============================================
+
+/**
+ * التحقق مما إذا كان المستخدم الحالي محظوراً
+ */
+async function checkIfIAmBlocked(otherUserId) {
+  try {
+      const userDoc = await db.collection('users').doc(otherUserId).get();
+      if (userDoc.exists) {
+          const otherUserBlocked = userDoc.data().blockedUsers || [];
+          return otherUserBlocked.includes(currentUser.uid);
+      }
+  } catch (error) {
+      console.error('Error checking block status:', error);
+  }
+  return false;
+}
+
+// ============================================
+// تعديل دالة loadMessages لإظهار حالة الحظر
+// ============================================
+
+
+
+// ============================================
+// تعديل createChatItemHTML لدعم الحظر
+// ============================================
+
+
+
+// ============================================
+// تهيئة النظام عند تحميل الصفحة
+// ============================================
+
+document.addEventListener('DOMContentLoaded', () => {
+    // سيتم تهيئة النظام بعد التحقق من المصادقة
+});
+
+// تهيئة بعد التحقق من المصادقة
+function initAfterAuth() {
+    initProfileSystem();
+}
 
 // تصدير الدوال
-window.showCommunityInfo = showCommunityInfo;
-window.leaveCommunity = leaveCommunity;
-window.deleteCommunity = deleteCommunity;
-window.openCommunityChat = openCommunityChat;
+window.openProfile = openProfile;
+window.blockUser = blockUser;
+window.unblockUser = unblockUser;
+window.isUserBlocked = isUserBlocked;

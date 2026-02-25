@@ -2351,3 +2351,706 @@
     background: var(--accent-green) !important;
     box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
 }
+/* ============================================
+   البروفايل
+   ============================================ */
+
+   .profile-modal-content {
+    max-width: 400px;
+}
+
+.profile-header-section {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+    margin: -20px -20px 20px -20px;
+    border-radius: 20px 20px 0 0;
+}
+
+.profile-avatar-large {
+    width: 100px;
+    height: 100px;
+    margin: 0 auto 16px;
+    border-radius: 50%;
+    overflow: hidden;
+    border: 4px solid rgba(255,255,255,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.profile-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-header-section h2 {
+    color: white;
+    font-size: 1.4rem;
+    margin-bottom: 4px;
+}
+
+.profile-email {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.85rem;
+}
+
+.profile-bio-section {
+    margin-bottom: 20px;
+}
+
+.profile-bio-section label {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+}
+
+.bio-input-wrapper {
+    position: relative;
+}
+
+.bio-input-wrapper textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border: 2px solid transparent;
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 0.95rem;
+    resize: none;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.bio-input-wrapper textarea:focus {
+    border-color: var(--accent-green);
+}
+
+.char-count {
+    position: absolute;
+    bottom: 8px;
+    left: 12px;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.save-bio-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.save-bio-btn:hover {
+    background: var(--secondary-green);
+}
+
+.profile-menu-section {
+    border-top: 1px solid var(--border-color);
+    padding-top: 16px;
+}
+
+.profile-menu-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--bg-tertiary);
+    border: none;
+    border-radius: 12px;
+    color: var(--text-primary);
+    font-family: inherit;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.profile-menu-btn:hover {
+    background: var(--bg-primary);
+}
+
+/* قائمة البروفايل المنسدلة */
+.profile-dropdown-menu {
+    position: fixed;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 8px 0;
+    box-shadow: var(--shadow-lg);
+    z-index: 400;
+    display: none;
+    min-width: 200px;
+    animation: fadeIn 0.2s ease;
+}
+
+.profile-dropdown-menu.active {
+    display: block;
+}
+
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    color: var(--text-primary);
+}
+
+.dropdown-item:hover {
+    background: var(--bg-tertiary);
+}
+
+.dropdown-item.danger {
+    color: var(--danger);
+}
+
+/* ============================================
+   المستخدمون المحظورون
+   ============================================ */
+
+.blocked-users-list {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
+.blocked-user-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.2s ease;
+}
+
+.blocked-user-item:hover {
+    background: var(--bg-tertiary);
+}
+
+.blocked-user-item img {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    filter: grayscale(100%);
+    opacity: 0.7;
+}
+
+.blocked-user-info {
+    flex: 1;
+}
+
+.blocked-user-info h4 {
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.blocked-user-info p {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.unblock-btn-small {
+    padding: 8px 16px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 20px;
+    color: white;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.unblock-btn-small:hover {
+    background: var(--secondary-green);
+}
+
+/* ============================================
+   مودال الحظر
+   ============================================ */
+
+.block-confirm-content {
+    max-width: 350px;
+}
+
+.block-user-preview {
+    text-align: center;
+    padding: 20px;
+}
+
+.block-user-preview img {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 16px;
+    border: 3px solid var(--danger);
+}
+
+.block-user-preview h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+}
+
+.block-user-preview p {
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+}
+
+.block-warning {
+    color: var(--warning) !important;
+    font-size: 0.85rem !important;
+    margin-top: 8px;
+}
+
+.blocked-message {
+    color: var(--danger) !important;
+    font-weight: 600;
+}
+
+.block-confirm-btn {
+    flex: 1;
+    padding: 12px;
+    background: var(--danger);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.block-confirm-btn:hover {
+    background: #c5221f;
+}
+
+.unblock-btn {
+    flex: 1;
+    padding: 12px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 12px;
+    color: white;
+    font-family: inherit;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.unblock-btn:hover {
+    background: var(--secondary-green);
+}
+
+/* ============================================
+   قائمة خيارات الشات
+   ============================================ */
+
+.chat-options-menu {
+    position: fixed;
+    top: 60px;
+    left: 16px;
+    background: var(--bg-secondary);
+    border-radius: 12px;
+    padding: 8px 0;
+    box-shadow: var(--shadow-lg);
+    z-index: 250;
+    display: none;
+    min-width: 180px;
+    animation: fadeIn 0.2s ease;
+}
+
+.chat-options-menu.active {
+    display: block;
+}
+
+.chat-option-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    transition: background 0.2s ease;
+    color: var(--text-primary);
+}
+
+.chat-option-item:hover {
+    background: var(--bg-tertiary);
+}
+
+.chat-option-item.danger {
+    color: var(--danger);
+}
+
+.chat-option-item.danger:hover {
+    background: rgba(234, 67, 53, 0.1);
+}
+
+/* ============================================
+   شريط تحديد الرسائل
+   ============================================ */
+
+.message-selection-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border-color);
+    z-index: 300;
+    animation: slideUp 0.2s ease;
+}
+
+.selection-info {
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+
+.selection-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.selection-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 20px;
+    font-family: inherit;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.selection-btn.cancel {
+    background: var(--bg-tertiary);
+    color: var(--text-primary);
+}
+
+.selection-btn.cancel:hover {
+    background: var(--bg-primary);
+}
+
+.selection-btn.delete {
+    background: var(--danger);
+    color: white;
+}
+
+.selection-btn.delete:hover {
+    background: #c5221f;
+}
+
+/* رسالة محددة */
+.message.selected {
+    background: rgba(37, 211, 102, 0.2) !important;
+    box-shadow: 0 0 0 2px var(--accent-green);
+}
+
+.message-checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--text-muted);
+    border-radius: 50%;
+    margin-left: 8px;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.message.selected .message-checkbox {
+    display: flex;
+    background: var(--accent-green);
+    border-color: var(--accent-green);
+}
+
+.message.selected .message-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+}
+
+/* ============================================
+   حالة "حظرك" في الشات
+   ============================================ */
+
+.blocked-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    background: rgba(234, 67, 53, 0.2);
+    color: var(--danger);
+    font-size: 0.75rem;
+    border-radius: 10px;
+    margin-right: 8px;
+}
+
+.chat-user-blocked {
+    color: var(--danger);
+    font-size: 0.75rem;
+}
+
+/* ============================================
+   مستخدم محظور في القائمة
+   ============================================ */
+
+.chat-item.blocked {
+    opacity: 0.5;
+}
+
+.chat-item.blocked .chat-avatar img {
+    filter: grayscale(100%);
+}
+
+.chat-item.blocked::after {
+    content: 'محظور';
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.7rem;
+    background: var(--danger);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 10px;
+}
+
+/* ============================================
+   رسالة فارغة
+   ============================================ */
+
+.empty-blocked {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-muted);
+}
+
+.empty-blocked i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.3;
+}
+/* ============================================
+   بروفايل المستخدم في الشات
+   ============================================ */
+
+/* جعل معلومات المستخدم قابلة للنقر */
+.chat-user-info {
+  cursor: pointer;
+  padding: 5px 10px;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.chat-user-info:hover {
+  background: var(--bg-tertiary);
+}
+
+/* عرض الوصف في البروفايل */
+.profile-bio-display {
+  color: rgba(255,255,255,0.8);
+  font-size: 0.9rem;
+  margin-top: 8px;
+  padding: 10px 15px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 10px;
+  max-width: 280px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* حالة الاتصال في البروفايل */
+.profile-status-section {
+  text-align: center;
+  padding: 15px;
+  border-top: 1px solid var(--border-color);
+  margin-top: 15px;
+}
+
+.profile-status-section span {
+  padding: 6px 16px;
+  background: var(--bg-tertiary);
+  border-radius: 20px;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+}
+
+.profile-status-section span.online {
+  background: rgba(37, 211, 102, 0.2);
+  color: var(--accent-green);
+}
+
+/* أزرار الإجراءات في البروفايل */
+.profile-actions-footer {
+  flex-direction: column;
+  gap: 10px;
+}
+
+.profile-action-btn {
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: all 0.2s ease;
+}
+
+.profile-action-btn.danger {
+  background: rgba(234, 67, 53, 0.15);
+  color: var(--danger);
+  border: 1px solid rgba(234, 67, 53, 0.3);
+}
+
+.profile-action-btn.danger:hover {
+  background: var(--danger);
+  color: white;
+}
+
+.profile-action-btn.warning {
+  background: rgba(251, 188, 4, 0.15);
+  color: var(--warning);
+  border: 1px solid rgba(251, 188, 4, 0.3);
+}
+
+.profile-action-btn.warning:hover {
+  background: var(--warning);
+  color: black;
+}
+
+/* زر إلغاء الحظر */
+.profile-action-btn.success {
+  background: rgba(37, 211, 102, 0.15);
+  color: var(--accent-green);
+  border: 1px solid rgba(37, 211, 102, 0.3);
+}
+
+.profile-action-btn.success:hover {
+  background: var(--accent-green);
+  color: white;
+}
+
+/* أيقونة متصل في البروفايل */
+.online-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.online-indicator::before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  background: var(--accent-green);
+  border-radius: 50%;
+  animation: pulse 2s infinite;
+}
+/* ============================================
+   تحديد الرسائل للحذف
+   ============================================ */
+
+/* رسالة قابلة للتحديد (مرسلة من المستخدم) */
+.message.selectable {
+  cursor: pointer;
+  position: relative;
+}
+
+.message.selectable::before {
+  content: '';
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border: 2px solid var(--accent-green);
+  border-radius: 50%;
+  opacity: 0.5;
+  transition: all 0.2s ease;
+}
+
+.message.selectable:hover::before {
+  opacity: 1;
+}
+
+.message.selectable:hover {
+  background: rgba(37, 211, 102, 0.1);
+}
+
+/* رسالة محددة */
+.message.selected {
+  background: rgba(37, 211, 102, 0.2) !important;
+  box-shadow: 0 0 0 2px var(--accent-green);
+}
+
+.message.selected::before {
+  opacity: 1;
+  background: var(--accent-green);
+}
+
+.message.selected::after {
+  content: '✓';
+  position: absolute;
+  left: -26px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: white;
+  font-size: 12px;
+  z-index: 1;
+}
+
+/* رسالة غير قابلة للتحديد (مستلمة) */
+.message.not-selectable {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.message.not-selectable::before {
+  content: '🔒';
+  position: absolute;
+  left: -30px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  opacity: 0.5;
+}

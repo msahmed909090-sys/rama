@@ -503,5 +503,230 @@
   <script src="whatsapp.js"></script>
   <!-- عنصر الصوت للمكالمات -->
 <audio id="callAudioElement" autoplay playsinline style="display: none;"></audio>
+<!-- مودال البروفايل -->
+<div class="modal" id="profileModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content profile-modal-content">
+    <div class="modal-header">
+      <h3>البروفايل</h3>
+      <button class="close-modal-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- صورة واسم من قاعدة البيانات (غير قابلين للتعديل) -->
+      <div class="profile-header-section">
+        <div class="profile-avatar-large" id="profileAvatarLarge">
+          <img id="profileModalAvatar" src="" alt="">
+        </div>
+        <h2 id="profileModalName">اسم المستخدم</h2>
+        <p class="profile-email" id="profileModalEmail"></p>
+      </div>
+      
+      <!-- وصف قابل للتعديل -->
+      <div class="profile-bio-section">
+        <label>الوصف الشخصي</label>
+        <div class="bio-input-wrapper">
+          <textarea id="profileBioInput" placeholder="اكتب وصفاً عن نفسك..." maxlength="150"></textarea>
+          <span class="char-count"><span id="bioCharCount">0</span>/150</span>
+        </div>
+        <button class="save-bio-btn" id="saveBioBtn">
+          <i class="fas fa-check"></i>
+          حفظ الوصف
+        </button>
+      </div>
+      
+      <!-- زر القائمة (3 نقاط) -->
+      <div class="profile-menu-section">
+        <button class="profile-menu-btn" id="profileMenuBtn">
+          <i class="fas fa-ellipsis-h"></i>
+          المزيد
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- قائمة البروفايل المنسدلة -->
+<div class="profile-dropdown-menu" id="profileDropdownMenu">
+  <div class="dropdown-item" id="viewBlockedUsersBtn">
+    <i class="fas fa-ban"></i>
+    <span>المستخدمون المحظورون</span>
+  </div>
+  <div class="dropdown-item" id="logoutBtn">
+    <i class="fas fa-sign-out-alt"></i>
+    <span>تسجيل الخروج</span>
+  </div>
+</div>
+
+<!-- مودال المستخدمين المحظورين -->
+<div class="modal" id="blockedUsersModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content">
+    <div class="modal-header">
+      <h3>المستخدمون المحظورون</h3>
+      <button class="close-modal-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="blocked-users-list" id="blockedUsersList">
+        <!-- ستضاف هنا -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- مودال تأكيد الحظر -->
+<div class="modal" id="blockConfirmModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content block-confirm-content">
+    <div class="modal-header">
+      <h3>حظر المستخدم</h3>
+      <button class="close-modal-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="block-user-preview">
+        <img id="blockUserAvatar" src="" alt="">
+        <h4 id="blockUserName">اسم المستخدم</h4>
+        <p>هل أنت متأكد من حظر هذا المستخدم؟</p>
+        <p class="block-warning">لن يتمكن من إرسال رسائل لك أو رؤية حالتك</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" id="cancelBlockBtn">إلغاء</button>
+      <button class="block-confirm-btn" id="confirmBlockBtn">
+        <i class="fas fa-ban"></i>
+        حظر
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- مودال إلغاء الحظر -->
+<div class="modal" id="unblockModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content block-confirm-content">
+    <div class="modal-header">
+      <h3>إلغاء الحظر</h3>
+      <button class="close-modal-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="block-user-preview">
+        <img id="unblockUserAvatar" src="" alt="">
+        <h4 id="unblockUserName">اسم المستخدم</h4>
+        <p>لقد قمت بحظر هذا المستخدم</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" id="closeUnblockModalBtn">إغلاق</button>
+      <button class="unblock-btn" id="unblockUserBtn">
+        <i class="fas fa-unlock"></i>
+        إلغاء الحظر
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- مودال "لقد حظرت هذا الشخص" -->
+<div class="modal" id="blockedUserAlertModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content block-confirm-content">
+    <div class="modal-header">
+      <h3>مستخدم محظور</h3>
+      <button class="close-modal-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="block-user-preview">
+        <img id="blockedAlertAvatar" src="" alt="">
+        <h4 id="blockedAlertName">اسم المستخدم</h4>
+        <p class="blocked-message">لقد قمت بحظر هذا المستخدم</p>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="cancel-btn" id="closeBlockedAlertBtn">إغلاق</button>
+      <button class="unblock-btn" id="unblockFromAlertBtn">
+        <i class="fas fa-unlock"></i>
+        إلغاء الحظر
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- قائمة خيارات الشات (3 نقاط) -->
+<div class="chat-options-menu" id="chatOptionsMenu">
+  <div class="chat-option-item" id="deleteMessagesOption">
+    <i class="fas fa-trash-alt"></i>
+    <span>حذف رسائل</span>
+  </div>
+  <div class="chat-option-item" id="deleteChatOption">
+    <i class="fas fa-comment-slash"></i>
+    <span>حذف الدردشة</span>
+  </div>
+  <div class="chat-option-item danger" id="blockUserOption">
+    <i class="fas fa-ban"></i>
+    <span>حظر المستخدم</span>
+  </div>
+</div>
+
+<!-- وضع تحديد الرسائل للحذف -->
+<div class="message-selection-bar" id="messageSelectionBar" style="display: none;">
+  <div class="selection-info">
+    <span>تم تحديد <span id="selectedCount">0</span> رسالة</span>
+  </div>
+  <div class="selection-actions">
+    <button class="selection-btn cancel" id="cancelSelectionBtn">
+      <i class="fas fa-times"></i>
+      إلغاء
+    </button>
+    <button class="selection-btn delete" id="deleteSelectedBtn">
+      <i class="fas fa-trash"></i>
+      حذف
+    </button>
+  </div>
+</div>
+<!-- مودال بروفايل المستخدم في الشات -->
+<div class="modal" id="chatUserProfileModal">
+  <div class="modal-overlay"></div>
+  <div class="modal-content profile-modal-content">
+    <div class="modal-header">
+      <h3>بروفايل المستخدم</h3>
+      <button class="close-modal-btn">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="modal-body">
+      <!-- صورة واسم المستخدم -->
+      <div class="profile-header-section">
+        <div class="profile-avatar-large">
+          <img id="chatProfileAvatar" src="" alt="">
+        </div>
+        <h2 id="chatProfileName">اسم المستخدم</h2>
+        <p class="profile-bio-display" id="chatProfileBio">لا يوجد وصف</p>
+      </div>
+      
+      <!-- حالة الاتصال -->
+      <div class="profile-status-section">
+        <span id="chatProfileStatus">غير متصل</span>
+      </div>
+    </div>
+    <div class="modal-footer profile-actions-footer">
+      <button class="profile-action-btn danger" id="blockUserFromProfileBtn">
+        <i class="fas fa-ban"></i>
+        حظر المستخدم
+      </button>
+      <button class="profile-action-btn warning" id="deleteChatFromProfileBtn">
+        <i class="fas fa-trash-alt"></i>
+        حذف المحادثة
+      </button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
