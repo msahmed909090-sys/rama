@@ -1486,745 +1486,508 @@ async function searchUserByEmail(email) {
 // ============================================
 // متغيرات WebRTC
 // ============================================
+// ============================================
+// نظام المكالمات الحقيقية باستخدام WebRTC
+// ============================================
+
 class WebRTCManager {
-    constructor() {
+  constructor() {
+      this.peerConnection = null;
       this.localStream = null;
       this.remoteStream = null;
       this.isMuted = false;
-      this.isSpeaker = false;  // حالياً مكبر الصوت مفعل
-      this.isEarpiece = true;   // افتراضياً سماعة الأذن مفعّلة
+      this.isSpeaker = false;
+      this.isEarpiece = true;
       this.audioElement = null;
       this.currentCallId = null;
-      // ... باقي المتغيرات
-      this.peerConnection = null;
       this.callStartTime = null;
       this.timerInterval = null;
       this.callType = 'voice';
       this.otherUserId = null;
-      this.iceCandidates = [];
       this.callDoc = null;
       this.callListener = null;
       
-      // إعدادات ICE Servers (مجانية)
       this.iceServers = {
-        iceServers: [
-          { urls: 'stun:stun.l.google.com:19302' },
-          { urls: 'stun:stun1.l.google.com:19302' },
-          { urls: 'stun:stun2.l.google.com:19302' },
-          { urls: 'stun:stun3.l.google.com:19302' },
-          { urls: 'stun:stun4.l.google.com:19302' }
-        ]
+          iceServers: [
+              { urls: 'stun:stun.l.google.com:19302' },
+              { urls: 'stun:stun1.l.google.com:19302' },
+              { urls: 'stun:stun2.l.google.com:19302' }
+          ]
       };
-    }
-  
-    // ============================================
-    // بدء مكالمة صوتية
-    // ============================================
-    async startVoiceCall(userId, userName, userAvatar) {
+  }
+
+  // ============================================
+  // بدء مكالمة صوتية
+  // ============================================
+  async startVoiceCall(userId, userName, userAvatar) {
       this.callType = 'voice';
       this.otherUserId = userId;
       
       try {
-        // طلب إذن المايكروفون
-        this.localStream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true
-          },
-          video: false
-        });
-        
-        // إظهار مودال المكالمة
-        this.showCallModal(userName, userAvatar, 'voice');
-        
-        // إنشاء اتصال PeerConnection
-        await this.createPeerConnection();
-        
-        // إنشاء مستند المكالمة في Firestore
-        this.callDoc = db.collection('calls_v2').doc();
-        this.currentCallId = this.callDoc.id;
-        
-        // حفظ بيانات المكالمة
-        await this.callDoc.set({
-          type: 'voice',
-          callerId: currentUser.uid,
-          callerName: userData.username,
-          callerAvatar: userData.photoURL,
-          receiverId: userId,
-          status: 'calling',
-          timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-          participants: [currentUser.uid, userId]
-        });
-        
-        // الاستماع للاستجابة
-        this.listenForAnswer();
-        
-        // جمع ICE Candidates
-        this.collectIceCandidates();
-        
-        // إنشاء Offer
-        await this.createOffer();
-        
-        showToast('جاري الاتصال...', 'info');
-        
+          this.localStream = await navigator.mediaDevices.getUserMedia({
+              audio: {
+                  echoCancellation: true,
+                  noiseSuppression: true,
+                  autoGainControl: true
+              },
+              video: false
+          });
+          
+          this.showCallModal(userName, userAvatar, 'voice');
+          await this.createPeerConnection();
+          
+          this.callDoc = db.collection('calls_v2').doc();
+          this.currentCallId = this.callDoc.id;
+          
+          await this.callDoc.set({
+              type: 'voice',
+              callerId: currentUser.uid,
+              callerName: userData.username,
+              callerAvatar: userData.photoURL,
+              receiverId: userId,
+              status: 'calling',
+              timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+              participants: [currentUser.uid, userId]
+          });
+          
+          this.listenForAnswer();
+          this.collectIceCandidates();
+          await this.createOffer();
+          
+          showToast('جاري الاتصال...', 'info');
+          
       } catch (error) {
-        console.error('Error starting call:', error);
-        
-        if (error.name === 'NotAllowedError') {
-          showToast('يرجى السماح بالوصول للميكروفون', 'error');
-        } else if (error.name === 'NotFoundError') {
-          showToast('لم يتم العثور على ميكروفون', 'error');
-        } else {
-          showToast('حدث خطأ في الاتصال', 'error');
-        }
-        
-        this.endCall();
+          console.error('Error starting call:', error);
+          
+          if (error.name === 'NotAllowedError') {
+              showToast('يرجى السماح بالوصول للميكروفون', 'error');
+          } else if (error.name === 'NotFoundError') {
+              showToast('لم يتم العثور على ميكروفون', 'error');
+          } else {
+              showToast('حدث خطأ في الاتصال', 'error');
+          }
+          
+          this.endCall();
       }
-    }
-  
-    // ============================================
-    // بدء مكالمة فيديو (قريباً)
-    // ============================================
-    startVideoCall(userId, userName, userAvatar) {
-      // عرض رسالة قريباً
+  }
+
+  // ============================================
+  // بدء مكالمة فيديو
+  // ============================================
+  startVideoCall(userId, userName, userAvatar) {
       const alertDiv = document.createElement('div');
       alertDiv.className = 'coming-soon-alert';
       alertDiv.innerHTML = `
-        <div class="coming-soon-content">
-          <div class="coming-soon-icon">
-            <i class="fas fa-video"></i>
+          <div class="coming-soon-content">
+              <div class="coming-soon-icon">
+                  <i class="fas fa-video"></i>
+              </div>
+              <h3>مكالمة الفيديو</h3>
+              <p>هذه الميزة قيد التطوير وستكون متاحة قريباً!</p>
+              <button class="coming-soon-btn" onclick="this.parentElement.parentElement.remove()">
+                  حسناً
+              </button>
           </div>
-          <h3>مكالمة الفيديو</h3>
-          <p>هذه الميزة قيد التطوير وستكون متاحة قريباً!</p>
-          <button class="coming-soon-btn" onclick="this.parentElement.parentElement.remove()">
-            حسناً
-          </button>
-        </div>
       `;
       
-      // إضافة التنسيقات
       const style = document.createElement('style');
       style.textContent = `
-        .coming-soon-alert {
-          position: fixed;
-          inset: 0;
-          z-index: 9999;
-          background: rgba(0,0,0,0.8);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          animation: fadeIn 0.3s ease;
-        }
-        .coming-soon-content {
-          background: var(--bg-secondary);
-          padding: 40px;
-          border-radius: 20px;
-          text-align: center;
-          max-width: 350px;
-          margin: 20px;
-          animation: slideUp 0.3s ease;
-        }
-        .coming-soon-icon {
-          width: 80px;
-          height: 80px;
-          background: linear-gradient(135deg, var(--accent-green), var(--secondary-green));
-          border-radius: 50%;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          margin: 0 auto 20px;
-          font-size: 2rem;
-          color: white;
-        }
-        .coming-soon-content h3 {
-          font-size: 1.5rem;
-          margin-bottom: 10px;
-        }
-        .coming-soon-content p {
-          color: var(--text-secondary);
-          margin-bottom: 20px;
-        }
-        .coming-soon-btn {
-          padding: 12px 40px;
-          background: var(--accent-green);
-          border: none;
-          border-radius: 25px;
-          color: white;
-          font-size: 1rem;
-          font-weight: 600;
-          cursor: pointer;
-          transition: all 0.2s ease;
-        }
-        .coming-soon-btn:hover {
-          background: var(--secondary-green);
-          transform: scale(1.05);
-        }
+          .coming-soon-alert {
+              position: fixed;
+              inset: 0;
+              z-index: 9999;
+              background: rgba(0,0,0,0.8);
+              display: flex;
+              align-items: center;
+              justify-content: center;
+          }
+          .coming-soon-content {
+              background: var(--bg-secondary);
+              padding: 40px;
+              border-radius: 20px;
+              text-align: center;
+              max-width: 350px;
+              margin: 20px;
+          }
+          .coming-soon-icon {
+              width: 80px;
+              height: 80px;
+              background: linear-gradient(135deg, var(--accent-green), var(--secondary-green));
+              border-radius: 50%;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              margin: 0 auto 20px;
+              font-size: 2rem;
+              color: white;
+          }
+          .coming-soon-btn {
+              padding: 12px 40px;
+              background: var(--accent-green);
+              border: none;
+              border-radius: 25px;
+              color: white;
+              font-size: 1rem;
+              font-weight: 600;
+              cursor: pointer;
+          }
       `;
       document.head.appendChild(style);
       document.body.appendChild(alertDiv);
-    }
-  
-    // ============================================
-    // إنشاء PeerConnection
-    // ============================================
-    async createPeerConnection() {
+  }
+
+  // ============================================
+  // إنشاء PeerConnection
+  // ============================================
+  async createPeerConnection() {
       this.peerConnection = new RTCPeerConnection(this.iceServers);
       
-      // إضافة المسار المحلي
       if (this.localStream) {
-        this.localStream.getTracks().forEach(track => {
-          this.peerConnection.addTrack(track, this.localStream);
-        });
+          this.localStream.getTracks().forEach(track => {
+              this.peerConnection.addTrack(track, this.localStream);
+          });
       }
       
-      // استقبال المسار البعيد
       this.peerConnection.ontrack = (event) => {
-        console.log('Received remote track');
-        this.remoteStream = event.streams[0];
-        
-        const remoteVideo = document.getElementById('remoteVideo');
-        if (remoteVideo) {
-          remoteVideo.srcObject = this.remoteStream;
-          if (this.callType === 'video') {
-            remoteVideo.classList.add('active');
-          }
-        }
-        
-        // تشغيل الصوت
-        this.playRemoteAudio();
+          console.log('Received remote track');
+          this.remoteStream = event.streams[0];
+          this.playRemoteAudio();
       };
       
-      // مراقبة حالة الاتصال
       this.peerConnection.onconnectionstatechange = () => {
-        console.log('Connection state:', this.peerConnection.connectionState);
-        
-        switch (this.peerConnection.connectionState) {
-          case 'connected':
-            this.onCallConnected();
-            break;
-          case 'disconnected':
-          case 'failed':
-            this.endCall();
-            break;
-        }
+          console.log('Connection state:', this.peerConnection.connectionState);
+          switch (this.peerConnection.connectionState) {
+              case 'connected':
+                  this.onCallConnected();
+                  break;
+              case 'disconnected':
+              case 'failed':
+                  this.endCall();
+                  break;
+          }
       };
-      
-      // مراقبة حالة ICE
-      this.peerConnection.oniceconnectionstatechange = () => {
-        console.log('ICE state:', this.peerConnection.iceConnectionState);
-        this.updateCallQuality();
-      };
-    }
-  
-    // ============================================
-    // إنشاء Offer
-    // ============================================
-    async createOffer() {
+  }
+
+  // ============================================
+  // إنشاء Offer
+  // ============================================
+  async createOffer() {
       const offer = await this.peerConnection.createOffer();
       await this.peerConnection.setLocalDescription(offer);
       
-      // حفظ الـ Offer في Firestore
       await this.callDoc.collection('signals').doc('offer').set({
-        sdp: offer.sdp,
-        type: offer.type,
-        timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          sdp: offer.sdp,
+          type: offer.type,
+          timestamp: firebase.firestore.FieldValue.serverTimestamp()
       });
-    }
-  
-    // ============================================
-    // الاستماع للإجابة
-    // ============================================
-    listenForAnswer() {
+  }
+
+  // ============================================
+  // الاستماع للإجابة
+  // ============================================
+  listenForAnswer() {
       this.callListener = this.callDoc.collection('signals').doc('answer')
-        .onSnapshot(async (snapshot) => {
-          if (snapshot.exists) {
-            const data = snapshot.data();
-            
-            if (data && data.sdp && !this.peerConnection.currentRemoteDescription) {
-              console.log('Received answer');
-              
-              const answer = new RTCSessionDescription({
-                type: data.type,
-                sdp: data.sdp
-              });
-              
-              await this.peerConnection.setRemoteDescription(answer);
-            }
-          }
-        });
-    }
-  
-    // ============================================
-    // جمع ICE Candidates
-    // ============================================
-    collectIceCandidates() {
-      this.peerConnection.onicecandidate = async (event) => {
-        if (event.candidate) {
-          await this.callDoc.collection('iceCandidates').add({
-            ...event.candidate.toJSON(),
-            userId: currentUser.uid,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
+          .onSnapshot(async (snapshot) => {
+              if (snapshot.exists) {
+                  const data = snapshot.data();
+                  if (data && data.sdp && !this.peerConnection.currentRemoteDescription) {
+                      const answer = new RTCSessionDescription({
+                          type: data.type,
+                          sdp: data.sdp
+                      });
+                      await this.peerConnection.setRemoteDescription(answer);
+                  }
+              }
           });
-        }
+  }
+
+  // ============================================
+  // جمع ICE Candidates
+  // ============================================
+  collectIceCandidates() {
+      this.peerConnection.onicecandidate = async (event) => {
+          if (event.candidate) {
+              await this.callDoc.collection('iceCandidates').add({
+                  ...event.candidate.toJSON(),
+                  userId: currentUser.uid,
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp()
+              });
+          }
       };
       
-      // الاستماع لـ ICE Candidates من الطرف الآخر
       this.callDoc.collection('iceCandidates')
-        .where('userId', '!=', currentUser.uid)
-        .onSnapshot((snapshot) => {
-          snapshot.docChanges().forEach(async (change) => {
-            if (change.type === 'added') {
-              const data = change.doc.data();
-              await this.peerConnection.addIceCandidate(new RTCIceCandidate(data));
-            }
+          .where('userId', '!=', currentUser.uid)
+          .onSnapshot((snapshot) => {
+              snapshot.docChanges().forEach(async (change) => {
+                  if (change.type === 'added') {
+                      const data = change.doc.data();
+                      await this.peerConnection.addIceCandidate(new RTCIceCandidate(data));
+                  }
+              });
           });
-        });
-    }
-  
-    // ============================================
-    // استقبال مكالمة
-    // ============================================
-    async receiveCall(callData, callId) {
+  }
+
+  // ============================================
+  // استقبال مكالمة
+  // ============================================
+  async receiveCall(callData, callId) {
       this.callType = callData.type;
       this.otherUserId = callData.callerId;
       this.currentCallId = callId;
       this.callDoc = db.collection('calls_v2').doc(callId);
-      
-      // إظهار مودال المكالمة الواردة
       this.showIncomingCallModal(callData);
-    }
-  
-    // ============================================
-    // قبول المكالمة
-    // ============================================
-    async acceptCall() {
+  }
+
+  // ============================================
+  // قبول المكالمة
+  // ============================================
+  async acceptCall() {
       try {
-        // طلب إذن المايكروفون
-        this.localStream = await navigator.mediaDevices.getUserMedia({
-          audio: {
-            echoCancellation: true,
-            noiseSuppression: true,
-            autoGainControl: true
-          },
-          video: this.callType === 'video'
-        });
-        
-        // إخفاء مودال الواردة
-        document.getElementById('incomingCallModal').style.display = 'none';
-        
-        // إظهار مودال المكالمة
-        const callerName = document.getElementById('incomingCallerName').textContent;
-        const callerAvatar = document.getElementById('incomingCallerAvatar').src;
-        this.showCallModal(callerName, callerAvatar, this.callType);
-        
-        // تحديث حالة المكالمة
-        await this.callDoc.update({ status: 'answered' });
-        
-        // إنشاء اتصال
-        await this.createPeerConnection();
-        
-        // جلب الـ Offer
-        const offerDoc = await this.callDoc.collection('signals').doc('offer').get();
-        if (offerDoc.exists) {
-          const offerData = offerDoc.data();
-          
-          const offer = new RTCSessionDescription({
-            type: offerData.type,
-            sdp: offerData.sdp
+          this.localStream = await navigator.mediaDevices.getUserMedia({
+              audio: {
+                  echoCancellation: true,
+                  noiseSuppression: true,
+                  autoGainControl: true
+              },
+              video: this.callType === 'video'
           });
           
-          await this.peerConnection.setRemoteDescription(offer);
+          document.getElementById('incomingCallModal').style.display = 'none';
           
-          // إنشاء Answer
-          const answer = await this.peerConnection.createAnswer();
-          await this.peerConnection.setLocalDescription(answer);
+          const callerName = document.getElementById('incomingCallerName').textContent;
+          const callerAvatar = document.getElementById('incomingCallerAvatar').src;
+          this.showCallModal(callerName, callerAvatar, this.callType);
           
-          // حفظ الـ Answer
-          await this.callDoc.collection('signals').doc('answer').set({
-            sdp: answer.sdp,
-            type: answer.type,
-            timestamp: firebase.firestore.FieldValue.serverTimestamp()
-          });
+          await this.callDoc.update({ status: 'answered' });
+          await this.createPeerConnection();
           
-          // جمع ICE Candidates
-          this.collectIceCandidates();
-        }
-        
+          const offerDoc = await this.callDoc.collection('signals').doc('offer').get();
+          if (offerDoc.exists) {
+              const offerData = offerDoc.data();
+              const offer = new RTCSessionDescription({
+                  type: offerData.type,
+                  sdp: offerData.sdp
+              });
+              
+              await this.peerConnection.setRemoteDescription(offer);
+              const answer = await this.peerConnection.createAnswer();
+              await this.peerConnection.setLocalDescription(answer);
+              
+              await this.callDoc.collection('signals').doc('answer').set({
+                  sdp: answer.sdp,
+                  type: answer.type,
+                  timestamp: firebase.firestore.FieldValue.serverTimestamp()
+              });
+              
+              this.collectIceCandidates();
+          }
+          
       } catch (error) {
-        console.error('Error accepting call:', error);
-        showToast('حدث خطأ في قبول المكالمة', 'error');
-        this.endCall();
+          console.error('Error accepting call:', error);
+          showToast('حدث خطأ في قبول المكالمة', 'error');
+          this.endCall();
       }
-    }
-  
-    // ============================================
-    // رفض المكالمة
-    // ============================================
-    async rejectCall() {
+  }
+
+  // ============================================
+  // رفض المكالمة
+  // ============================================
+  async rejectCall() {
       if (this.callDoc) {
-        await this.callDoc.update({ status: 'rejected' });
+          await this.callDoc.update({ status: 'rejected' });
       }
-      
       document.getElementById('incomingCallModal').style.display = 'none';
       this.cleanup();
-    }
-  
-    // ============================================
-    // عند اتصال المكالمة
-    // ============================================
-    onCallConnected() {
+  }
+
+  // ============================================
+  // عند اتصال المكالمة
+  // ============================================
+  onCallConnected() {
       document.getElementById('callStatus').textContent = 'متصل';
       document.getElementById('callStatus').classList.remove('call-status-connecting');
-      
-      // إظهار المؤقت
       document.getElementById('callTimer').style.display = 'block';
       
-      // بدء العداد
       this.callStartTime = Date.now();
       this.timerInterval = setInterval(() => {
-        const duration = Math.floor((Date.now() - this.callStartTime) / 1000);
-        document.getElementById('callDuration').textContent = this.formatDuration(duration);
+          const duration = Math.floor((Date.now() - this.callStartTime) / 1000);
+          document.getElementById('callDuration').textContent = this.formatDuration(duration);
       }, 1000);
       
       showToast('تم الاتصال', 'success');
-    }
-  
-    // ============================================
-    // كتم/إلغاء كتم المايكروفون
-    // ============================================
-    toggleMute() {
-      if (this.localStream) {
-        const audioTrack = this.localStream.getAudioTracks()[0];
-        if (audioTrack) {
-          this.isMuted = !this.isMuted;
-          audioTrack.enabled = !this.isMuted;
-          
-          const muteBtn = document.getElementById('muteBtn');
-          if (this.isMuted) {
-            muteBtn.classList.add('active');
-            muteBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
-            showToast('تم كتم المايكروفون', 'info');
-          } else {
-            muteBtn.classList.remove('active');
-            muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
-            showToast('تم إلغاء كتم المايكروفون', 'info');
-          }
-        }
-      }
-    }
-  
-    // ============================================
-    // تبديل إلى مكبر الصوت
-    // ============================================
-   // ============================================
-// تبديل إلى مكبر الصوت
-// ============================================
-async toggleSpeaker() {
-  const speakerBtn = document.getElementById('speakerBtn');
-  const earpieceBtn = document.getElementById('earpieceBtn');
-  
-  // تفعيل مكبر الصوت
-  this.isSpeaker = true;
-  this.isEarpiece = false;
-  
-  // تحديث واجهة الأزرار
-  speakerBtn.classList.add('active');
-  earpieceBtn.classList.remove('active');
-  
-  // محاولة استخدام مكبر الصوت
-  if (this.audioElement) {
-      try {
-          // الحصول على أجهزة الإخراج المتاحة
-          const devices = await navigator.mediaDevices.enumerateDevices();
-          
-          // البحث عن مكبر الصوت
-          const speaker = devices.find(d => 
-              d.kind === 'audiooutput' && 
-              (d.label.toLowerCase().includes('speaker') || 
-               d.label.toLowerCase().includes('speakerphone'))
-          );
-          
-          if (speaker && typeof this.audioElement.setSinkId === 'function') {
-              await this.audioElement.setSinkId(speaker.deviceId);
-              showToast('تم تفعيل مكبر الصوت', 'info');
-          } else {
-              // حل بديل: تعيين volume عالي
-              this.audioElement.volume = 1.0;
-              showToast('تم تفعيل مكبر الصوت', 'info');
-          }
-      } catch (e) {
-          console.log('Could not switch to speaker:', e);
-          // حل بديل للمتصفحات التي لا تدعم setSinkId
-          this.audioElement.volume = 1.0;
-          showToast('تم تفعيل مكبر الصوت', 'info');
-      }
   }
-}
 
-// ============================================
-// تبديل إلى سماعة الأذن (الافتراضي)
-// ============================================
-async switchToEarpiece() {
-  const speakerBtn = document.getElementById('speakerBtn');
-  const earpieceBtn = document.getElementById('earpieceBtn');
-  
-  // تفعيل سماعة الأذن
-  this.isSpeaker = false;
-  this.isEarpiece = true;
-  
-  // تحديث واجهة الأزرار
-  speakerBtn.classList.remove('active');
-  earpieceBtn.classList.add('active');
-  
-  // محاولة استخدام سماعة الأذن
-  if (this.audioElement) {
-      try {
-          // الحصول على أجهزة الإخراج المتاحة
-          const devices = await navigator.mediaDevices.enumerateDevices();
-          
-          // البحث عن سماعة الأذن
-          const earpiece = devices.find(d => 
-              d.kind === 'audiooutput' && 
-              (d.label.toLowerCase().includes('earpiece') || 
-               d.label.toLowerCase().includes('headphone') ||
-               d.label.toLowerCase().includes('default'))
-          );
-          
-          if (earpiece && typeof this.audioElement.setSinkId === 'function') {
-              await this.audioElement.setSinkId(earpiece.deviceId);
-              console.log('Switched to earpiece');
-          }
-      } catch (e) {
-          console.log('Could not switch to earpiece:', e);
-      }
-  }
-}
-
-// دالة toggleEarpiece للزر
-async toggleEarpiece() {
-  await this.switchToEarpiece();
-  showToast('تم تفعيل سماعة الأذن', 'info');
-}
-// ============================================
-// تشغيل الصوت البعيد (سماعة الأذن افتراضياً)
-// ============================================
-// ============================================
-// تبديل إلى سماعة الأذن (صوت منخفض للخصوصية)
-// ============================================
-async toggleEarpiece() {
-    const speakerBtn = document.getElementById('speakerBtn');
-    const earpieceBtn = document.getElementById('earpieceBtn');
-    
-    // تفعيل سماعة الأذن
-    this.isSpeaker = false;
-    this.isEarpiece = true;
-    
-    // تحديث واجهة الأزرار
-    speakerBtn.classList.remove('active');
-    earpieceBtn.classList.add('active');
-    
-    // تخفيض الصوت جداً (فقط من يضع أذنه يسمع)
-    if (this.audioElement) {
-        this.audioElement.volume = 0.15; // 15% فقط
-    }
-    
-    showToast('🎧 سماعة الأذن', 'info');
-}
-  
-    // ============================================
-    // تحديث جودة المكالمة
-    // ============================================
-    updateCallQuality() {
-      const indicator = document.getElementById('callQualityIndicator');
-      const text = document.getElementById('callQualityText');
-      
-      if (!this.peerConnection || !indicator) return;
-      
-      const state = this.peerConnection.iceConnectionState;
-      
-      indicator.classList.remove('poor', 'good', 'excellent');
-      
-      switch (state) {
-        case 'connected':
-        case 'completed':
-          indicator.classList.add('excellent');
-          text.textContent = 'جودة الاتصال: ممتازة';
-          break;
-        case 'checking':
-          indicator.classList.add('good');
-          text.textContent = 'جاري التحقق...';
-          break;
-        case 'disconnected':
-        case 'failed':
-          indicator.classList.add('poor');
-          text.textContent = 'جودة الاتصال: ضعيفة';
-          break;
-        default:
-          text.textContent = 'جاري الاتصال...';
-      }
-    }
   // ============================================
-// تشغيل الصوت البعيد - سماعة الأذن افتراضياً
-// ============================================
-async playRemoteAudio() {
-  // الحصول على عنصر الصوت
-  this.audioElement = document.getElementById('callAudioElement');
-  
-  if (!this.audioElement || !this.remoteStream) return;
-  
-  // ربط البث بعنصر الصوت
-  this.audioElement.srcObject = this.remoteStream;
-  
-  // تشغيل الصوت
-  try {
-      await this.audioElement.play();
-      console.log('✅ Audio playing');
-  } catch (e) {
-      console.error('Could not play audio:', e);
-  }
-  
-  // افتراضياً: سماعة الأذن = صوت منخفض
-  this.audioElement.volume = 0.15;
-  this.isSpeaker = false;
-  this.isEarpiece = true;
-  
-  // تحديث الأزرار
-  const earpieceBtn = document.getElementById('earpieceBtn');
-  const speakerBtn = document.getElementById('speakerBtn');
-  if (earpieceBtn) earpieceBtn.classList.add('active');
-  if (speakerBtn) speakerBtn.classList.remove('active');
-}
-
-// ============================================
-// تبديل إلى مكبر الصوت (صوت عالي)
-// ============================================
-async toggleSpeaker() {
-  const speakerBtn = document.getElementById('speakerBtn');
-  const earpieceBtn = document.getElementById('earpieceBtn');
-  
-  this.isSpeaker = true;
-  this.isEarpiece = false;
-  
-  if (speakerBtn) speakerBtn.classList.add('active');
-  if (earpieceBtn) earpieceBtn.classList.remove('active');
-  
-  // رفع الصوت للحد الأقصى
-  if (this.audioElement) {
-      this.audioElement.volume = 1.0;
-  }
-  
-  showToast('🔊 تم تفعيل مكبر الصوت', 'info');
-}
-
-// ============================================
-// تبديل إلى سماعة الأذن (صوت منخفض)
-// ============================================
-async toggleEarpiece() {
-  const speakerBtn = document.getElementById('speakerBtn');
-  const earpieceBtn = document.getElementById('earpieceBtn');
-  
-  this.isSpeaker = false;
-  this.isEarpiece = true;
-  
-  if (speakerBtn) speakerBtn.classList.remove('active');
-  if (earpieceBtn) earpieceBtn.classList.add('active');
-  
-  // تخفيض الصوت
-  if (this.audioElement) {
+  // تشغيل الصوت البعيد (سماعة الأذن افتراضياً)
+  // ============================================
+  async playRemoteAudio() {
+      this.audioElement = document.getElementById('callAudioElement');
+      
+      if (!this.audioElement || !this.remoteStream) return;
+      
+      this.audioElement.srcObject = this.remoteStream;
+      
+      try {
+          await this.audioElement.play();
+          console.log('✅ Audio playing');
+      } catch (e) {
+          console.error('Could not play audio:', e);
+      }
+      
+      // افتراضياً: سماعة الأذن = صوت منخفض (15%)
       this.audioElement.volume = 0.15;
+      this.isSpeaker = false;
+      this.isEarpiece = true;
+      
+      const earpieceBtn = document.getElementById('earpieceBtn');
+      const speakerBtn = document.getElementById('speakerBtn');
+      if (earpieceBtn) earpieceBtn.classList.add('active');
+      if (speakerBtn) speakerBtn.classList.remove('active');
   }
-  
-  showToast('🎧 سماعة الأذن', 'info');
-}
-    // ============================================
-    // إنهاء المكالمة
-    // ============================================
-    async endCall() {
-      // حساب مدة المكالمة
+
+  // ============================================
+  // كتم/إلغاء كتم المايكروفون
+  // ============================================
+  toggleMute() {
+      if (this.localStream) {
+          const audioTrack = this.localStream.getAudioTracks()[0];
+          if (audioTrack) {
+              this.isMuted = !this.isMuted;
+              audioTrack.enabled = !this.isMuted;
+              
+              const muteBtn = document.getElementById('muteBtn');
+              if (this.isMuted) {
+                  muteBtn.classList.add('active');
+                  muteBtn.innerHTML = '<i class="fas fa-microphone-slash"></i>';
+                  showToast('تم كتم المايكروفون', 'info');
+              } else {
+                  muteBtn.classList.remove('active');
+                  muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+                  showToast('تم إلغاء كتم المايكروفون', 'info');
+              }
+          }
+      }
+  }
+
+  // ============================================
+  // تبديل إلى مكبر الصوت (صوت عالي 100%)
+  // ============================================
+  async toggleSpeaker() {
+      const speakerBtn = document.getElementById('speakerBtn');
+      const earpieceBtn = document.getElementById('earpieceBtn');
+      
+      this.isSpeaker = true;
+      this.isEarpiece = false;
+      
+      if (speakerBtn) speakerBtn.classList.add('active');
+      if (earpieceBtn) earpieceBtn.classList.remove('active');
+      
+      // رفع الصوت للحد الأقصى
+      if (this.audioElement) {
+          this.audioElement.volume = 1.0;
+      }
+      
+      showToast('🔊 تم تفعيل مكبر الصوت', 'info');
+  }
+
+  // ============================================
+  // تبديل إلى سماعة الأذن (صوت منخفض 15%)
+  // ============================================
+  async toggleEarpiece() {
+      const speakerBtn = document.getElementById('speakerBtn');
+      const earpieceBtn = document.getElementById('earpieceBtn');
+      
+      this.isSpeaker = false;
+      this.isEarpiece = true;
+      
+      if (speakerBtn) speakerBtn.classList.remove('active');
+      if (earpieceBtn) earpieceBtn.classList.add('active');
+      
+      // تخفيض الصوت
+      if (this.audioElement) {
+          this.audioElement.volume = 0.15;
+      }
+      
+      showToast('🎧 سماعة الأذن', 'info');
+  }
+
+  // ============================================
+  // إنهاء المكالمة
+  // ============================================
+  async endCall() {
       let duration = 0;
       if (this.callStartTime) {
-        duration = Math.floor((Date.now() - this.callStartTime) / 1000);
+          duration = Math.floor((Date.now() - this.callStartTime) / 1000);
       }
       
-      // تحديث حالة المكالمة
       if (this.callDoc) {
-        try {
-          await this.callDoc.update({
-            status: 'ended',
-            duration: duration
-          });
-        } catch (e) {
-          console.log('Could not update call status');
-        }
+          try {
+              await this.callDoc.update({
+                  status: 'ended',
+                  duration: duration
+              });
+          } catch (e) {
+              console.log('Could not update call status');
+          }
       }
       
-      // إيقاف المؤقت
       if (this.timerInterval) {
-        clearInterval(this.timerInterval);
+          clearInterval(this.timerInterval);
       }
       
-      // إغلاق الاتصال
       this.cleanup();
       
-      // إخفاء المودال
       document.getElementById('callModal').classList.remove('active');
       document.getElementById('incomingCallModal').style.display = 'none';
       
       showToast('تم إنهاء المكالمة', 'info');
       
-      // تسجيل المكالمة
       if (this.otherUserId && duration > 0) {
-        await logCallToHistory(this.callType, this.otherUserId, true, duration);
+          await logCallToHistory(this.callType, this.otherUserId, true, duration);
       }
-    }
-  
-    // ============================================
-    // تنظيف الموارد
-    // ============================================
-    cleanup() {
-      // إيقاف المسارات المحلية
+  }
+
+  // ============================================
+  // تنظيف الموارد
+  // ============================================
+  cleanup() {
       if (this.localStream) {
-        this.localStream.getTracks().forEach(track => track.stop());
-        this.localStream = null;
+          this.localStream.getTracks().forEach(track => track.stop());
+          this.localStream = null;
       }
       
-      // إيقاف المسارات البعيدة
       if (this.remoteStream) {
-        this.remoteStream.getTracks().forEach(track => track.stop());
-        this.remoteStream = null;
+          this.remoteStream.getTracks().forEach(track => track.stop());
+          this.remoteStream = null;
       }
       
-      // إغلاق PeerConnection
       if (this.peerConnection) {
-        this.peerConnection.close();
-        this.peerConnection = null;
+          this.peerConnection.close();
+          this.peerConnection = null;
       }
       
-      // إلغاء الاستماع
       if (this.callListener) {
-        this.callListener();
-        this.callListener = null;
+          this.callListener();
+          this.callListener = null;
       }
       
-      // إعادة تعيين المتغيرات
       this.currentCallId = null;
       this.callStartTime = null;
       this.isMuted = false;
       this.isSpeaker = false;
+      this.isEarpiece = true;
       
-      // إعادة تعيين الفيديو
       const remoteVideo = document.getElementById('remoteVideo');
       if (remoteVideo) {
-        remoteVideo.srcObject = null;
-        remoteVideo.classList.remove('active');
+          remoteVideo.srcObject = null;
+          remoteVideo.classList.remove('active');
       }
-    }
-  
-    // ============================================
-    // إظهار مودال المكالمة
-    // ============================================
-    showCallModal(userName, userAvatar, type) {
+  }
+
+  // ============================================
+  // إظهار مودال المكالمة
+  // ============================================
+  showCallModal(userName, userAvatar, type) {
       document.getElementById('callUserName').textContent = userName;
       document.getElementById('callUserAvatar').src = userAvatar;
       document.getElementById('callTypeText').textContent = type === 'video' ? 'مكالمة فيديو' : 'مكالمة صوتية';
@@ -2234,60 +1997,46 @@ async toggleEarpiece() {
       document.getElementById('callTimer').style.display = 'none';
       document.getElementById('callDuration').textContent = '00:00';
       
-      // إعادة تعيين الأزرار
-      
-      // إظهار المودال
-      document.getElementById('callModal').classList.add('active');
       // إعادة تعيين الأزرار - سماعة الأذن افتراضية
-document.getElementById('muteBtn').classList.remove('active');
-document.getElementById('muteBtn').innerHTML = '<i class="fas fa-microphone"></i>';
-document.getElementById('speakerBtn').classList.remove('active');  // مكبر الصوت غير مفعل
-document.getElementById('earpieceBtn').classList.add('active');     // سماعة الأذن مفعّلة
-    }
-  
-    // ============================================
-    // إظهار مودال المكالمة الواردة
-    // ============================================
-    showIncomingCallModal(callData) {
+      const muteBtn = document.getElementById('muteBtn');
+      const speakerBtn = document.getElementById('speakerBtn');
+      const earpieceBtn = document.getElementById('earpieceBtn');
+      
+      if (muteBtn) {
+          muteBtn.classList.remove('active');
+          muteBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+      }
+      if (speakerBtn) speakerBtn.classList.remove('active');
+      if (earpieceBtn) earpieceBtn.classList.add('active');
+      
+      document.getElementById('callModal').classList.add('active');
+  }
+
+  // ============================================
+  // إظهار مودال المكالمة الواردة
+  // ============================================
+  showIncomingCallModal(callData) {
       document.getElementById('incomingCallerName').textContent = callData.callerName || 'مستخدم';
       document.getElementById('incomingCallerAvatar').src = callData.callerAvatar || 
-        `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23075e54" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="40">${(callData.callerName || 'م')[0]}</text></svg>`;
+          `data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23075e54" width="100" height="100"/><text x="50" y="60" text-anchor="middle" fill="white" font-size="40">${(callData.callerName || 'م')[0]}</text></svg>`;
       document.getElementById('incomingCallType').textContent = 
-        callData.type === 'video' ? 'مكالمة فيديو' : 'مكالمة صوتية';
+          callData.type === 'video' ? 'مكالمة فيديو' : 'مكالمة صوتية';
       
       document.getElementById('incomingCallModal').style.display = 'flex';
-      
-      // تشغيل صوت الرنين
-      this.playRingtone();
-    }
-  
-    // ============================================
-    // تشغيل صوت الرنين
-    // ============================================
-    playRingtone() {
-      // يمكن إضافة صوت رنين هنا
-      const audio = new Audio('data:audio/wav;base64,UklGRl9...');
-      audio.loop = true;
-      audio.play().catch(e => console.log('Could not play ringtone'));
-      
-      // إيقاف الصوت بعد 30 ثانية
-      setTimeout(() => {
-        audio.pause();
-      }, 30000);
-    }
-  
-    // ============================================
-    // تنسيق المدة
-    // ============================================
-    formatDuration(seconds) {
+  }
+
+  // ============================================
+  // تنسيق المدة
+  // ============================================
+  formatDuration(seconds) {
       const mins = Math.floor(seconds / 60);
       const secs = seconds % 60;
       return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-    }
   }
-  
-  // إنشاء مثيل من مدير المكالمات
-  const webrtcManager = new WebRTCManager();
+}
+
+// إنشاء مثيل من مدير المكالمات
+const webrtcManager = new WebRTCManager();
   
   // ============================================
   // الاستماع للمكالمات الواردة
