@@ -459,32 +459,45 @@ async function loadMessages(otherUserId) {
 * إنشاء HTML للرسالة (معدلة لإضافة messageId)
 */
 /**
- * إنشاء HTML للرسالة (معدلة لإضافة messageId و senderId)
+ * إنشاء HTML للرسالة (محدثة لدعم الوسائط)
  */
 function createMessageHTML(msg, isSent, messageId = '') {
   const time = formatMessageTime(msg.timestamp);
   const messageClass = isSent ? 'sent' : 'received';
+  const senderId = msg.senderId || '';
   
   let contentHtml = '';
   
   if (msg.type === 'image') {
       contentHtml = `
           <div class="message-media">
-              <img src="${msg.mediaUrl}" alt="صورة" onclick="viewImage('${msg.mediaUrl}')">
+              <img src="${msg.mediaUrl}" alt="صورة" onclick="viewImage('${msg.mediaUrl}')" loading="lazy">
           </div>
       `;
   } else if (msg.type === 'video') {
       contentHtml = `
           <div class="message-media">
-              <video src="${msg.mediaUrl}" controls></video>
+              <video src="${msg.mediaUrl}" controls preload="metadata"></video>
+          </div>
+      `;
+  } else if (msg.type === 'audio') {
+      contentHtml = `
+          <div class="message-audio">
+              <button class="audio-play-btn" onclick="toggleAudio(this, '${msg.mediaUrl}')">
+                  <i class="fas fa-play"></i>
+              </button>
+              <div class="audio-info">
+                  <div class="audio-name">${escapeHtml(msg.fileName || 'ملف صوتي')}</div>
+                  <div class="audio-duration">${formatFileSize(msg.fileSize)}</div>
+                  <div class="audio-progress">
+                      <div class="audio-progress-bar"></div>
+                  </div>
+              </div>
           </div>
       `;
   }
   
   contentHtml += `<div class="message-text">${escapeHtml(msg.text)}</div>`;
-  
-  // إضافة data-sender-id للتحقق عند الحذف
-  const senderId = msg.senderId || '';
   
   return `
     <div class="message ${messageClass}" data-message-id="${messageId}" data-sender-id="${senderId}">
@@ -495,6 +508,54 @@ function createMessageHTML(msg, isSent, messageId = '') {
       </div>
     </div>
   `;
+}
+
+/**
+* تنسيق حجم الملف
+*/
+function formatFileSize(bytes) {
+  if (!bytes) return '';
+  if (bytes < 1024) return bytes + ' B';
+  if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+  return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+}
+
+/**
+* تشغيل/إيقاف الصوت
+*/
+function toggleAudio(btn, url) {
+  const icon = btn.querySelector('i');
+  const progressBar = btn.parentElement.querySelector('.audio-progress-bar');
+  
+  // إيقاف أي صوت آخر قيد التشغيل
+  document.querySelectorAll('.audio-play-btn').forEach(otherBtn => {
+      if (otherBtn !== btn) {
+          otherBtn.querySelector('i').className = 'fas fa-play';
+      }
+  });
+  
+  // إنشاء عنصر صوت
+  if (!btn.audioElement) {
+      btn.audioElement = new Audio(url);
+      
+      btn.audioElement.addEventListener('timeupdate', () => {
+          const progress = (btn.audioElement.currentTime / btn.audioElement.duration) * 100;
+          progressBar.style.width = progress + '%';
+      });
+      
+      btn.audioElement.addEventListener('ended', () => {
+          icon.className = 'fas fa-play';
+          progressBar.style.width = '0%';
+      });
+  }
+  
+  if (btn.audioElement.paused) {
+      btn.audioElement.play();
+      icon.className = 'fas fa-pause';
+  } else {
+      btn.audioElement.pause();
+      icon.className = 'fas fa-play';
+  }
 }
 
 /**
@@ -571,37 +632,45 @@ function createChatItemHTML(chatId, chat, otherUser, isOnline, unreadCount, othe
     });
   }
   
-  // ============================================
-  // تهيئة واجهة المحادثة
-  // ============================================
+// ============================================
+// تهيئة واجهة المحادثة
+// ============================================
+
+function initChatView() {
+  console.log('🔍 تهيئة واجهة المحادثة...');
   
-  function initChatView() {
-    // زر الرجوع
-    document.getElementById('backFromChat').addEventListener('click', closeChatView);
-    
-    // إرسال الرسالة
-    document.getElementById('sendBtn').addEventListener('click', sendMessage);
-    document.getElementById('messageInput').addEventListener('keypress', (e) => {
+  // زر الرجوع
+  document.getElementById('backFromChat').addEventListener('click', closeChatView);
+  
+  // إرسال الرسالة
+  document.getElementById('sendBtn').addEventListener('click', sendMessage);
+  document.getElementById('messageInput').addEventListener('keypress', (e) => {
       if (e.key === 'Enter' && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
+          e.preventDefault();
+          sendMessage();
       }
-    });
-    
-    // إرفاق ملفات
-    document.getElementById('attachBtn').addEventListener('click', toggleAttachMenu);
-    
-    // مكالمة صوتية
-    document.getElementById('voiceCallBtn').addEventListener('click', () => startCall('voice'));
-    
-    // مكالمة فيديو
-    document.getElementById('videoCallBtn').addEventListener('click', () => startCall('video'));
-    
-    // ملفات الرفع
-    initFileUploads();
-        // تهيئة بروفايل المستخدم في الشات
-        initChatUserProfile();
-  }
+  });
+  
+  // إرفاق ملفات
+  document.getElementById('attachBtn').addEventListener('click', toggleAttachMenu);
+  
+  // مكالمة صوتية
+  document.getElementById('voiceCallBtn').addEventListener('click', () => startCall('voice'));
+  
+  // مكالمة فيديو
+  document.getElementById('videoCallBtn').addEventListener('click', () => startCall('video'));
+  
+  // زر المايكروفون - تسجيل صوتي
+  document.getElementById('micBtn').addEventListener('click', startVoiceRecording);
+  
+  // تهيئة رفع الملفات
+  initFileUploads();
+  
+  // تهيئة بروفايل المستخدم في الشات
+  initChatUserProfile();
+  
+  console.log('✅ تم تهيئة واجهة المحادثة');
+}
   
   /**
    * إغلاق واجهة المحادثة
@@ -663,13 +732,18 @@ function closeChatView() {
     }
   }
   
-  /**
-   * تبديل قائمة الإرفاق
-   */
-  function toggleAttachMenu() {
-    const menu = document.getElementById('attachMenu');
-    menu.classList.toggle('active');
+/**
+ * تبديل قائمة الإرفاق
+ */
+function toggleAttachMenu() {
+  const menu = document.getElementById('attachMenu');
+  if (menu) {
+      menu.classList.toggle('active');
+      console.log('📎 قائمة الإرفاق:', menu.classList.contains('active') ? 'مفتوحة' : 'مغلقة');
+  } else {
+      console.error('❌ لم يتم العثور على قائمة الإرفاق');
   }
+}
   
   /**
    * تهيئة رفع الملفات
@@ -677,43 +751,301 @@ function closeChatView() {
 /**
  * تهيئة رفع الملفات (محدّثة)
  */
+// ============================================
+// تهيئة رفع الملفات (محدثة مع Storage)
+// ============================================
+
+let uploadTask = null;
+let isUploading = false;
+
 function initFileUploads() {
-    // رفع صورة
-    document.getElementById('attachImage').addEventListener('click', () => {
-        document.getElementById('imageUploadInput').click();
-    });
-    
-    document.getElementById('imageUploadInput').addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (file && currentChat) {
-            await sendMediaMessage(file, 'image');
-        }
-        e.target.value = ''; // إعادة تعيين
-    });
-    
-    // رفع فيديو
-    document.getElementById('attachVideo').addEventListener('click', () => {
-        document.getElementById('videoUploadInput').click();
-    });
-    
-    document.getElementById('videoUploadInput').addEventListener('change', async (e) => {
-        const file = e.target.files[0];
-        if (file && currentChat) {
-            await sendMediaMessage(file, 'video');
-        }
-        e.target.value = ''; // إعادة تعيين
-    });
-    
-    // إغلاق القائمة عند النقر خارجها
-    document.addEventListener('click', (e) => {
-        const attachMenu = document.getElementById('attachMenu');
-        const attachBtn = document.getElementById('attachBtn');
-        if (attachMenu && attachBtn && !attachMenu.contains(e.target) && !attachBtn.contains(e.target)) {
-            attachMenu.classList.remove('active');
-        }
-    });
-}
+  // رفع صورة
+  document.getElementById('attachImage').addEventListener('click', () => {
+      document.getElementById('imageUploadInput').click();
+      document.getElementById('attachMenu').classList.remove('active');
+  });
   
+  document.getElementById('imageUploadInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file && currentChat) {
+          await uploadAndSendMedia(file, 'image');
+      }
+      e.target.value = '';
+  });
+  
+  // رفع فيديو (مع تحذير الحجم)
+  document.getElementById('attachVideo').addEventListener('click', () => {
+      document.getElementById('videoUploadInput').click();
+      document.getElementById('attachMenu').classList.remove('active');
+  });
+  
+  document.getElementById('videoUploadInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file && currentChat) {
+          // تحذير: الفيديو لازم يكون صغير جداً (أقل من 1MB)
+          if (file.size > 950 * 1024) {
+              showToast('الفيديو كبير جداً! الحد الأقصى 1MB', 'error');
+              e.target.value = '';
+              return;
+          }
+          await uploadAndSendMedia(file, 'video');
+      }
+      e.target.value = '';
+  });
+  
+  // رفع صوت
+  document.getElementById('attachAudio').addEventListener('click', () => {
+      document.getElementById('audioUploadInput').click();
+      document.getElementById('attachMenu').classList.remove('active');
+  });
+  
+  document.getElementById('audioUploadInput').addEventListener('change', async (e) => {
+      const file = e.target.files[0];
+      if (file && currentChat) {
+          if (file.size > 950 * 1024) {
+              showToast('الملف الصوتي كبير جداً! الحد الأقصى 1MB', 'error');
+              e.target.value = '';
+              return;
+          }
+          await uploadAndSendMedia(file, 'audio');
+      }
+      e.target.value = '';
+  });
+  
+  // زر إلغاء الرفع
+  document.getElementById('cancelUploadBtn').addEventListener('click', cancelUpload);
+  
+  // إغلاق القائمة عند النقر خارجها
+  document.addEventListener('click', (e) => {
+      const attachMenu = document.getElementById('attachMenu');
+      const attachBtn = document.getElementById('attachBtn');
+      if (attachMenu && attachBtn && !attachMenu.contains(e.target) && !attachBtn.contains(e.target)) {
+          attachMenu.classList.remove('active');
+      }
+  });
+}
+// ============================================
+// رفع الملفات إلى Firebase Storage
+// ============================================
+
+// ============================================
+// رفع الملفات (مجاني - بدون Storage)
+// ============================================
+
+/**
+ * رفع الملف وإرساله كرسالة (مضغوط - مجاني)
+ */
+async function uploadAndSendMedia(file, type) {
+  if (!currentChat || !currentUser) return;
+  
+  const chatId = currentChat.type === 'community' 
+      ? currentChat.id 
+      : getChatId(currentUser.uid, currentChat.id);
+  
+  // إظهار مودال التحميل
+  showUploadModal(file.name);
+  
+  try {
+      let mediaUrl = '';
+      let compressedFile = file;
+      
+      // ضغط الصور لتقليل الحجم
+      if (type === 'image') {
+          updateProgress(30);
+          compressedFile = await compressImage(file, 800, 0.7); // ضغط للحد الأقصى 800px
+          updateProgress(60);
+          
+          // التحقق من الحجم (أقل من 900KB آمن)
+          if (compressedFile.size > 900 * 1024) {
+              // ضغط أكبر لو لسه كبير
+              compressedFile = await compressImage(file, 600, 0.5);
+          }
+      }
+      
+      // التحقق من الحجم النهائي
+      if (compressedFile.size > 950 * 1024) { // أقل من 1MB
+          hideUploadModal();
+          showToast('الملف كبير جداً! الحد الأقصى 1MB', 'error');
+          return;
+      }
+      
+      updateProgress(80);
+      
+      // تحويل إلى Base64
+      mediaUrl = await imageToBase64(compressedFile);
+      
+      updateProgress(100);
+      
+      // إرسال الرسالة
+      await sendMediaMessageWithURL(mediaUrl, file.name, type, compressedFile.size);
+      
+      hideUploadModal();
+      showToast('تم إرسال الملف', 'success');
+      
+  } catch (error) {
+      console.error('Error uploading file:', error);
+      hideUploadModal();
+      
+      if (error.message && error.message.includes('size')) {
+          showToast('الملف كبير جداً! الحد الأقصى 1MB', 'error');
+      } else {
+          showToast('حدث خطأ أثناء المعالجة', 'error');
+      }
+  }
+}
+
+/**
+* ضغط الصور
+*/
+function compressImage(file, maxWidth, quality) {
+  return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+              const canvas = document.createElement('canvas');
+              let width = img.width;
+              let height = img.height;
+              
+              // تغيير الحجم لو ضروري
+              if (width > maxWidth) {
+                  height = (height * maxWidth) / width;
+                  width = maxWidth;
+              }
+              
+              canvas.width = width;
+              canvas.height = height;
+              
+              const ctx = canvas.getContext('2d');
+              ctx.drawImage(img, 0, 0, width, height);
+              
+              // تحويل إلى Blob
+              canvas.toBlob((blob) => {
+                  if (blob) {
+                      resolve(new File([blob], file.name, { type: 'image/jpeg' }));
+                  } else {
+                      reject(new Error('فشل ضغط الصورة'));
+                  }
+              }, 'image/jpeg', quality);
+          };
+          img.onerror = () => reject(new Error('فشل تحميل الصورة'));
+          img.src = e.target.result;
+      };
+      reader.onerror = () => reject(new Error('فشل قراءة الملف'));
+      reader.readAsDataURL(file);
+  });
+}
+
+/**
+* إرسال رسالة وسائط مع رابط
+*/
+async function sendMediaMessageWithURL(mediaUrl, fileName, type, fileSize) {
+  if (!currentChat || !currentUser) return;
+  
+  const chatId = currentChat.type === 'community' 
+      ? currentChat.id 
+      : getChatId(currentUser.uid, currentChat.id);
+  
+  let messageText = '';
+  switch (type) {
+      case 'image': messageText = '📷 صورة'; break;
+      case 'video': messageText = '🎬 فيديو'; break;
+      case 'audio': messageText = '🎵 ملف صوتي'; break;
+      default: messageText = '📄 ملف';
+  }
+  
+  const messageData = {
+      text: messageText,
+      type: type,
+      mediaUrl: mediaUrl,
+      fileName: fileName,
+      fileSize: fileSize,
+      senderId: currentUser.uid,
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
+      read: false
+  };
+  
+  // إضافة اسم المرسل للمجتمعات
+  if (currentChat.type === 'community') {
+      messageData.senderName = userData.username || 'مستخدم';
+      messageData.senderAvatar = userData.photoURL || null;
+  }
+  
+  try {
+      // إضافة الرسالة
+      await db.collection(currentChat.type === 'community' ? 'communities' : 'chats')
+          .doc(chatId)
+          .collection('messages')
+          .add(messageData);
+      
+      // تحديث بيانات المحادثة
+      const updateData = {
+          lastMessage: messageText,
+          lastMessageAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
+      
+      if (currentChat.type === 'community') {
+          updateData.lastMessageSenderName = userData.username || 'مستخدم';
+      } else {
+          updateData.lastMessageSenderId = currentUser.uid;
+          updateData[`unreadCount.${currentChat.id}`] = firebase.firestore.FieldValue.increment(1);
+      }
+      
+      await db.collection(currentChat.type === 'community' ? 'communities' : 'chats')
+          .doc(chatId)
+          .set(updateData, { merge: true });
+          
+  } catch (error) {
+      console.error('Error sending media message:', error);
+      throw error;
+  }
+}
+
+/**
+* إلغاء الرفع
+*/
+function cancelUpload() {
+  if (uploadTask) {
+      uploadTask.cancel();
+      uploadTask = null;
+  }
+  hideUploadModal();
+  showToast('تم إلغاء الرفع', 'info');
+}
+
+/**
+* إظهار مودال الرفع
+*/
+function showUploadModal(fileName) {
+  isUploading = true;
+  document.getElementById('uploadFilename').textContent = fileName;
+  document.getElementById('progressPercent').textContent = '0%';
+  
+  // إعادة تعيين الدائرة
+  const circle = document.getElementById('progressCircle');
+  circle.style.strokeDashoffset = '326.73';
+  
+  document.getElementById('uploadModal').classList.add('active');
+}
+
+/**
+* تحديث التقدم
+*/
+function updateProgress(percent) {
+  const circumference = 326.73;
+  const offset = circumference - (percent / 100) * circumference;
+  
+  document.getElementById('progressCircle').style.strokeDashoffset = offset;
+  document.getElementById('progressPercent').textContent = `${Math.round(percent)}%`;
+}
+
+/**
+* إخفاء مودال الرفع
+*/
+function hideUploadModal() {
+  isUploading = false;
+  document.getElementById('uploadModal').classList.remove('active');
+}
   /**
    * إرسال رسالة وسائط
    */
@@ -2204,7 +2536,99 @@ const webrtcManager = new WebRTCManager();
       webrtcManager.startVoiceCall(userId, userName, userAvatar);
     }
   }
-  
+  // ============================================
+// تسجيل الرسائل الصوتية
+// ============================================
+
+let mediaRecorder = null;
+let audioChunks = [];
+let isRecording = false;
+let recordingTimer = null;
+let recordingSeconds = 0;
+
+/**
+ * بدء تسجيل صوتي
+ */
+async function startVoiceRecording() {
+    if (isRecording) {
+        stopVoiceRecording();
+        return;
+    }
+    
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        
+        mediaRecorder.ondataavailable = (event) => {
+            audioChunks.push(event.data);
+        };
+        
+        mediaRecorder.onstop = async () => {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            
+            // إنشاء ملف من الـ Blob
+            const audioFile = new File([audioBlob], `voice_${Date.now()}.webm`, {
+                type: 'audio/webm'
+            });
+            
+            // رفع وإرسال
+            await uploadAndSendMedia(audioFile, 'audio');
+            
+            // إيقاف الـ stream
+            stream.getTracks().forEach(track => track.stop());
+        };
+        
+        mediaRecorder.start();
+        isRecording = true;
+        recordingSeconds = 0;
+        
+        // تحديث شكل الزر
+        const micBtn = document.getElementById('micBtn');
+        micBtn.innerHTML = '<i class="fas fa-stop"></i>';
+        micBtn.style.background = '#ea4335';
+        micBtn.style.color = 'white';
+        
+        // بدء العداد
+        recordingTimer = setInterval(() => {
+            recordingSeconds++;
+            const mins = Math.floor(recordingSeconds / 60);
+            const secs = recordingSeconds % 60;
+            micBtn.innerHTML = `<span style="font-size: 0.7rem;">${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}</span>`;
+        }, 1000);
+        
+        showToast('🎤 جاري التسجيل...', 'info');
+        
+    } catch (error) {
+        console.error('Error starting recording:', error);
+        showToast('يرجى السماح بالوصول للميكروفون', 'error');
+    }
+}
+
+/**
+ * إيقاف التسجيل الصوتي
+ */
+function stopVoiceRecording() {
+    if (mediaRecorder && isRecording) {
+        mediaRecorder.stop();
+        isRecording = false;
+        
+        // إيقاف العداد
+        if (recordingTimer) {
+            clearInterval(recordingTimer);
+            recordingTimer = null;
+        }
+        
+        // إعادة شكل الزر
+        const micBtn = document.getElementById('micBtn');
+        micBtn.innerHTML = '<i class="fas fa-microphone"></i>';
+        micBtn.style.background = '';
+        micBtn.style.color = '';
+        
+        showToast('⏹️ تم إيقاف التسجيل', 'info');
+    }
+}
   // تصدير الدوال
   window.startCall = startCall;
   window.listenForIncomingCalls = listenForIncomingCalls;

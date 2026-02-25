@@ -457,32 +457,33 @@
     </div>
 
     <!-- مودال إرفاق ملف -->
-    <div class="attach-menu" id="attachMenu">
-      <div class="attach-item" id="attachImage">
-        <div class="attach-icon" style="background: #e07c52;">
-          <i class="fas fa-image"></i>
-        </div>
-        <span>صورة</span>
-      </div>
-      <div class="attach-item" id="attachVideo">
-        <div class="attach-icon" style="background: #7c3aed;">
-          <i class="fas fa-video"></i>
-        </div>
-        <span>فيديو</span>
-      </div>
-      <div class="attach-item" id="attachDocument">
-        <div class="attach-icon" style="background: #3b82f6;">
-          <i class="fas fa-file-alt"></i>
-        </div>
-        <span>مستند</span>
-      </div>
-      <div class="attach-item" id="attachLocation">
-        <div class="attach-icon" style="background: #10b981;">
-          <i class="fas fa-map-marker-alt"></i>
-        </div>
-        <span>موقع</span>
-      </div>
+<!-- قائمة الإرفاق -->
+<div class="attach-menu" id="attachMenu">
+  <div class="attach-item" id="attachImage">
+    <div class="attach-icon" style="background: #e07c52;">
+      <i class="fas fa-image"></i>
     </div>
+    <span>صورة</span>
+  </div>
+  <div class="attach-item" id="attachVideo">
+    <div class="attach-icon" style="background: #7c3aed;">
+      <i class="fas fa-video"></i>
+    </div>
+    <span>فيديو</span>
+  </div>
+  <div class="attach-item" id="attachAudio">
+    <div class="attach-icon" style="background: #f06292;">
+      <i class="fas fa-music"></i>
+    </div>
+    <span>صوت</span>
+  </div>
+  <div class="attach-item" id="attachDocument">
+    <div class="attach-icon" style="background: #3b82f6;">
+      <i class="fas fa-file-alt"></i>
+    </div>
+    <span>مستند</span>
+  </div>
+</div>
 
     <!-- ملفات مخفية للرفع -->
     <input type="file" id="imageUploadInput" accept="image/*" style="display: none;">
@@ -728,5 +729,34 @@
     </div>
   </div>
 </div>
+<!-- ============================================
+   مودال رفع الملفات (مطلوب للصور والفيديو والصوت)
+   ============================================ -->
+   <div class="upload-modal" id="uploadModal">
+    <div class="upload-modal-content">
+      <div class="upload-icon">
+        <i class="fas fa-cloud-upload-alt"></i>
+      </div>
+      <h3>جاري الرفع...</h3>
+      <div class="upload-progress-container">
+        <svg class="progress-ring" width="120" height="120">
+          <circle class="progress-ring-bg" cx="60" cy="60" r="52" fill="none" stroke="#2a3a42" stroke-width="8"/>
+          <circle class="progress-ring-circle" id="progressCircle" cx="60" cy="60" r="52" fill="none" stroke="#25d366" stroke-width="8" stroke-linecap="round"/>
+        </svg>
+        <div class="progress-percent" id="progressPercent">0%</div>
+      </div>
+      <p class="upload-filename" id="uploadFilename">image.jpg</p>
+      <button class="cancel-upload-btn" id="cancelUploadBtn">
+        <i class="fas fa-times"></i>
+        إلغاء
+      </button>
+    </div>
+  </div>
+  
+  <!-- عنصر الصوت الخفي للمكالمات -->
+  <audio id="callAudioElement" autoplay playsinline style="display: none;"></audio>
+  
+  <!-- input للصوت (مطلوب) -->
+  <input type="file" id="audioUploadInput" accept="audio/*" style="display: none;">
 </body>
 </html>

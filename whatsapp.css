@@ -3054,3 +3054,713 @@
   font-size: 14px;
   opacity: 0.5;
 }
+/* ============================================
+   مودال رفع الملفات
+   ============================================ */
+
+   .upload-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 600;
+    backdrop-filter: blur(5px);
+}
+
+.upload-modal.active {
+    display: flex;
+}
+
+.upload-modal-content {
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-secondary);
+    border-radius: 24px;
+    max-width: 320px;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.upload-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--accent-green), var(--secondary-green));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+    color: white;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.upload-modal-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+}
+
+.upload-progress-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 24px;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+    opacity: 0.3;
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.3s ease;
+    stroke-dasharray: 326.73;
+    stroke-dashoffset: 326.73;
+}
+
+.progress-percent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.upload-filename {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    word-break: break-all;
+    padding: 0 10px;
+}
+
+.cancel-upload-btn {
+    padding: 10px 30px;
+    background: transparent;
+    border: 2px solid var(--danger);
+    border-radius: 20px;
+    color: var(--danger);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cancel-upload-btn:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* ============================================
+   رسائل الوسائط في الشات
+   ============================================ */
+
+.message-media {
+    margin-bottom: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 250px;
+}
+
+.message-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+    transition: transform 0.2s ease;
+}
+
+.message-media img:hover {
+    transform: scale(1.02);
+}
+
+.message-media video {
+    width: 100%;
+    max-height: 300px;
+    display: block;
+    border-radius: 12px;
+}
+
+/* رسالة صوتية */
+.message-audio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    min-width: 200px;
+    max-width: 280px;
+}
+
+.audio-play-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.audio-play-btn:hover {
+    background: var(--secondary-green);
+    transform: scale(1.05);
+}
+
+.audio-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.audio-info .audio-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.audio-info .audio-duration {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.audio-progress {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin-top: 6px;
+    cursor: pointer;
+    position: relative;
+}
+
+.audio-progress-bar {
+    height: 100%;
+    background: var(--accent-green);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+
+/* أيقونة نوع الملف */
+.file-type-icon {
+    width: 50px;
+    height: 50px;
+    background: var(--bg-tertiary);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.file-type-icon.image { color: #e07c52; }
+.file-type-icon.video { color: #7c3aed; }
+.file-type-icon.audio { color: #f06292; }
+.file-type-icon.document { color: #3b82f6; }
+/* ============================================
+   مودال رفع الملفات
+   ============================================ */
+
+   .upload-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 600;
+    backdrop-filter: blur(5px);
+}
+
+.upload-modal.active {
+    display: flex;
+}
+
+.upload-modal-content {
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-secondary);
+    border-radius: 24px;
+    max-width: 320px;
+    animation: modalSlideIn 0.3s ease;
+}
+
+.upload-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, var(--accent-green), var(--secondary-green));
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+    color: white;
+    animation: bounce 1s infinite;
+}
+
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+.upload-modal-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 24px;
+    color: var(--text-primary);
+}
+
+.upload-progress-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 24px;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+    opacity: 0.3;
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.3s ease;
+    stroke-dasharray: 326.73;
+    stroke-dashoffset: 326.73;
+}
+
+.progress-percent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--accent-green);
+}
+
+.upload-filename {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    margin-bottom: 20px;
+    word-break: break-all;
+    padding: 0 10px;
+}
+
+.cancel-upload-btn {
+    padding: 10px 30px;
+    background: transparent;
+    border: 2px solid var(--danger);
+    border-radius: 20px;
+    color: var(--danger);
+    font-family: inherit;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.cancel-upload-btn:hover {
+    background: var(--danger);
+    color: white;
+}
+
+/* رسائل الوسائط */
+.message-media {
+    margin-bottom: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 250px;
+}
+
+.message-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.message-media video {
+    width: 100%;
+    max-height: 300px;
+    display: block;
+    border-radius: 12px;
+}
+
+/* رسالة صوتية */
+.message-audio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    min-width: 200px;
+    max-width: 280px;
+}
+
+.audio-play-btn {
+    width: 40px;
+    height: 40px;
+    background: var(--accent-green);
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.audio-play-btn:hover {
+    background: var(--secondary-green);
+    transform: scale(1.05);
+}
+
+.audio-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.audio-info .audio-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.audio-info .audio-duration {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.audio-progress {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin-top: 6px;
+    cursor: pointer;
+}
+
+.audio-progress-bar {
+    height: 100%;
+    background: var(--accent-green);
+    border-radius: 2px;
+    width: 0%;
+    transition: width 0.1s linear;
+}
+/* ============================================
+   قائمة الإرفاق - مهم جداً
+   ============================================ */
+
+   .attach-menu {
+    position: fixed;
+    bottom: 80px;
+    left: 16px;
+    background: var(--bg-secondary);
+    border-radius: 16px;
+    padding: 8px;
+    display: none;
+    flex-direction: column;
+    gap: 4px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    z-index: 250;
+    min-width: 160px;
+}
+
+.attach-menu.active {
+    display: flex !important;
+    animation: slideUp 0.2s ease;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.attach-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: background 0.2s ease;
+    color: var(--text-primary);
+}
+
+.attach-item:hover {
+    background: var(--bg-tertiary);
+}
+
+.attach-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+}
+
+/* ============================================
+   مودال رفع الملفات
+   ============================================ */
+
+.upload-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.85);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 600;
+    backdrop-filter: blur(5px);
+}
+
+.upload-modal.active {
+    display: flex !important;
+}
+
+.upload-modal-content {
+    text-align: center;
+    padding: 40px;
+    background: var(--bg-secondary);
+    border-radius: 24px;
+    max-width: 320px;
+    animation: modalSlideIn 0.3s ease;
+}
+
+@keyframes modalSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.upload-icon {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+    font-size: 2rem;
+    color: white;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.upload-modal-content h3 {
+    font-size: 1.3rem;
+    margin-bottom: 24px;
+    color: #e9edef;
+}
+
+.upload-progress-container {
+    position: relative;
+    width: 120px;
+    height: 120px;
+    margin: 0 auto 24px;
+}
+
+.progress-ring {
+    transform: rotate(-90deg);
+}
+
+.progress-ring-bg {
+    opacity: 0.3;
+}
+
+.progress-ring-circle {
+    transition: stroke-dashoffset 0.3s ease;
+    stroke-dasharray: 326.73;
+    stroke-dashoffset: 326.73;
+}
+
+.progress-percent {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #25d366;
+}
+
+.upload-filename {
+    font-size: 0.9rem;
+    color: #8696a0;
+    margin-bottom: 20px;
+    word-break: break-all;
+}
+
+.cancel-upload-btn {
+    padding: 10px 30px;
+    background: transparent;
+    border: 2px solid #ea4335;
+    border-radius: 20px;
+    color: #ea4335;
+    font-family: 'Cairo', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+.cancel-upload-btn:hover {
+    background: #ea4335;
+    color: white;
+}
+
+/* ============================================
+   رسائل الوسائط
+   ============================================ */
+
+.message-media {
+    margin-bottom: 8px;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 250px;
+}
+
+.message-media img {
+    width: 100%;
+    height: auto;
+    display: block;
+    cursor: pointer;
+    border-radius: 12px;
+}
+
+.message-media video {
+    width: 100%;
+    max-height: 300px;
+    display: block;
+    border-radius: 12px;
+}
+
+/* رسالة صوتية */
+.message-audio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 20px;
+    min-width: 200px;
+    max-width: 280px;
+}
+
+.audio-play-btn {
+    width: 40px;
+    height: 40px;
+    background: #25d366;
+    border: none;
+    border-radius: 50%;
+    color: white;
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.audio-play-btn:hover {
+    background: #128c7e;
+    transform: scale(1.05);
+}
+
+.audio-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.audio-info .audio-name {
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 4px;
+}
+
+.audio-info .audio-duration {
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.6);
+}
+
+.audio-progress {
+    width: 100%;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 2px;
+    margin-top: 6px;
+}
+
+.audio-progress-bar {
+    height: 100%;
+    background: #25d366;
+    border-radius: 2px;
+    width: 0%;
+}
