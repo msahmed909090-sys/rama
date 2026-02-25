@@ -2330,3 +2330,18 @@
 .call-action-btn.speaker.active {
   background: var(--accent-green) !important;
 }
+/* زر سماعة الأذن - نشط افتراضياً */
+.call-action-btn.earpiece {
+  background: rgba(255,255,255,0.1);
+}
+
+.call-action-btn.earpiece.active {
+  background: var(--accent-green) !important;
+  box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+}
+
+/* زر مكبر الصوت */
+.call-action-btn.speaker.active {
+  background: var(--accent-green) !important;
+  box-shadow: 0 0 15px rgba(37, 211, 102, 0.5);
+}

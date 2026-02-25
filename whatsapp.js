@@ -2009,25 +2009,27 @@ async toggleEarpiece() {
 // ============================================
 // تشغيل الصوت البعيد (سماعة الأذن افتراضياً)
 // ============================================
-async playRemoteAudio() {
-  // الحصول على عنصر الصوت
-  this.audioElement = document.getElementById('callAudioElement');
+// ============================================
+// تبديل إلى سماعة الأذن (صوت منخفض للخصوصية)
+// ============================================
+async toggleEarpiece() {
+  const speakerBtn = document.getElementById('speakerBtn');
+  const earpieceBtn = document.getElementById('earpieceBtn');
   
-  if (!this.audioElement || !this.remoteStream) return;
+  // تفعيل سماعة الأذن
+  this.isSpeaker = false;
+  this.isEarpiece = true;
   
-  // ربط البث بعنصر الصوت
-  this.audioElement.srcObject = this.remoteStream;
+  // تحديث واجهة الأزرار
+  speakerBtn.classList.remove('active');
+  earpieceBtn.classList.add('active');
   
-  // محاولة تشغيل الصوت
-  try {
-      await this.audioElement.play();
-      console.log('Audio playing');
-  } catch (e) {
-      console.error('Could not play audio:', e);
+  // تخفيض الصوت جداً (فقط من يضع أذنه يسمع)
+  if (this.audioElement) {
+      this.audioElement.volume = 0.15; // 15% فقط
   }
   
-  // افتراضياً: استخدام سماعة الأذن (وليس مكبر الصوت)
-  await this.switchToEarpiece();
+  showToast('🎧 سماعة الأذن', 'info');
 }
   
     // ============================================
