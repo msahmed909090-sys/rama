@@ -1488,12 +1488,15 @@ async function searchUserByEmail(email) {
 // ============================================
 class WebRTCManager {
     constructor() {
-      this.peerConnection = null;
       this.localStream = null;
       this.remoteStream = null;
       this.isMuted = false;
-      this.isSpeaker = false;
+      this.isSpeaker = false;  // حالياً مكبر الصوت مفعل
+      this.isEarpiece = true;   // افتراضياً سماعة الأذن مفعّلة
+      this.audioElement = null;
       this.currentCallId = null;
+      // ... باقي المتغيرات
+      this.peerConnection = null;
       this.callStartTime = null;
       this.timerInterval = null;
       this.callType = 'voice';
@@ -1914,100 +1917,118 @@ class WebRTCManager {
     // ============================================
     // تبديل إلى مكبر الصوت
     // ============================================
-    async toggleSpeaker() {
+   // ============================================
+// تبديل إلى مكبر الصوت
+// ============================================
+async toggleSpeaker() {
+  const speakerBtn = document.getElementById('speakerBtn');
+  const earpieceBtn = document.getElementById('earpieceBtn');
+  
+  // تفعيل مكبر الصوت
+  this.isSpeaker = true;
+  this.isEarpiece = false;
+  
+  // تحديث واجهة الأزرار
+  speakerBtn.classList.add('active');
+  earpieceBtn.classList.remove('active');
+  
+  // محاولة استخدام مكبر الصوت
+  if (this.audioElement) {
       try {
-        if (this.remoteStream) {
-          const audioTrack = this.remoteStream.getAudioTracks()[0];
-          if (audioTrack) {
-            // محاولة استخدام Speakerphone API
-            if (typeof audioTrack.getCapabilities === 'function') {
-              const capabilities = audioTrack.getCapabilities();
-              console.log('Audio capabilities:', capabilities);
-            }
-          }
-        }
-        
-        // تبديل حالة الزر
-        const speakerBtn = document.getElementById('speakerBtn');
-        const earpieceBtn = document.getElementById('earpieceBtn');
-        
-        this.isSpeaker = !this.isSpeaker;
-        
-        if (this.isSpeaker) {
-          speakerBtn.classList.add('active');
-          earpieceBtn.classList.remove('active');
+          // الحصول على أجهزة الإخراج المتاحة
+          const devices = await navigator.mediaDevices.enumerateDevices();
           
-          // محاولة تفعيل مكبر الصوت
-          if (this.remoteStream) {
-            const remoteVideo = document.getElementById('remoteVideo');
-            if (remoteVideo) {
-              // للهواتف التي تدعم هذا
-              try {
-                await remoteVideo.setSinkId('default');
-              } catch (e) {
-                console.log('setSinkId not supported');
-              }
-            }
-          }
+          // البحث عن مكبر الصوت
+          const speaker = devices.find(d => 
+              d.kind === 'audiooutput' && 
+              (d.label.toLowerCase().includes('speaker') || 
+               d.label.toLowerCase().includes('speakerphone'))
+          );
           
+          if (speaker && typeof this.audioElement.setSinkId === 'function') {
+              await this.audioElement.setSinkId(speaker.deviceId);
+              showToast('تم تفعيل مكبر الصوت', 'info');
+          } else {
+              // حل بديل: تعيين volume عالي
+              this.audioElement.volume = 1.0;
+              showToast('تم تفعيل مكبر الصوت', 'info');
+          }
+      } catch (e) {
+          console.log('Could not switch to speaker:', e);
+          // حل بديل للمتصفحات التي لا تدعم setSinkId
+          this.audioElement.volume = 1.0;
           showToast('تم تفعيل مكبر الصوت', 'info');
-        } else {
-          speakerBtn.classList.remove('active');
-          showToast('تم إلغاء مكبر الصوت', 'info');
-        }
-        
-      } catch (error) {
-        console.error('Error toggling speaker:', error);
       }
-    }
+  }
+}
+
+// ============================================
+// تبديل إلى سماعة الأذن (الافتراضي)
+// ============================================
+async switchToEarpiece() {
+  const speakerBtn = document.getElementById('speakerBtn');
+  const earpieceBtn = document.getElementById('earpieceBtn');
   
-    // ============================================
-    // تبديل إلى سماعة الأذن
-    // ============================================
-    async toggleEarpiece() {
+  // تفعيل سماعة الأذن
+  this.isSpeaker = false;
+  this.isEarpiece = true;
+  
+  // تحديث واجهة الأزرار
+  speakerBtn.classList.remove('active');
+  earpieceBtn.classList.add('active');
+  
+  // محاولة استخدام سماعة الأذن
+  if (this.audioElement) {
       try {
-        const speakerBtn = document.getElementById('speakerBtn');
-        const earpieceBtn = document.getElementById('earpieceBtn');
-        
-        this.isSpeaker = false;
-        
-        speakerBtn.classList.remove('active');
-        earpieceBtn.classList.add('active');
-        
-        // محاولة استخدام سماعة الأذن
-        if (this.remoteStream) {
-          const remoteVideo = document.getElementById('remoteVideo');
-          if (remoteVideo) {
-            // للهواتف التي تدعم هذا
-            try {
-              const devices = await navigator.mediaDevices.enumerateDevices();
-              const earpiece = devices.find(d => d.kind === 'audiooutput' && d.label.includes('earpiece'));
-              if (earpiece) {
-                await remoteVideo.setSinkId(earpiece.deviceId);
-              }
-            } catch (e) {
-              console.log('Could not switch to earpiece');
-            }
+          // الحصول على أجهزة الإخراج المتاحة
+          const devices = await navigator.mediaDevices.enumerateDevices();
+          
+          // البحث عن سماعة الأذن
+          const earpiece = devices.find(d => 
+              d.kind === 'audiooutput' && 
+              (d.label.toLowerCase().includes('earpiece') || 
+               d.label.toLowerCase().includes('headphone') ||
+               d.label.toLowerCase().includes('default'))
+          );
+          
+          if (earpiece && typeof this.audioElement.setSinkId === 'function') {
+              await this.audioElement.setSinkId(earpiece.deviceId);
+              console.log('Switched to earpiece');
           }
-        }
-        
-        showToast('تم تفعيل سماعة الأذن', 'info');
-        
-      } catch (error) {
-        console.error('Error toggling earpiece:', error);
+      } catch (e) {
+          console.log('Could not switch to earpiece:', e);
       }
-    }
+  }
+}
+
+// دالة toggleEarpiece للزر
+async toggleEarpiece() {
+  await this.switchToEarpiece();
+  showToast('تم تفعيل سماعة الأذن', 'info');
+}
+// ============================================
+// تشغيل الصوت البعيد (سماعة الأذن افتراضياً)
+// ============================================
+async playRemoteAudio() {
+  // الحصول على عنصر الصوت
+  this.audioElement = document.getElementById('callAudioElement');
   
-    // ============================================
-    // تشغيل الصوت البعيد
-    // ============================================
-    playRemoteAudio() {
-      const remoteVideo = document.getElementById('remoteVideo');
-      if (remoteVideo && this.remoteStream) {
-        remoteVideo.srcObject = this.remoteStream;
-        remoteVideo.play().catch(e => console.log('Auto-play prevented'));
-      }
-    }
+  if (!this.audioElement || !this.remoteStream) return;
+  
+  // ربط البث بعنصر الصوت
+  this.audioElement.srcObject = this.remoteStream;
+  
+  // محاولة تشغيل الصوت
+  try {
+      await this.audioElement.play();
+      console.log('Audio playing');
+  } catch (e) {
+      console.error('Could not play audio:', e);
+  }
+  
+  // افتراضياً: استخدام سماعة الأذن (وليس مكبر الصوت)
+  await this.switchToEarpiece();
+}
   
     // ============================================
     // تحديث جودة المكالمة
@@ -2140,13 +2161,14 @@ class WebRTCManager {
       document.getElementById('callDuration').textContent = '00:00';
       
       // إعادة تعيين الأزرار
-      document.getElementById('muteBtn').classList.remove('active');
-      document.getElementById('muteBtn').innerHTML = '<i class="fas fa-microphone"></i>';
-      document.getElementById('speakerBtn').classList.remove('active');
-      document.getElementById('earpieceBtn').classList.remove('active');
       
       // إظهار المودال
       document.getElementById('callModal').classList.add('active');
+      // إعادة تعيين الأزرار - سماعة الأذن افتراضية
+document.getElementById('muteBtn').classList.remove('active');
+document.getElementById('muteBtn').innerHTML = '<i class="fas fa-microphone"></i>';
+document.getElementById('speakerBtn').classList.remove('active');  // مكبر الصوت غير مفعل
+document.getElementById('earpieceBtn').classList.add('active');     // سماعة الأذن مفعّلة
     }
   
     // ============================================

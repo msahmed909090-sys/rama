@@ -2317,3 +2317,16 @@
     opacity: 0;
     pointer-events: none;
 }
+/* زر سماعة الأذن - نشط افتراضياً */
+.call-action-btn.earpiece.active {
+  background: var(--accent-green) !important;
+}
+
+/* زر مكبر الصوت - غير نشط */
+.call-action-btn.speaker {
+  background: rgba(255,255,255,0.1);
+}
+
+.call-action-btn.speaker.active {
+  background: var(--accent-green) !important;
+}
